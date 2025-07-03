@@ -1,0 +1,170 @@
+.button {
+    border: none;
+    color: #000000;
+    background-color: rgba(0,0,0,0);
+    font-family: "Golos Text", monospace;
+    padding: 15px 32px;
+    text-align: center;
+    height: 72px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 18px;
+    line-height: 1.15;
+    z-index: 1;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+.button .icon1, .icon2 {
+    float: left;
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+    transition: all 0.1s ease-in;
+}
+.button:hover{
+    background-color: #F2F3F4;
+}
+.button:hover .icon1{
+    transform: rotate(60deg);
+}
+.button:hover .icon2{
+    background: url('../img/exit2.png') no-repeat;
+    width: 29px;
+
+}
+.icon1{
+    background: url('../img/update-arrows.png') no-repeat;
+}
+.icon2{
+    background: url('../img/exit.png') no-repeat;
+    z-index: 5;
+}
+.button .span {
+    float: left;
+    width: 20px;
+    height: 20px;
+}
+.ico1{background: url('../img/apps.png') no-repeat;}
+.ico2{background: url('../img/calendar.png') no-repeat;}
+.ico3{background: url('../img/grid.png') no-repeat;}
+.ico4{background: url('../img/edit.png') no-repeat;}
+.ico5{background: url('../img/graph.png') no-repeat;}
+.option .ico1, .ico2, .ico3, .ico4, .ico5, .iconEdit, .symbol, .emoji {
+    float: left;
+    vertical-align: middle;
+    width: 24px;
+    height: 24px;
+    margin-right: 20px;
+    transition: all 0.1s ease-in;
+}
+.ico1, .ico2, .ico3, .ico4, .ico5 {
+
+}
+.iconEdit{
+    background: url('../img/edit.png') no-repeat;
+}
+.edit{
+    margin-top: 20px;
+    padding: 10px 32px 10px 20px !important;
+    height: fit-content !important;
+    display: none;
+
+}
+.submit{
+    height: fit-content !important;
+    margin-top: 10px;
+    margin-right: 12px;
+}
+.submit:hover{
+    background-color: #37bc8d;
+}
+.delete{
+    height: fit-content !important;
+    margin-top: 10px;
+    margin-right: 12px;
+    align-self: start;
+}
+.delete:hover{
+    background-color: crimson;
+}
+.save{
+    height: fit-content !important;
+    border-radius: 12px !important;
+    margin-top: 0 !important;
+    padding: 10px 35px !important;
+    width: 150px !important;
+}
+.add{
+    height: 47px !important;
+    border-radius: 8px !important;
+    margin-top: 20px !important;
+    color: black !important;
+    font-family: "Noah Regular", monospace !important;
+    font-size: 18px;
+    padding: 10px 35px !important;
+    width: 150px !important;
+}
+.clean{
+    font-family: Rubik, monospace;
+    background-color: #ffffff;
+    box-shadow: 0px 5px 13px #d2d2d2;
+    border: none;
+    color: #6f6f6f;
+    width: 50%;
+    height: 36px;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+.clean:focus{border: none !important; outline: none !important;}
+.clean:hover{background-color: #f8f8f8
+}
+.clean:active{background-color: #d4d4d4; color: #8d8d8d;
+}
+.popup{
+    color: black;
+    position: absolute;
+    right: 40px;
+    font-family: Rubik, monospace !important;
+    border-radius: 18px !important;
+    padding: 9px 30px 9px 48px !important;
+    width: fit-content !important;
+    visibility: visible;
+    opacity: 0;
+    transition: right 0.5s ease-in-out, visibility 0.1s ease-in-out;
+    /*animation-iteration-count: 1;*/
+    animation: popup 1.5s ease 1;
+    animation-fill-mode: forwards;
+}
+
+.green{
+    color: white;
+    background-color: #15c94e !important;
+}
+.orange{
+    color: white;
+    background-color: #e7980c !important;
+}
+.white{
+    color: black;
+    background-color: white !important;
+}
+.symbol{
+    font-size: 56px;
+    line-height: 27px;
+    color: rgba(255, 255, 255, 0.5);
+    position: absolute;
+    left: 5px;
+}
+.emoji{
+    font-size: 38px !important;
+    line-height: 25px;
+    color: rgba(255, 255, 255, 1) !important;
+    left: -9px;
+}
+@keyframes popup {
+    0%{right:20px; opacity: 0}
+    10%{ opacity: 1}
+    28%{right:65px; opacity: 1}
+    100%{right:40px; opacity: 1}
+}
+

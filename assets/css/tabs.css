@@ -1,0 +1,28 @@
+.custom-tabs-container {
+    width: 100%;
+}
+.custom-tabs {
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    padding: 0;
+    width: 350px;
+}
+
+.custom-tab {
+    color:#586069;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+    border: 0px !important;
+    background-color: #fafbfc;
+    padding: 12px !important;
+    font-family: "Noah Regular", monospace;
+    font-size: 18px;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+.custom-tab--selected {
+    color: black;
+    border-bottom: 5px solid #25c193 !important;
+}
+.tablo{padding: 0; margin-bottom: 20px}

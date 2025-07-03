@@ -1,0 +1,35 @@
+.logo{
+    background: rgb(52,222,114);
+    /*background: linear-gradient(180deg, rgba(50,231,116,1) 0%, rgba(33,210,178,1) 36%, rgba(35,162,219,1) 75%, rgba(42,211,215,1) 75%, rgba(29,29,29,1) 75%, rgba(29,29,29,1) 100%);*/
+
+    background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 36%, rgb(190, 82, 253) 36%, rgb(250, 216, 15) 75%, rgba(29,29,29,1) 75%, rgba(29,29,29,1) 100%);
+    display: inline-block;
+    background-size: 400% 400%;
+    vertical-align: middle;
+    animation-iteration-count: 1;
+    animation: colorize 2s ease 1;
+    animation-fill-mode: forwards;
+
+    /*animation-direction: alternate;*/
+}
+.logo::before{
+    content: url("../img/logo1.png");
+
+    /*position: absolute;*/
+    /*top: 0;*/
+    /*width: 50px;*/
+}
+.titleBox{
+    display: inline-block;
+    height: 50px;
+    vertical-align: middle;
+    padding-top: 9px;
+    margin-left: 14px;
+}
+.subtitle{padding-left: 2px}
+
+@keyframes colorize {
+    0%{background-position:39% 0%}
+    80%{background-position:62% 50%}
+    100%{background-position:100% 100%}
+}

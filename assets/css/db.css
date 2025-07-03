@@ -1,0 +1,51 @@
+.db{
+    font-family: "Noah Regular", monospace;
+    background-color: white;
+    box-shadow: 0 5px 13px #d2d2d2;
+    border-radius: 10px;
+    width: 68%;
+    max-width: 1050px;
+    height: 100%;
+    z-index: 5;
+    padding: 0;
+    transition: all 0.12s ease-in-out;
+}
+.db .cell-0-1{
+    background-color: rgb(49, 49, 49) !important;
+}
+#AdmTable .cell-0-1{
+    background-color: #E1E1E1 !important;
+}
+.dash-fixed-row{ margin-right: 0 !important;}
+
+.dash-spreadsheet .row {
+  flex-wrap: nowrap;
+}
+.filters{
+    /*width: 22% !important;*/
+    max-width: 340px !important;
+    color: #8d8d8d;
+    padding-bottom: 10px !important;
+}
+.filters .dash-dropdown{
+    font-family: Rubik, monospace !important;
+    font-size: 14px !important;
+    color: black;
+    margin-bottom: 8px;
+}
+.Select-control{
+    border: none !important;
+    background-color: #f6f6f6 !important;
+}
+.Select-value{
+    padding-right: 10px !important;
+    cursor: default;
+}
+.Select-menu-outer>*{
+    cursor: pointer;
+}
+
+.rows{
+    margin-top: 12px;
+    height: 45px;
+}
