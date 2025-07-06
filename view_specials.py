@@ -100,6 +100,10 @@ def DATABASE(dbDF):
 
 def ADMINPAGE():
     content = html.Div([
+        dcc.ConfirmDialog(
+            id='ConfirmDelete',
+            message='Внимание!',
+        ),
         html.Div([
             html.Div('АДМИНИСТРИРОВАНИЕ', className='line name'),
             html.Div([
@@ -120,7 +124,8 @@ def ADMINPAGE():
         dcc.Loading([html.Div(id='tabs-content')],color='grey', type='circle'),
         html.Div([
             html.Button([
-                html.Span([], className='iconEdit'), 'Редактировать'
+                # html.Span([], className='iconEdit'),
+                '✏️ Редактировать'
             ], id='EditButton', className='button edit line cloud', style={'display': 'none'}),
             html.Button('+Новый', className='clean add line', id='AddButton'),
         ],className='line-wrap'),

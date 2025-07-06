@@ -3,12 +3,24 @@
     background-color: white;
     box-shadow: 0 5px 13px #d2d2d2;
     border-radius: 10px;
-    width: 68%;
+    width: 95%;
     max-width: 1050px;
-    height: 100%;
+    max-height: calc(100vh - 380px);
+    height: fit-content;
     z-index: 5;
     padding: 0;
     transition: all 0.12s ease-in-out;
+}
+#AdmTable{
+    height: 100%;
+}
+#AdmTable .dash-spreadsheet.dash-freeze-top, .dash-spreadsheet.dash-virtualized
+    { max-height: calc(100vh - 385px); !important; }
+
+#AdmTable .dash-table-container {max-height: calc(100vh - 370px);}
+/*makes the height of the DashTable 225 pix less then the 100% screen */
+#tabs-content{
+    max-height: calc(100vh - 370px);
 }
 .db .cell-0-1{
     background-color: rgb(49, 49, 49) !important;
@@ -48,4 +60,8 @@
 .rows{
     margin-top: 12px;
     height: 45px;
+}
+.column-actions{margin-right: 5px}
+.dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner table {
+    --accent: black !important;
 }

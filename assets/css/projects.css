@@ -50,6 +50,10 @@
         grid-template-columns: 1fr;
         padding-right: 25px;
     }
+    .prjName{font-size: 18px !important;}
+    .prjInfo{
+    /*margin-top: 22px;*/
+    background: linear-gradient(to left, #2d2d2d 36px, rgba(243, 243, 243, 0) 20px) !important;}
 }
 @media (max-width: 1330px){
     .dash-dropdown{display: inline-block; margin-right: 8px; margin-top: 0 !important;}
@@ -87,7 +91,7 @@
 .card:hover{
     /*border:  solid 2px !important;*/
     /*border-right: solid 6px !important;*/
-    border-right-width: 6px;
+    /*border-right-width: 6px;*/
     background-image: url("../img/prjActive1.png");
     /*padding-left: 4px;*/
 

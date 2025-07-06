@@ -77,7 +77,7 @@ appDash.title = 'SKMK'
 @flask_login.login_required
 def projectDesk():
     appDash.layout = LAYOUT(flask_login.current_user.name, '')
-    return appDash.index()
+    return appDash.run(debug=True)
 
 # @cache.memoize()
 # def getData():
@@ -112,10 +112,10 @@ def display_page(prjBtn, calBtn, dbBtn, admBtn):
     #     getData()
     #     # print(dbDF[0].shape)
     #     content = DATABASE(dbDF[0])
-    # elif 'admBtn' in changed_id:
-    #     content = ADMINPAGE()
+    elif 'admBtn' in changed_id:
+        content = ADMINPAGE()
     else:
-        content = PROJECTDESK()
+        content = ADMINPAGE()
     return content
 
 if __name__ == '__main__':

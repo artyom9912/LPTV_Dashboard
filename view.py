@@ -7,6 +7,7 @@ from datetime import date
 import plotly.graph_objects as go
 import pandas as pd
 import db
+from utils import get_user_picture
 from view_specials import DATABASE
 from app import  engine
 
@@ -39,7 +40,7 @@ def LAYOUT(username, role):
                        dbc.Row([
                            html.Div([
                                html.Div([
-                                   html.Img(src='assets/img/artem.png', className='userPic'),
+                                   html.Img(src=get_user_picture(db.get_user_login(username)), className='userPic', id='UserPic'),
                                    html.Div(username, className='userName', id='USER'),
                                    html.Div(role, className='userRole', id='ROLE'),
                                ], className='userBox'),

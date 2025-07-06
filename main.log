@@ -1,0 +1,16 @@
+2025-07-06 23:51:00,927 - ERROR - Ошибка при выполнении SQL: can only concatenate str (not "NoneType") to str
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 707, in UpdateDict
+    db.execute_user_queries(CACHE, item_id, mode)
+  File "D:\PROJECTS\LPTV_Dashboard\db.py", line 173, in execute_user_queries
+    if os.path.isfile(path+old_name+'.png'):
+                      ~~~~^~~~~~~~~
+TypeError: can only concatenate str (not "NoneType") to str
+2025-07-06 23:51:35,715 - ERROR - Ошибка при выполнении SQL: can only concatenate str (not "NoneType") to str
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 707, in UpdateDict
+    db.execute_user_queries(CACHE, item_id, mode)
+  File "D:\PROJECTS\LPTV_Dashboard\db.py", line 174, in execute_user_queries
+    if os.path.isfile(path+old_name+'.png'):
+                      ~~~~^~~~~~~~~
+TypeError: can only concatenate str (not "NoneType") to str
