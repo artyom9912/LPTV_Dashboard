@@ -260,4 +260,87 @@ def execute_project_queries(cache, project_id, mode):
             execute_query(con,sql3)
 
 
+def get_db_chunk(page_current, page_size):
+    offset = page_current * page_size
+    query = text("""
+        SELECT 
+            YEAR(dateStamp) AS year,
+            MONTH(dateStamp) AS month,
+            DAY(dateStamp) AS day,
+            u.name AS user,
+            p.name AS project,
+            s.name AS stage,
+            p.square,
+            main.hours
+        FROM main
+        JOIN user u ON u.id = main.userId
+        JOIN project p ON main.projectId = p.id
+        JOIN stage s ON main.stageId = s.id
+        ORDER BY dateStamp DESC
+        LIMIT :limit OFFSET :offset
+    """)
 
+    with engine.connect() as con:
+        result = con.execute(query, {"limit": page_size, "offset": offset})
+        rows = result.fetchall()
+        columns = result.keys()
+        data = [dict(zip(columns, row)) for row in rows]
+        return data, columns
+
+def get_filtered_data(select, group_by, filters, join, order_by):
+    query = text(f"""
+        SELECT {select}, SUM(hours) AS hours 
+        FROM lptv.main
+        {join}
+        WHERE {filters}
+        GROUP BY {group_by}
+        ORDER BY {order_by} SUM(hours) DESC
+    """)
+
+    with engine.connect() as con:
+        result = con.execute(query)
+        rows = result.fetchall()
+        columns = result.keys()
+        data = [dict(zip(columns, row)) for row in rows]
+        return data, columns
+
+
+def get_main_count():
+    with engine.connect() as con:
+        res = con.execute(text(""" SELECT COUNT(*) FROM main"""))
+        return res.scalar()
+
+def get_filters():
+    options = {}
+
+    with engine.connect() as con:
+        # Годы
+        res = con.execute(text("SELECT DISTINCT YEAR(dateStamp) AS year FROM main ORDER BY year DESC"))
+        options['year'] = [{'label': str(row[0]), 'value': row[0]} for row in res.fetchall()]
+
+        # Месяцы
+        res = con.execute(text("SELECT DISTINCT MONTH(dateStamp) AS month FROM main ORDER BY month"))
+        options['month'] = [{'label': f"{row[0]:02d}", 'value': row[0]} for row in res.fetchall()]
+
+        # Дни
+        res = con.execute(text("SELECT DISTINCT DAY(dateStamp) AS day FROM main ORDER BY day"))
+        options['day'] = [{'label': f"{row[0]:02d}", 'value': row[0]} for row in res.fetchall()]
+
+        # Сотрудники
+        res = con.execute(text("SELECT DISTINCT u.name FROM main JOIN user u ON u.id = main.userId ORDER BY u.name"))
+        options['user'] = [{'label': row[0], 'value': row[0]} for row in res.fetchall()]
+
+        # Проекты
+        res = con.execute(text("SELECT DISTINCT p.name FROM main JOIN project p ON p.id = main.projectId ORDER BY p.name"))
+        options['project'] = [{'label': row[0], 'value': row[0]} for row in res.fetchall()]
+
+        # Площадь
+        res = con.execute(
+            text("SELECT DISTINCT p.square FROM main JOIN project p ON p.id = main.projectId ORDER BY p.square DESC"))
+        options['square'] = [{'label': row[0], 'value': row[0]} for row in res.fetchall()]
+
+        # Этапы
+        res = con.execute(text("SELECT DISTINCT s.name FROM main JOIN stage s ON s.id = main.stageId ORDER BY s.name"))
+        options['stage'] = [{'label': row[0], 'value': row[0]} for row in res.fetchall()]
+
+    return options

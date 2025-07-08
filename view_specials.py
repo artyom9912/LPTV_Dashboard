@@ -2,6 +2,7 @@ from dash import dcc
 import dash_bootstrap_components as dbc
 from dash import html
 from dash import dash_table
+import db
 
 
 filterItems = [
@@ -9,20 +10,18 @@ filterItems = [
     dbc.DropdownMenuItem("Архивные"),
     dbc.DropdownMenuItem("Все"),
 ]
-def DATABASE(dbDF):
-
-    print(dbDF.info())
-    dbDF['ШИФР'] = dbDF['ШИФР'].map(lambda x: str(x).split(' ')[0])
-
+def DATABASE():
+    options = db.get_filters()
     content = html.Div([
         html.Div('БАЗА ДАННЫХ', className='name'),
         html.Div([
             dcc.Loading([
             dash_table.DataTable(
                 id='TableDB',
-                data=dbDF.to_dict('records'),
-                columns=[{"name": i, "id": i} for i in dbDF.columns],
                 fixed_rows={'headers': True,},
+                page_current=0,
+                page_size=40,
+                page_action='custom',
                 style_data={
                     'whiteSpace':'normal'
                 },
@@ -32,20 +31,19 @@ def DATABASE(dbDF):
                     'margin-top': '0px',
                     'padding': '0',
                     'width': '100%',
-                    'height': '700px',
+                    'height': 'fit-content',
                     'min-height':'400px',
-                    'max-height':'650px',
+                    'max-height':'100%',
                     'overflow-y':'auto',
                     'border': '0px solid white',
                     'borderRadius': '10px',
-                    'minWidth': '100%',
                     'transition':'all 0.12s ease-in-out',
                 },
                 style_cell={'font-family': 'Rubik', 'text-align': 'left', 'width':'auto',
                             'border': '2px solid white', 'background-color': '#f7f7f7',
                             'font-size': '14px', 'padding-left':'12px', 'cursor':'default'},
                 style_header={'background-color': '#313131', 'color': 'white', 'height': '35px','z-index':'5',
-                              'border': '0px solid white', 'font-family': 'Rubik', 'font-size': '14px'},
+                              'border': '0px solid white', 'font-family': 'Rubik', 'font-size': '14px',  'padding-left':'2px',},
                 style_data_conditional=[
                     {
                         "if": {"state": "selected"},  # 'active' | 'selected'
@@ -54,15 +52,22 @@ def DATABASE(dbDF):
                     },
                 ],
                 style_cell_conditional=[
-                    {
-                        'if': {'column_id': 'ЧАСЫ'},
-                        'textAlign': 'center',
-                        'background-color': '#F0F0F0',
-                        'padding-left': '0',
-                        'width': '100px',
-                        # 'max-width': '60px',
-                    },
-                ],
+                                           {
+                                               'if': {'column_id': 'hours'},
+                                               'textAlign': 'center',
+                                               'background-color': '#EAEAEA',
+                                               'padding-left': '0',
+                                               'width': '80px',
+                                               'max-width': '80px',
+                                           },
+                                       ] + [
+                                           {
+                                               'if': {'column_id': col_id},
+                                               # 'textAlign': 'center',
+                                               'width':'70px',
+                                               'padding': '0 8px'
+                                           } for col_id in ('year', 'month', 'day')
+                                       ]
             )], color='grey', type='circle'),
         ], className='db line'),
         html.Div([
@@ -71,30 +76,43 @@ def DATABASE(dbDF):
             dbc.Form([
                 dbc.Row([
                     dbc.Col([
-                        dcc.Dropdown(id='DayFilter', placeholder='ДД', style={'width': '70px', 'margin-right': '6px','display':'inline-block'},
+                        dcc.Dropdown(id='DayFilter', placeholder='ДД',
+                                     style={'width':'100%','margin-right': '6px', 'display': 'inline-block'},
                                      disabled=True,
-                                     options=[{'label': i, 'value': i} for i in dbDF['ДД'].unique()] + [
+                                     options=options['day'] + [
                                          {'label': '✱', 'value': 'Все'}]),
-                        dcc.Dropdown(id='MonthFilter', placeholder='ММ', style={'width': '70px', 'margin-right': '6px','display':'inline-block'},
+                    ], width=4),
+                    dbc.Col([
+                        dcc.Dropdown(id='MonthFilter', placeholder='ММ',
+                                     style={'width':'100%', 'margin-right': '6px', 'display': 'inline-block'},
                                      disabled=True,
-                                     options=[{'label': i, 'value': i} for i in dbDF['ММ'].unique()] + [
+                                     options=options['month'] + [
                                          {'label': '✱', 'value': 'Все'}], ),
-                        dcc.Dropdown(id='YearFilter', placeholder='ГОД', style={'width': '85px', 'margin-right': '6px','display':'inline-block'},
-                                     options=[{'label': i, 'value': i} for i in dbDF['ГОД'].unique()] + [
-                                         {'label': '✱', 'value': 'Все'}], ), ], ),
-                    ])
+                    ], width=4),
+                    dbc.Col([
+                        dcc.Dropdown(id='YearFilter', placeholder='ГОД', style={'width':'100%', 'margin-right': '6px','display':'inline-block'},
+                                     options=options['year'] + [
+                                         {'label': '✱', 'value': 'Все'}], ),
+                    ], width=4),
+
+                    ], className='g-1' )
                 ]),
                 dbc.Row([
                     dbc.Col([
-                    dcc.Dropdown(id='UserFilter',placeholder='Сотрудник', options=[{'label': i, 'value': i} for i in dbDF['СОТРУДНИК'].unique()]+[{'label': '[Все сотрудники]', 'value': 'Все'}]),
-                    dcc.Dropdown(id='ProjectFilter',placeholder='Проект', options=[{'label': i, 'value': i} for i in dbDF['ПРОЕКТ'].unique()]+[{'label': '[Все проекты]', 'value': 'Все'}]),
-                    dcc.Dropdown(id='CustomerFilter',placeholder='Заказчик', options=[{'label': i, 'value': i} for i in dbDF['ЗАКАЗЧИК'].unique()]+[{'label': '[Все заказчики]', 'value': 'Все'}]),
+                    dcc.Dropdown(id='UserFilter',placeholder='Сотрудник',
+                                 options=options['user']+[{'label': '[Все сотрудники]', 'value': 'Все'}]),
+                    dcc.Dropdown(id='ProjectFilter',placeholder='Проект',
+                                 options=options['project']+[{'label': '[Все проекты]', 'value': 'Все'}]),
+                    dcc.Dropdown(id='StageFilter',placeholder='Этап',
+                                 options=options['stage']+[{'label': '[Все Этапы]', 'value': 'Все'}]),
+                    dcc.Dropdown(id='SquareFilter', placeholder='Площадь',
+                                     options=options['square'] + [{'label': '[Все]', 'value': 'Все'}]),
                     ]),
                 ]),
-        ], className='cloud'),
+        ], className='cloud', style={'margin-bottom':'0', 'padding-bottom':'14px', 'min-width':'260px'}),
         html.Button('Сбросить', className='clean', id='refresh')
         ], className='filters line'),
-        html.Div([dbDF.shape[0], html.Span('кол. строк', className='tail')],id='RowCount', className='cloud number rows'),
+        html.Div([],id='RowCount', className='cloud number rows'),
     ])
     return content
 

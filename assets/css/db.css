@@ -11,14 +11,20 @@
     padding: 0;
     transition: all 0.12s ease-in-out;
 }
+
 #AdmTable{
     height: 100%;
 }
+#TableDB{
+    height: 100%;
+
+}
 #AdmTable .dash-spreadsheet.dash-freeze-top, .dash-spreadsheet.dash-virtualized
     { max-height: calc(100vh - 385px); !important; }
+#TableDB .dash-spreadsheet.dash-freeze-top, .dash-spreadsheet.dash-virtualized
+    { max-height: calc(100vh - 385px); !important; margin-bottom: 10px;}
+.dash-table-container {max-height: calc(100vh - 370px);}
 
-#AdmTable .dash-table-container {max-height: calc(100vh - 370px);}
-/*makes the height of the DashTable 225 pix less then the 100% screen */
 #tabs-content{
     max-height: calc(100vh - 370px);
 }
@@ -64,4 +70,7 @@
 .column-actions{margin-right: 5px}
 .dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner table {
     --accent: black !important;
+}
+.current-page{
+    font-family: "Golos Text", sans-serif !important;
 }

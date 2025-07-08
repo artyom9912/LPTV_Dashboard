@@ -46,8 +46,6 @@ def logout():
 
 @app.route('/login', methods=['POST'])
 def login():
-    con = engine.connect()
-    # con = connect('clickhouse://10.200.2.113')
     username = request.form.get('username')
     password = request.form.get('password')
     if password == '' or username == '':
@@ -72,7 +70,7 @@ def unathor():
 
 #------------DASH---------------
 appDash.layout = LAYOUT('Артём Тюбаев','')
-appDash.title = 'SKMK'
+appDash.title = 'LPTV'
 @app.route('/dash')
 @flask_login.login_required
 def projectDesk():
@@ -103,19 +101,21 @@ def display_page(prjBtn, calBtn, dbBtn, admBtn):
     # global dbDF
     # for i in range(0,len(calendar_cache)): del calendar_cache[0]
 
+
+
     if 'prjBtn' in changed_id:
         content = PROJECTDESK()
     # elif 'calBtn' in changed_id:
     #     content = CALENDAR()
-    # elif 'dbBtn' in changed_id:
-    #     # JOIN для отображения бд
-    #     getData()
-    #     # print(dbDF[0].shape)
-    #     content = DATABASE(dbDF[0])
+    elif 'dbBtn' in changed_id:
+        # JOIN для отображения бд
+        # getData()
+        # print(dbDF[0].shape)
+        content = DATABASE()
     elif 'admBtn' in changed_id:
         content = ADMINPAGE()
     else:
-        content = ADMINPAGE()
+        content = DATABASE()
     return content
 
 if __name__ == '__main__':
