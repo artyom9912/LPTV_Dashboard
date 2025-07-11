@@ -2,6 +2,7 @@ from dash import dcc
 import dash_bootstrap_components as dbc
 from dash import html
 from dash import dash_table
+from app import cache
 import db
 
 
@@ -10,8 +11,13 @@ filterItems = [
     dbc.DropdownMenuItem("Архивные"),
     dbc.DropdownMenuItem("Все"),
 ]
+
+@cache.memoize()
+def get_filters_cached():
+    return db.get_filters()
+
 def DATABASE():
-    options = db.get_filters()
+    options = get_filters_cached()
     content = html.Div([
         html.Div('БАЗА ДАННЫХ', className='name'),
         html.Div([
@@ -56,7 +62,7 @@ def DATABASE():
                                                'if': {'column_id': 'hours'},
                                                'textAlign': 'center',
                                                'background-color': '#EAEAEA',
-                                               'padding-left': '0',
+                                               'padding': '0',
                                                'width': '80px',
                                                'max-width': '80px',
                                            },

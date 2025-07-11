@@ -101,6 +101,7 @@ def PROJECTDESK():
     irrel = db.get_project_count(0)
     content = html.Div(
         [
+            dcc.Store(id='selected-project-id', data=None),
             html.Div('ДОСКА ПРОЕКТОВ', className='name'),
             html.Div([
                 html.Div([irrel, html.Span('завершено', className='tail')], className='cloud number line'),
@@ -117,6 +118,7 @@ def PROJECTDESK():
                     dcc.Dropdown(id='YearFilterDesk', placeholder='',  style=dict(width=170, marginTop=15),
                                  options=[{'label': i, 'value': i} for i in Years], value='Всё время'),
                 ], className='cloud filter line'),
-            ], className='line-wrap focus'), ], style=dict(height='100%'))
+            ], className='line-wrap focus'),
+        ], style=dict(height='100%'))
     return content
 

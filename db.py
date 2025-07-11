@@ -1,8 +1,11 @@
 from app import engine
 from sqlalchemy import text
+from utils import month_name_ru
 import pandas as pd
 from datetime import date
 import os
+
+
 
 def execute_query(con, query: str):
     if query:
@@ -59,6 +62,14 @@ def get_project_full(id):
         )
         return res.fetchone()
 
+def get_project_name(id):
+    with engine.connect() as con:
+        res = con.execute(
+            text('SELECT name FROM lptv.project WHERE id = :id'),
+            {"id": id}
+        )
+        return res.scalar()
+
 def get_project_count(is_relevant=1):
     with engine.connect() as con:
         res = con.execute(
@@ -97,7 +108,7 @@ def get_project_stages(id):
 
 def get_project_cards(relevant, year):
     base_query = text("""
-        SELECT name, square, count_users, sum_hours, isDone, level
+        SELECT id, name, square, count_users, sum_hours, isDone, level
         FROM lptv.project p
         LEFT JOIN (
             SELECT projectId, count(distinct userId) count_users, sum(hours) sum_hours, max(dateStamp) lastAct
@@ -207,8 +218,7 @@ def execute_project_queries(cache, project_id, mode):
             'PrjLvl': 'level',
             'PrjDone': 'isDone',
         }
-        print(mode)
-        print(cache)
+
         def fmt(value):
             return f"'{value}'" if isinstance(value, str) and not value.startswith("'") else str(value)
 
@@ -310,6 +320,7 @@ def get_main_count():
         res = con.execute(text(""" SELECT COUNT(*) FROM main"""))
         return res.scalar()
 
+
 def get_filters():
     options = {}
 
@@ -344,3 +355,80 @@ def get_filters():
         options['stage'] = [{'label': row[0], 'value': row[0]} for row in res.fetchall()]
 
     return options
+
+def get_graph_filters():
+    options = {}
+    with engine.connect() as con:
+        # Годы
+        res = con.execute(text("SELECT DISTINCT YEAR(dateStamp) AS year FROM main ORDER BY year DESC"))
+        options['year'] = [{'label': str(row[0]), 'value': row[0]} for row in res.fetchall()]
+
+        # Месяцы
+        res = con.execute(text("SELECT DISTINCT MONTH(dateStamp) AS month FROM main ORDER BY month"))
+        options['month'] = [{'label': f"{month_name_ru(row[0])}", 'value': row[0]} for row in res.fetchall()]
+
+        # Сотрудники
+        res = con.execute(text("SELECT DISTINCT u.name FROM main JOIN user u ON u.id = main.userId ORDER BY u.name"))
+        options['user'] = [{'label': row[0], 'value': row[0]} for row in res.fetchall()]
+
+        # Проекты
+        res = con.execute(text("SELECT DISTINCT p.name, p.id FROM main JOIN project p ON p.id = main.projectId ORDER BY p.name"))
+        options['project'] = [{'label': row[0], 'value': row[1]} for row in res.fetchall()]
+
+    return options
+
+def get_lines_users(project_id, month, year):
+    result = {}
+
+    where_clauses = ["projectId = :project_id", "YEAR(dateStamp) = :year"]
+    params = {'project_id': project_id, 'year': year}
+
+    if month is not None:
+        where_clauses.append("MONTH(dateStamp) = :month")
+        params['month'] = month
+        group_by = "DAY(dateStamp)"
+        select_fields = "DAY(dateStamp) AS x, SUM(hours) AS hours"
+    else:
+        group_by = "MONTH(dateStamp)"
+        select_fields = "MONTH(dateStamp) AS x, SUM(hours) AS hours"
+
+    where_sql = " AND ".join(where_clauses)
+
+    with engine.connect() as con:
+        # Получаем пользователей и цвет
+        user_query = text(f"""
+            SELECT DISTINCT u.id AS user_id, u.name AS user_name, u.color
+            FROM main m
+            JOIN user u ON u.id = m.userId
+            WHERE m.projectId = :project_id AND YEAR(m.dateStamp) = :year
+            {"AND MONTH(m.dateStamp) = :month" if month else ""}
+        """)
+        users = con.execute(user_query, params).fetchall()
+
+        for user in users:
+            user_params = dict(params, user_id=user.user_id)
+            data_query = text(f"""
+                SELECT {select_fields}
+                FROM main
+                WHERE {where_sql} AND userId = :user_id
+                GROUP BY {group_by}
+                ORDER BY x
+            """)
+            rows = con.execute(data_query, user_params).fetchall()
+            days_dict = {row.x: row.hours for row in rows}
+
+            result[user.user_name] = {
+                'color': user.color,
+                'data': days_dict
+            }
+
+    return result
+
+def get_graph_data():
+    query = text(f"""
+        SELECT LEFT(u.name,LOCATE(' ',u.name) - 1) user, s.name stage, SUM(hours)  
+        FROM main m JOIN user u ON u.id = m.userId JOIN stage s on s.id = m.stageId
+        WHERE YEAR(m.dateStamp) = 2025 AND MONTH(m.dateStamp) = 7
+        AND m.projectId = 13
+        GROUP BY u.name, stage
+    """)

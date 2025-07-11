@@ -94,8 +94,14 @@
     /*border-right-width: 6px;*/
     background-image: url("../img/prjActive1.png");
     /*padding-left: 4px;*/
-
-
+}
+.card:active{
+    border-width: 3px;
+    /*box-shadow: 3px 3px 1px #e5e5e5;*/
+}
+.card:active .prjName{
+    /*background-color: rgba(238, 238, 238, 0);*/
+     /*background-image: url("../img/prjActive1.png");*/
 }
 .card:hover .prjInfo{
     padding-left: 10px;
@@ -142,7 +148,7 @@
     background-color: white;
     font-size: 20px;
     line-height: 20px;
-    transition: all 0.1s ease-in;
+    transition: padding-left 0.1s ease-in;
     min-height: 87px;
 }
 .prjInfo{
@@ -153,6 +159,7 @@
     vertical-align: bottom;
     height: 100%;
     transition: all 0.1s ease-in, border-left-color 0s ease-in;
+    padding-bottom: 8px;
 }
 .dim{
     color: #8d8d8d;

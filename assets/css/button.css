@@ -117,6 +117,9 @@
     border-radius: 8px;
     margin-top: 10px;
 }
+.w100{
+    width: 100%;
+}
 .clean:focus{border: none !important; outline: none !important;}
 .clean:hover{background-color: #f8f8f8
 }

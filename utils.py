@@ -35,3 +35,20 @@ def hex_to_rgba01(hex_color: str, alpha: float = 1.0):
     b = int(hex_color[4:6], 16) / 255.0
 
     return f'{round(r, 3)}, {round(g, 3)}, {round(b, 3)}, {round(alpha, 3)}'
+
+def month_name_ru(month_number):
+    months = {
+        1: "Январь",
+        2: "Февраль",
+        3: "Март",
+        4: "Апрель",
+        5: "Май",
+        6: "Июнь",
+        7: "Июль",
+        8: "Август",
+        9: "Сентябрь",
+        10: "Октябрь",
+        11: "Ноябрь",
+        12: "Декабрь"
+    }
+    return months.get(month_number, "")

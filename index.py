@@ -7,6 +7,7 @@ import pandas as pd
 import dash
 from view import LAYOUT, PROJECTDESK
 from view_specials import DATABASE, ADMINPAGE
+from view_analysis import GRAPHIC
 from dash.dependencies import Input, Output
 from sqlalchemy import text
 import db
@@ -94,9 +95,10 @@ def projectDesk():
 @appDash.callback(Output('content', 'children'),
               Input('prjBtn', 'n_clicks'),
               Input('calBtn', 'n_clicks'),
+              Input('graphBtn', 'n_clicks'),
               Input('dbBtn', 'n_clicks'),
               Input('admBtn', 'n_clicks'))
-def display_page(prjBtn, calBtn, dbBtn, admBtn):
+def display_page(prjBtn, calBtn, graphBtn, dbBtn, admBtn):
     changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
     # global dbDF
     # for i in range(0,len(calendar_cache)): del calendar_cache[0]
@@ -112,10 +114,12 @@ def display_page(prjBtn, calBtn, dbBtn, admBtn):
         # getData()
         # print(dbDF[0].shape)
         content = DATABASE()
+    elif 'graphBtn' in changed_id:
+        content = GRAPHIC(13)
     elif 'admBtn' in changed_id:
         content = ADMINPAGE()
     else:
-        content = DATABASE()
+        content = GRAPHIC(13)
     return content
 
 if __name__ == '__main__':

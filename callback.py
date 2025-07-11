@@ -1,13 +1,13 @@
 import datetime
 from datetime import datetime as dt
 import dash_bootstrap_components as dbc
-from dash import dcc
-from dash.dependencies import Input, Output, State
+from dash import dcc, callback_context
+from dash.dependencies import Input, Output, State, ALL, MATCH
 # from app import appDash, calendar_cache, WEEKDAYS, engine, dbDF, cache
 import db
-from app import appDash, engine, cache
+from app import appDash, cache
 import dash
-from utils import get_user_picture, rgba_string_to_hex, hex_to_rgba01
+from utils import get_user_picture, rgba_string_to_hex, hex_to_rgba01, month_name_ru
 from time import sleep
 from dash import html
 from datetime import date
@@ -17,6 +17,10 @@ import sys
 import plotly.graph_objects as go
 import flask_login
 from datatables import UsersTable, ProjectsTable, to_css_rgba
+from dash.exceptions import PreventUpdate
+
+
+
 
 # WEEK_NUMBERS = dict(zip(WEEKDAYS, range(0, 7)))
 CACHE = {}
@@ -30,8 +34,12 @@ CACHE = {}
     Input('content', 'children')
 )
 def SetUser(style):
-    user = flask_login.current_user
-    return user.name, 'Администратор' if user.admin == 1 else 'Сотрудник', get_user_picture(db.get_user_login(user.name))
+    try:
+        user = flask_login.current_user
+        return user.name, 'Администратор' if user.admin == 1 else 'Сотрудник', get_user_picture(db.get_user_login(user.name))
+    except Exception as e:
+        logger.exception("Ошибка в SetUser: %s", str(e))
+        return dash.no_update
 
 @appDash.callback(
     Output('ProjectDesk', 'children'),
@@ -39,29 +47,83 @@ def SetUser(style):
     Input('YearFilterDesk', 'value'),
 )
 def UpdateProjectDesk(relevant, year):
-    projects = db.get_project_cards(relevant, year)
-    content = [html.Div([
-                html.Div([project['name'], html.Div([dcc.Markdown(str(project['square']) + " m²", className='prjStage'),]),],
-                         className='prjName'),
-
+    try:
+        projects = db.get_project_cards(relevant, year)
+        content = [
                 html.Div([
-                    html.Div([project['sum_hours'], html.Span('часов', className='tail')], className='num line'),
-                    html.Div([project['count_users'], html.Span('чел.', className='tail')], className='num line dim'),
-                    html.Div([project['level']], className='num line last'),
-                ], className='line-wrap prjInfo', style={'background':'linear-gradient(to right, rgba(243, 243, 243, 0) 210px, #E1D2BEFF 20px)'} if project['isDone']==1 else {}),
-              ], className='card', style={'border-color':'#E1D2BEFF'} if project['isDone']==1 else {}) for id, project in projects.iterrows()]
-    return content
+                    html.Div([project['name'], html.Div([dcc.Markdown(str(project['square']) + " m²", className='prjStage'),]),],
+                             className='prjName'),
+
+                    html.Div([
+                        html.Div([project['sum_hours'], html.Span('часов', className='tail')], className='num line'),
+                        html.Div([project['count_users'], html.Span('чел.', className='tail')], className='num line dim'),
+                        html.Div([project['level']], className='num line last'),
+                    ], className='line-wrap prjInfo', style={'background':'linear-gradient(to right, rgba(243, 243, 243, 0) 210px, #E1D2BEFF 20px)'} if project['isDone']==1 else {}),
+                  ], className='card',id={'type': 'project-card', 'id': project['id']}, style={'border-color':'#E1D2BEFF'} if project['isDone']==1 else {}) for id, project in projects.iterrows()]
+        return content
+    except Exception as e:
+        logger.exception("Ошибка в UpdateProjectDesk: %s", str(e))
+        return dash.no_update
+
+@appDash.callback(
+    Output('selected-project-id', 'data'),
+    Input({'type': 'project-card', 'id': ALL}, 'n_clicks'),
+    State({'type': 'project-card', 'id': ALL}, 'id'),
+    prevent_initial_call=True
+)
+def store_selected_card(n_clicks_list, ids):
+    triggered = callback_context.triggered
+    if not triggered:
+        return dash.no_update
+
+    prop_id = triggered[0]['prop_id'].split('.')[0]
+    try:
+        import json
+        parsed = json.loads(prop_id)
+        clicked_id = parsed['id']
+    except Exception:
+        return dash.no_update
+
+    # Важный момент — проверяем, был ли клик (n_clicks > 0)
+    index = ids.index(parsed)
+    if n_clicks_list[index] and n_clicks_list[index] > 0:
+        return clicked_id
+
+    return dash.no_update
+
+@appDash.callback(
+    Output({'type': 'project-card', 'id': ALL}, 'style'),
+    Input('selected-project-id', 'data'),
+    State({'type': 'project-card', 'id': ALL}, 'id')
+)
+def highlight_selected_card(selected_id, all_ids):
+    if selected_id is None:
+        return [{} for _ in all_ids]
+
+    color = to_css_rgba(flask_login.current_user.color)
+    selected_style = {
+        'border-color': 'black',
+        'background-color': color,
+        # 'background-image': 'url("assets/img/prjActive1.png")',
+        # 'box-shadow': f'0 0 0 2px {color}'
+    }
+    default_style = {}
+
+
+    return [
+        selected_style if id_['id'] == selected_id else default_style
+        for id_ in all_ids
+    ]
 
 @cache.memoize()
 @appDash.callback(
     Output('MonthFilter', 'disabled'),
     Output('DayFilter', 'disabled'),
-    Input('DayFilter', 'value'),
     Input('MonthFilter', 'value'),
     Input('YearFilter', 'value'),
     prevent_initial_call=True
 )
-def update_db( day, month, year):
+def update_db( month, year):
     if year is not None:
         if month is not None:
             return False, False
@@ -90,15 +152,19 @@ def clean_filter(n_clicks):
     Output('tabs-content', 'children'),
     Input('tabs', 'value'))
 def render_content(tab):
-    match tab:
-        case 'tab-c':
-            return html.Div([
-                UsersTable()
-            ], className='db')
-        case 'tab-p':
-            return html.Div([
-                ProjectsTable()
-            ], className='db')
+    try:
+        match tab:
+            case 'tab-c':
+                return html.Div([
+                    UsersTable()
+                ], className='db')
+            case 'tab-p':
+                return html.Div([
+                    ProjectsTable()
+                ], className='db')
+    except Exception as e:
+        logger.exception("Ошибка в render_content: %s", str(e))
+        return dash.no_update
 
 #
 #
@@ -296,6 +362,96 @@ def render_content(tab):
 #     return dash.no_update
 
 @appDash.callback(
+    Output('BigTitle','children'),
+    Input('ProjectFilterGraph', 'value'),
+)
+def update_graph_title(project_id):
+    return db.get_project_name(project_id)
+
+@appDash.callback(
+    Output('Graph','figure'),
+    Input('ProjectFilterGraph', 'value'),
+    Input('YearFilterGraph', 'value'),
+    Input('MonthFilterGraph', 'value')
+)
+def update_graph(project_id, year, month):
+    raw_data = db.get_lines_users(project_id=project_id, month=month, year=year)
+
+    traces = []
+
+    for name, user_info in raw_data.items():
+        day_hours = user_info['data']
+        color = rgba_string_to_hex(user_info['color']) or '#000000'  # fallback на черный
+
+        if not day_hours:
+            continue
+
+        sorted_days = sorted(day_hours.items())
+        full_x = []
+        full_y = []
+
+        for i in range(len(sorted_days)):
+            day, hours = sorted_days[i]
+            full_x.append(day)
+            full_y.append(hours)
+
+            # проверка на разрыв
+            if i + 1 < len(sorted_days):
+                next_day = sorted_days[i + 1][0]
+                if next_day - day > 1:
+                    # вставляем разрыв
+                    full_x.append(None)
+                    full_y.append(None)
+
+        traces.append(go.Scatter(
+            x=full_x,
+            y=full_y,
+            mode='lines+markers',
+            name=name,
+            line=dict(color=color, width=4),
+            marker=dict(size=6)
+        ))
+
+    fig = go.Figure(data=traces)
+    fig.update_layout(
+        font=dict(family="Rubik, sans-serif", size=14, color="black"),
+        title=f'{month_name_ru(month)} {year}',
+        xaxis=dict(title='', dtick=1, range=[0, 31]),
+        yaxis=dict(title='', range=[0, 12]),
+        plot_bgcolor='#fff',
+        paper_bgcolor='#fff',
+        autosize=True,
+        legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1),
+        margin=dict(l=20, r=20, t=50, b=40),
+    )
+    fig.layout.xaxis.fixedrange = True
+    fig.layout.yaxis.fixedrange = True
+
+    fig.update_xaxes(
+        ticks='outside', ticklen=5, tickwidth=2, tickcolor='#EBEBEB',
+        showline=True, linewidth=2, linecolor='#EBEBEB', showgrid=True
+    )
+    fig.update_yaxes(
+        ticks='outside', ticklen=5, tickwidth=2, tickcolor='#EBEBEB',
+        showline=True, linewidth=2, linecolor='#EBEBEB', showgrid=True
+    )
+    return fig
+
+@cache.memoize()
+def get_raw_data_cached(page_current, page_size):
+    return db.get_db_chunk(page_current, page_size)
+
+@cache.memoize()
+def get_filtered_data_cached(select, group_by, filters, join, order_by):
+    return db.get_filtered_data(
+        select=select,
+        group_by=group_by,
+        filters=filters,
+        join=join,
+        order_by=order_by
+    )
+
+@appDash.callback(
     Output("TableDB", "data"),
     Output("TableDB", "columns"),
     Output("TableDB", "page_size"),
@@ -312,68 +468,63 @@ def render_content(tab):
     Input('YearFilter', 'value'),
 )
 def update_table(page_current, page_size, user, project, square, stage, day, month, year):
-    HEAD_MAP = {
-        'year': 'ГОД',
-        'month': 'ММ',
-        'day': 'ДД',
-        'user': 'СОТРУДНИК',
-        'project': 'ПРОЕКТ',
-        'stage': 'ЭТАП',
-        'square': 'м²',
-        'hours': 'ЧАСЫ'
-    }
+    try:
+        HEAD_MAP = {
+            'year': 'ГОД',
+            'month': 'ММ',
+            'day': 'ДД',
+            'user': 'СОТРУДНИК',
+            'project': 'ПРОЕКТ',
+            'stage': 'ЭТАП',
+            'square': 'м²',
+            'hours': 'ЧАСЫ'
+        }
 
-    field_map = {
-        'year': [year, 'YEAR(dateStamp) year', None, 'YEAR(dateStamp)'],
-        'month': [month,'MONTH(dateStamp) month', None, 'MONTH(dateStamp)'],
-        'day': [day,'DAY(dateStamp) day', None, 'DAY(dateStamp)'],
-        'user': [user, 'u.name user', 'JOIN user u ON main.userId=u.id\n', 'u.name'],
-        'project': [project, 'p.name project', 'JOIN project p ON main.projectId=p.id\n', 'p.name'],
-        'square': [square, 'p.square square', 'JOIN project p ON main.projectId=p.id\n', 'p.square'],
-        'stage': [stage, 's.name stage', 'JOIN stage s ON main.stageId=s.id\n', 's.name'],
-    }
+        field_map = {
+            'year': [year, 'YEAR(dateStamp) year', None, 'YEAR(dateStamp)'],
+            'month': [month,'MONTH(dateStamp) month', None, 'MONTH(dateStamp)'],
+            'day': [day,'DAY(dateStamp) day', None, 'DAY(dateStamp)'],
+            'user': [user, 'u.name user', 'JOIN user u ON main.userId=u.id\n', 'u.name'],
+            'project': [project, 'p.name project', 'JOIN project p ON main.projectId=p.id\n', 'p.name'],
+            'square': [square, 'p.square square', 'JOIN project p ON main.projectId=p.id\n', 'p.square'],
+            'stage': [stage, 's.name stage', 'JOIN stage s ON main.stageId=s.id\n', 's.name'],
+        }
 
-    # Если ни один фильтр не выбран — показать "сырые" данные
-    if all(v[0] is None for v in field_map.values()):
-        data, columns = db.get_db_chunk(page_current, page_size)
-        page_size= 40
-        page_action='custom'
-        count = db.get_main_count()
-
-
-    else:
-        page_size = 250
-        page_action = 'native'
-
-        # Фильтрация и группировка по выбранным
-        select_keys = [field_map[k][1] for k, v in field_map.items() if v[0] is not None]
-        group_by_keys = [k for k, v in field_map.items() if v[0] is not None]
-        filters = [f"{field_map[k][-1]} = '{v[0]}'" for k, v in field_map.items() if v[0] is not None and 'Все' != v[0] ]
-        joins = [field_map[k][2] for k, v in field_map.items() if v[0] is not None and v[2] is not None]
-        order = [k+" DESC" for k, v in list(field_map.items())[:3] if v[0] is not None]
-
-        select_clause = ', '.join(select_keys)
-        where_clause = " AND ".join(filters) if filters else "1=1"
-        join_clause = ''.join(list(set(joins))) if len(joins) > 0 else ''
-        group_by_clause = ', '.join(group_by_keys)
-        order_by_clause = ', '.join(order)
-        order_by_clause+= ',' if len(order_by_clause) > 0 else ''
-        data, columns = db.get_filtered_data(select=select_clause ,group_by=group_by_clause,
-                                             filters=where_clause, join=join_clause, order_by=order_by_clause)
-        count = len(data)
-
-    # Формирование колонок таблицы
-    column_defs = [{"name": HEAD_MAP.get(col, col.upper()), "id": col} for col in columns]
-    return data, column_defs, page_size, page_action, [count, html.Span('кол. строк', className='tail')]
+        # Если ни один фильтр не выбран — показать "сырые" данные
+        if all(v[0] is None for v in field_map.values()):
+            data, columns = get_raw_data_cached(page_current, page_size)
+            page_size= 40
+            page_action='custom'
+            count = db.get_main_count()
 
 
+        else:
+            page_size = 250
+            page_action = 'native'
 
+            # Фильтрация и группировка по выбранным
+            select_keys = [field_map[k][1] for k, v in field_map.items() if v[0] is not None]
+            group_by_keys = [k for k, v in field_map.items() if v[0] is not None]
+            filters = [f"{field_map[k][-1]} = '{v[0]}'" for k, v in field_map.items() if v[0] is not None and 'Все' != v[0] ]
+            joins = [field_map[k][2] for k, v in field_map.items() if v[0] is not None and v[2] is not None]
+            order = [k+" DESC" for k, v in list(field_map.items())[:3] if v[0] is not None]
 
+            select_clause = ', '.join(select_keys)
+            where_clause = " AND ".join(filters) if filters else "1=1"
+            join_clause = ''.join(list(set(joins))) if len(joins) > 0 else ''
+            group_by_clause = ', '.join(group_by_keys)
+            order_by_clause = ', '.join(order)
+            order_by_clause+= ',' if len(order_by_clause) > 0 else ''
+            data, columns = get_filtered_data_cached(select_clause, group_by_clause, where_clause, join_clause, order_by_clause)
+            count = len(data)
 
-from dash.exceptions import PreventUpdate
-import logging
+        # Формирование колонок таблицы
+        column_defs = [{"name": HEAD_MAP.get(col, col.upper()), "id": col} for col in columns]
+        return data, column_defs, page_size, page_action, [count, html.Span('кол. строк', className='tail')]
 
-logger = logging.getLogger(__name__)
+    except Exception as e:
+        logger.exception("Ошибка в update_table: %s", str(e))
+        return [], [], 20, 'native', ["Ошибка загрузки", html.Span("⚠", className="tail")]
 
 @appDash.callback(
     Output('DialogModal', 'children'),

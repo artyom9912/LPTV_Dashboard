@@ -51,6 +51,11 @@
     color: black;
     margin-bottom: 8px;
 }
+.dash-dropdown *{
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+}
 .Select-control{
     border: none !important;
     background-color: #f6f6f6 !important;
