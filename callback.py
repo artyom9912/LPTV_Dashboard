@@ -166,6 +166,18 @@ def render_content(tab):
         logger.exception("Ошибка в render_content: %s", str(e))
         return dash.no_update
 
+
+@appDash.callback(
+    Output('ConfirmDelete', 'displayed'),
+    Output('ConfirmDelete', 'message'),
+    Input('ModalDelete', 'n_clicks'),
+    prevent_initial_call=True
+)
+def show_confirm(n_clicks):
+    if n_clicks:
+        return True, 'Вы уверены? Все связанные записи также безвозвратно удалятся!'
+    return dash.no_update
+
 #
 #
 # calendar = None
@@ -363,25 +375,73 @@ def render_content(tab):
 
 @appDash.callback(
     Output('BigTitle','children'),
-    Input('ProjectFilterGraph', 'value'),
+    Input('FilterGraph', 'value'),
+    State('GraphMode', 'data'),
 )
-def update_graph_title(project_id):
-    return db.get_project_name(project_id)
+def update_graph_title(id, is_project):
+    return db.get_project_name(id) if is_project else db.get_user_name(id).upper()
+
+@appDash.callback(
+    Output('YearFilterGraph', 'value'),
+    Output('MonthFilterGraph', 'value'),
+    Input('RefreshGraph','n_clicks'),
+    prevent_initial_call=True
+)
+def update_graph_filters(click):
+    if click:
+        print("CLEAR")
+        today = datetime.datetime.now()
+        return today.year, today.month
+    return dash.no_update, dash.no_update
 
 @appDash.callback(
     Output('Graph','figure'),
-    Input('ProjectFilterGraph', 'value'),
+    Output('GraphTable','data'),
+    Output('GraphTable','columns'),
+    Output('GraphTable','style_header_conditional'),
+    Input('FilterGraph', 'value'),
     Input('YearFilterGraph', 'value'),
-    Input('MonthFilterGraph', 'value')
+    Input('MonthFilterGraph', 'value'),
+    State('GraphMode', 'data'),
+    # prevent_initial_call=True
+
 )
-def update_graph(project_id, year, month):
-    raw_data = db.get_lines_users(project_id=project_id, month=month, year=year)
+def update_graph(id, year, month, is_project):
+    raw_data = db.get_lines_users(project_id=id, month=month, year=year) if is_project else db.get_lines_projects(user_id=id, month=month, year=year)
+
+    palette = ["#66C2A5", "#FC8D62", "#8DA0CB", "#E78AC3", "#A6D854", "#FFD92F", "#E5C494", "#B3B3B3"]
+
+
+    table_data, table_columns = db.get_graph_project_data(project_id=id, month=month, year=year) if is_project else db.get_graph_user_data(user_id=id, month=month, year=year)
+
+    if not is_project:
+        table_columns[0] = {'name': 'Проект', 'id': 'index'}
+        project_names = sorted(raw_data.keys())
+        color_map = {name: palette[i % len(palette)] for i, name in enumerate(project_names)}
+    else:
+        table_columns[0] = {'name': 'Этап', 'id': 'index'}
+        color_map = {
+            name: rgba_string_to_hex(data.get('color')) or "#000000"
+            for name, data in raw_data.items()
+        }
+        print(color_map)
+    style_header_conditional = [
+        {
+            "if": {"column_id": name},
+            "backgroundColor": color,
+            "color": "black",
+            "min-width":"75px",
+
+
+        }
+        for name, color in color_map.items()
+    ]
 
     traces = []
 
-    for name, user_info in raw_data.items():
-        day_hours = user_info['data']
-        color = rgba_string_to_hex(user_info['color']) or '#000000'  # fallback на черный
+    for name, item_info in raw_data.items():
+        day_hours = item_info['data']
+        color = color_map.get(name, '#000000')
 
         if not day_hours:
             continue
@@ -415,9 +475,9 @@ def update_graph(project_id, year, month):
     fig = go.Figure(data=traces)
     fig.update_layout(
         font=dict(family="Rubik, sans-serif", size=14, color="black"),
-        title=f'{month_name_ru(month)} {year}',
-        xaxis=dict(title='', dtick=1, range=[0, 31]),
-        yaxis=dict(title='', range=[0, 12]),
+        title=f'{month_name_ru(month)} {year}' if year else 'Нет данных',
+        xaxis=dict(title='', dtick=1, range=[0, 31] if month else [0,12]),
+        yaxis=dict(title='', range=[0, 12] ) if month else dict(autorange=True, fixedrange=False),
         plot_bgcolor='#fff',
         paper_bgcolor='#fff',
         autosize=True,
@@ -435,7 +495,7 @@ def update_graph(project_id, year, month):
         ticks='outside', ticklen=5, tickwidth=2, tickcolor='#EBEBEB',
         showline=True, linewidth=2, linecolor='#EBEBEB', showgrid=True
     )
-    return fig
+    return fig, table_data, table_columns, style_header_conditional
 
 @cache.memoize()
 def get_raw_data_cached(page_current, page_size):

@@ -1,6 +1,6 @@
 from app import engine
 from sqlalchemy import text
-from utils import month_name_ru
+from utils import month_name_ru, rgba_string_to_hex
 import pandas as pd
 from datetime import date
 import os
@@ -66,6 +66,14 @@ def get_project_name(id):
     with engine.connect() as con:
         res = con.execute(
             text('SELECT name FROM lptv.project WHERE id = :id'),
+            {"id": id}
+        )
+        return res.scalar()
+
+def get_user_name(id):
+    with engine.connect() as con:
+        res = con.execute(
+            text('SELECT name FROM lptv.user WHERE id = :id'),
             {"id": id}
         )
         return res.scalar()
@@ -368,8 +376,8 @@ def get_graph_filters():
         options['month'] = [{'label': f"{month_name_ru(row[0])}", 'value': row[0]} for row in res.fetchall()]
 
         # Сотрудники
-        res = con.execute(text("SELECT DISTINCT u.name FROM main JOIN user u ON u.id = main.userId ORDER BY u.name"))
-        options['user'] = [{'label': row[0], 'value': row[0]} for row in res.fetchall()]
+        res = con.execute(text("SELECT DISTINCT u.name, u.id FROM main JOIN user u ON u.id = main.userId ORDER BY u.name"))
+        options['user'] = [{'label': row[0], 'value': row[1]} for row in res.fetchall()]
 
         # Проекты
         res = con.execute(text("SELECT DISTINCT p.name, p.id FROM main JOIN project p ON p.id = main.projectId ORDER BY p.name"))
@@ -424,11 +432,150 @@ def get_lines_users(project_id, month, year):
 
     return result
 
-def get_graph_data():
-    query = text(f"""
-        SELECT LEFT(u.name,LOCATE(' ',u.name) - 1) user, s.name stage, SUM(hours)  
-        FROM main m JOIN user u ON u.id = m.userId JOIN stage s on s.id = m.stageId
-        WHERE YEAR(m.dateStamp) = 2025 AND MONTH(m.dateStamp) = 7
-        AND m.projectId = 13
-        GROUP BY u.name, stage
+def get_lines_projects(user_id, month, year):
+    result = {}
+
+    where_clauses = ["userId = :user_id", "YEAR(dateStamp) = :year"]
+    params = {'user_id': user_id, 'year': year}
+
+    if month is not None:
+        where_clauses.append("MONTH(dateStamp) = :month")
+        params['month'] = month
+        group_by = "DAY(dateStamp)"
+        select_fields = "DAY(dateStamp) AS x, SUM(hours) AS hours"
+    else:
+        group_by = "MONTH(dateStamp)"
+        select_fields = "MONTH(dateStamp) AS x, SUM(hours) AS hours"
+
+    where_sql = " AND ".join(where_clauses)
+
+    with engine.connect() as con:
+        p_query = text(f"""
+            SELECT DISTINCT p.id AS project_id, p.name AS project_name
+            FROM main m
+            JOIN project p ON p.id = m.projectId
+            WHERE m.userId = :user_id AND YEAR(m.dateStamp) = :year
+            {"AND MONTH(m.dateStamp) = :month" if month else ""}
+        """)
+        prjs = con.execute(p_query, params).fetchall()
+
+        for prj in prjs:
+            prj_params = dict(params, project_id=prj.project_id)
+            data_query = text(f"""
+                SELECT {select_fields}
+                FROM main
+                WHERE {where_sql} AND projectId = :project_id
+                GROUP BY {group_by}
+                ORDER BY x
+            """)
+            rows = con.execute(data_query, prj_params).fetchall()
+            days_dict = {row.x: row.hours for row in rows}
+
+            result[prj.project_name] = {
+                'data': days_dict
+            }
+    return result
+
+
+def get_user_color_map(project_id):
+    query = text("""
+        SELECT DISTINCT LEFT(u.name, LOCATE(' ', u.name) - 1) AS user, u.color
+        FROM main m
+        JOIN user u ON u.id = m.userId
+        WHERE m.projectId = :project_id
     """)
+
+    with engine.connect() as con:
+        rows = con.execute(query, {"project_id": project_id}).fetchall()
+
+    # Собираем словарь
+    color_map = {row.user: rgba_string_to_hex(row.color) for row in rows if row.color}
+    # color_map["Σ"] = "#EAEAEA"  # для сумм
+
+    return color_map
+
+def get_graph_project_data(project_id, year, month=None):
+    all_stages = [
+        'ПОДГОТОВКА',
+        '3D ГРАФИКА',
+        'ЗАКАЗНЫЕ ПОЗИЦИИ',
+        'СМР',
+        'КОМПЛЕКТАЦИЯ',
+        'РЕАЛИЗАЦИЯ'
+    ]
+
+    query = text(f"""
+        SELECT u.name AS user, s.name AS stage, SUM(hours) AS hours  
+        FROM main m
+        JOIN user u ON u.id = m.userId
+        JOIN stage s ON s.id = m.stageId
+        WHERE YEAR(m.dateStamp) = :year
+        {f"AND MONTH(m.dateStamp) = :month" if month else ""}
+        AND m.projectId = :project_id
+        GROUP BY u.name, s.name
+    """)
+
+    params = {"year": year, "project_id": project_id}
+    if month:
+        params["month"] = month
+
+    with engine.connect() as con:
+        df = pd.read_sql(query, con, params=params)
+
+    if df.empty:
+        df = pd.DataFrame(columns=['stage', 'Сотрудник', 'Σ'])
+        columns = [{"name": col, "id": col} for col in df.columns]
+        return df.to_dict('records'), columns
+
+    pivot = df.pivot_table(index='stage', columns='user', values='hours', aggfunc='sum', fill_value=0)
+
+
+    for stage in all_stages:
+        if stage not in pivot.index:
+            pivot.loc[stage] = 0
+
+    pivot = pivot.loc[all_stages]
+
+    pivot['Σ'] = pivot.sum(axis=1)
+
+
+    total_row = pd.DataFrame(pivot.sum(axis=0)).T
+    total_row.index = ['Σ']
+    pivot = pd.concat([pivot, total_row])
+
+    final_df = pivot.reset_index()
+
+    columns = [{"name": col.partition(" ")[0], "id": col} for col in final_df.columns]
+    print(columns)
+    return final_df.to_dict('records'), columns
+
+def get_graph_user_data(user_id, year, month=None):
+    query = text(f"""
+            SELECT p.name AS project, SUM(hours) AS hours  
+            FROM main m
+            JOIN project p ON p.id = m.projectId
+            WHERE YEAR(m.dateStamp) = :year
+            {f"AND MONTH(m.dateStamp) = :month" if month else ""}
+            AND m.userId = :user_id
+            GROUP BY p.name
+        """)
+    params = {"year": year, "user_id": user_id}
+    if month:
+        params["month"] = month
+
+    with engine.connect() as con:
+        df = pd.read_sql(query, con, params=params)
+    if df.empty:
+        df = pd.DataFrame(columns=['Проект',])
+        columns = [{"name": col, "id": col} for col in df.columns]
+        return df.to_dict('records'), columns
+    df.rename(columns={'hours': 'Часы'}, inplace=True)
+
+    final_df = df.transpose()
+    final_df.columns = final_df.iloc[0]
+    final_df = final_df.drop(final_df.index[0])
+    final_df = final_df.reset_index()
+    print(final_df)
+    columns = [{"name": col[:9], "id": col} for col in final_df.columns]
+    print(columns)
+    return final_df.to_dict('records'), columns

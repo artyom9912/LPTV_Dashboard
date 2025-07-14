@@ -115,11 +115,11 @@ def display_page(prjBtn, calBtn, graphBtn, dbBtn, admBtn):
         # print(dbDF[0].shape)
         content = DATABASE()
     elif 'graphBtn' in changed_id:
-        content = GRAPHIC(13)
+        content = GRAPHIC(13, True)
     elif 'admBtn' in changed_id:
         content = ADMINPAGE()
     else:
-        content = GRAPHIC(13)
+        content = GRAPHIC()
     return content
 
 if __name__ == '__main__':
