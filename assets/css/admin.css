@@ -10,6 +10,10 @@
     display: block;
     margin-bottom: 14px;
 }
+#PrjName{
+    background-color: white;
+    border: 2px lightgray solid;
+}
 .short{
     width: 60px !important;
 }
@@ -41,7 +45,7 @@
     display: block;
     cursor: pointer;
 }
-
+.SingleDatePickerInput__withBorder{border: none !important;}
 .DateInput_input__focused{
     background-color: #d9d9d9;
 }

@@ -1,59 +1,82 @@
+/*.calendar{*/
+/*    font-family: "Noah Regular", monospace;*/
+/*    background-color: white;*/
+/*    box-shadow: 0 5px 13px #d2d2d2;*/
+/*    border-radius: 20px;*/
+/*    width: 680px;*/
+/*    height: 100%;*/
+/*    margin-top: 4px;*/
+/*    z-index: 5;*/
+/*    padding: 0;*/
+/*    */
+/*}*/
+/*.slice, .surface{*/
+/*    !*transition: all 0.05s ease-in-out !important;*!*/
+/*}*/
+/*.dash-cell, .dash-header{*/
+/*    !*border-radius: 25px;*!*/
+/*    width: 35px;*/
+/*}*/
+/*.endDate{*/
+/*    height: 52px;*/
+/*    width: 154px !important;*/
+/*    font-size: 19px;*/
+/*    text-align: center;*/
+/*    vertical-align: center;*/
+/*    line-height: 50px;*/
+/*}*/
+/*.calendar>td:hover{*/
+/*    background-color: white !important;*/
+/*}*/
+
+/*.calendar > * .dash-cell:hover{background-color: #eaeaea !important; cursor: pointer }*/
+/*.calendar > * .column-0:hover{ cursor: default }*/
+/*.dash-cell > * .input-active{text-align: center !important;}*/
+/*.SingleDatePickerInput {border: none !important;}*/
+/*!*.DateInput_input {*!*/
+/*!*    cursor: pointer !important;*!*/
+/*!*    text-align: center !important;*!*/
+/*!*    padding: 15px 5px 8px 0px;*!*/
+/*!*    height: 42px !important;*!*/
+/*!*    line-height: 0;*!*/
+
+/*!*}*!*/
+/*.DayPicker {box-shadow: 0 5px 10px rgba(0,0,0,0.3);}*/
+/*.nopad{padding: 5px 12px !important;}*/
+
+/*#AddProjectCal{*/
+/*    display: inline-block;*/
+/*    float: right;*/
+/*    margin-right: 10px;*/
+/*}*/
+/*#AddProjectCal .Select-control{*/
+/*    border: none !important;*/
+/*    background-color: #ffffff !important;*/
+/*    height: 42px;*/
+/*    border-radius: 12px;*/
+/*    box-shadow: 0 5px 13px #d2d2d2;*/
+/*    vertical-align: top !important;*/
+/*}*/
+
+.calendar-cell:hover{
+    background-color: #c5c5c5;
+}
+/*.calendar-cell{*/
+/*    background-color: #c5c5c5;*/
+/*}*/
+
 .calendar{
     font-family: "Noah Regular", monospace;
     background-color: white;
     box-shadow: 0 5px 13px #d2d2d2;
-    border-radius: 20px;
-    width: 680px;
-    height: 100%;
-    margin-top: 4px;
+    border-radius: 10px;
+    width: 95%;
+    max-width: 1200px;
+    max-height: calc(100vh - 380px);
+    height: fit-content;
     z-index: 5;
     padding: 0;
-    
-}
-.slice, .surface{
-    /*transition: all 0.05s ease-in-out !important;*/
-}
-.dash-cell, .dash-header{
-    /*border-radius: 25px;*/
-    width: 35px;
-}
-.endDate{
-    height: 52px;
-    width: 154px !important;
-    font-size: 19px;
-    text-align: center;
-    vertical-align: center;
-    line-height: 50px;
-}
-.calendar>td:hover{
-    background-color: white !important;
-}
-
-.calendar > * .dash-cell:hover{background-color: #eaeaea !important; cursor: pointer }
-.calendar > * .column-0:hover{ cursor: default }
-.dash-cell > * .input-active{text-align: center !important;}
-.SingleDatePickerInput {border: none !important;}
-/*.DateInput_input {*/
-/*    cursor: pointer !important;*/
-/*    text-align: center !important;*/
-/*    padding: 15px 5px 8px 0px;*/
-/*    height: 42px !important;*/
-/*    line-height: 0;*/
-
-/*}*/
-.DayPicker {box-shadow: 0 5px 10px rgba(0,0,0,0.3);}
-.nopad{padding: 5px 12px !important;}
-
-#AddProjectCal{
-    display: inline-block;
-    float: right;
-    margin-right: 10px;
-}
-#AddProjectCal .Select-control{
-    border: none !important;
-    background-color: #ffffff !important;
-    height: 42px;
-    border-radius: 12px;
-    box-shadow: 0 5px 13px #d2d2d2;
-    vertical-align: top !important;
+    transition: all 0.12s ease-in-out;
+    overflow: auto;
+    margin-bottom: 14px;
 }

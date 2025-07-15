@@ -8,6 +8,7 @@ import dash
 from view import LAYOUT, PROJECTDESK
 from view_specials import DATABASE, ADMINPAGE
 from view_analysis import GRAPHIC
+from view_calendar import CALENDAR
 from dash.dependencies import Input, Output
 from sqlalchemy import text
 import db
@@ -107,8 +108,8 @@ def display_page(prjBtn, calBtn, graphBtn, dbBtn, admBtn):
 
     if 'prjBtn' in changed_id:
         content = PROJECTDESK()
-    # elif 'calBtn' in changed_id:
-    #     content = CALENDAR()
+    elif 'calBtn' in changed_id:
+        content = CALENDAR()
     elif 'dbBtn' in changed_id:
         # JOIN для отображения бд
         # getData()
@@ -119,7 +120,7 @@ def display_page(prjBtn, calBtn, graphBtn, dbBtn, admBtn):
     elif 'admBtn' in changed_id:
         content = ADMINPAGE()
     else:
-        content = GRAPHIC()
+        content = CALENDAR()
     return content
 
 if __name__ == '__main__':

@@ -282,12 +282,12 @@ body {
 #ProjectFilterGraph .Select-value{
     padding-right: 18px !important;
 }
-#UserFilterGraph {
+#FilterGraph {
     border: 2px #989898 solid;
     border-radius: 6px;
 
 }
-#UserFilterGraph .Select-control{
+#FilterGraph .Select-control{
     background-color: white !important;
 }
 .graph{

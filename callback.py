@@ -373,6 +373,46 @@ def show_confirm(n_clicks):
 #
 #     return dash.no_update
 
+
+@appDash.callback(
+    Output("filled-cells", "data"),
+    Input({"type": "calendar-cell", "stage": ALL, "hour": ALL, "day": ALL}, "n_clicks"),
+    prevent_initial_call=True
+)
+def update_single_cell(n_clicks_list):
+    triggered = callback_context.triggered_id
+    if not triggered:
+        return dash.no_update
+
+    all_stages = [
+        'ПОДГОТОВКА',
+        '3D ГРАФИКА',
+        'ЗАКАЗНЫЕ ПОЗИЦИИ',
+        'СМР',
+        'КОМПЛЕКТАЦИЯ',
+        'РЕАЛИЗАЦИЯ'
+    ]
+
+    # Формируем одно значение
+    return {
+        "stage": all_stages.index(triggered["stage"])+1,
+        "hour": triggered["hour"],
+        "day": triggered["day"]
+    }
+
+
+@appDash.callback(
+    Output("selected-cells", "children"),
+    Input("filled-cells", "data")
+)
+def display_current_cell(data):
+    if not data:
+        return "Нет выбранной ячейки"
+
+    return f"{data['stage']} — День {data['day']}, Час {data['hour']}"
+
+
+
 @appDash.callback(
     Output('BigTitle','children'),
     Input('FilterGraph', 'value'),
@@ -739,7 +779,8 @@ def RenderModal(tab, row, clickE, clickA, clickS, clickD):
                                 display_format='YYYY-MM-DD',
                                 placeholder='Дата дедлайна',
                                 style={'text-align': 'left'},
-                                date=stage_data[i][2]
+                                date=stage_data[i][2],
+
                             )
                         ], width=6),
                         dbc.Col([
