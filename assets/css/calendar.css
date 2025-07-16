@@ -59,16 +59,23 @@
 /*}*/
 
 .calendar-cell:hover{
-    background-color: #c5c5c5;
+    transition: background-color 0ms ease !important;
+    background-color: #c5c5c5 !important;
+    -webkit-transition: .0s background-color;
+    -moz-transition: .0s background-color;
 }
-/*.calendar-cell{*/
-/*    background-color: #c5c5c5;*/
-/*}*/
+.calendar-cell:active{
+    background-color: #a1a1a1 !important;
+}
+.calendar-cell{
+    transition: all 0.06s ease-in;
+    user-select: none;
+}
 
 .calendar{
     font-family: "Noah Regular", monospace;
     background-color: white;
-    box-shadow: 0 5px 13px #d2d2d2;
+    box-shadow: 0 5px 13px #bdbdbd;
     border-radius: 10px;
     width: 95%;
     max-width: 1200px;

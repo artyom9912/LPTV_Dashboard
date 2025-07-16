@@ -7,6 +7,7 @@ from dash.dependencies import Input, Output, State, ALL, MATCH
 import db
 from app import appDash, cache
 import dash
+from view_calendar import render_table, create_stage_block, stages, all_stages
 from utils import get_user_picture, rgba_string_to_hex, hex_to_rgba01, month_name_ru
 from time import sleep
 from dash import html
@@ -373,45 +374,78 @@ def show_confirm(n_clicks):
 #
 #     return dash.no_update
 
-
 @appDash.callback(
-    Output("filled-cells", "data"),
-    Input({"type": "calendar-cell", "stage": ALL, "hour": ALL, "day": ALL}, "n_clicks"),
+    Output({"type": "stage-block", "stage": MATCH}, "children"),
+    Input({"type": "calendar-cell", "stage": MATCH, "hour": ALL, "day": ALL}, "n_clicks"),
+    State({"type": "stage-block", "stage": MATCH}, "id"),
     prevent_initial_call=True
 )
-def update_single_cell(n_clicks_list):
+def update_stage_block(n_clicks_list, stage_id):
+    # triggered = callback_context.triggered_id
+    stage_index = all_stages.index(stage_id["stage"])
+    stage_name, rows = stage_id["stage"], 12
+
+
+    # Можно получить ID нажатой клетки через callback_context
     triggered = callback_context.triggered_id
+
     if not triggered:
         return dash.no_update
 
-    all_stages = [
-        'ПОДГОТОВКА',
-        '3D ГРАФИКА',
-        'ЗАКАЗНЫЕ ПОЗИЦИИ',
-        'СМР',
-        'КОМПЛЕКТАЦИЯ',
-        'РЕАЛИЗАЦИЯ'
-    ]
-
-    # Формируем одно значение
-    return {
-        "stage": all_stages.index(triggered["stage"])+1,
+    selected = {
+        "stage": stage_name,
         "hour": triggered["hour"],
-        "day": triggered["day"]
+        "day": triggered["day"],
+        "color": rgba_string_to_hex(flask_login.current_user.color)
     }
+    print(selected)
+
+    return create_stage_block(stage_name, rows, selected_data=selected)
+
+# @appDash.callback(
+#     Output("filled-cells", "data"),
+#     Input({"type": "calendar-cell", "stage": ALL, "hour": ALL, "day": ALL}, "n_clicks"),
+#     State("filled-cells", "data"),
+#     prevent_initial_call=True
+# )
+# def update_single_cell(n_clicks_list, prev_data):
+#
+#     ctx = callback_context
+#     triggered = ctx.triggered_id
+#
+#
+#     if not triggered:
+#         return dash.no_update
+#
+#     # Обновляем данные
+#     return {
+#         "stage": triggered["stage"],
+#         "hour": triggered["hour"],
+#         "day": triggered["day"],
+#         "color": rgba_string_to_hex(flask_login.current_user.color)
+#     }
 
 
 @appDash.callback(
     Output("selected-cells", "children"),
-    Input("filled-cells", "data")
+    Input("filled-cells", "data"),
+    prevent_initial_call=True
 )
 def display_current_cell(data):
+    print(data)
     if not data:
         return "Нет выбранной ячейки"
 
     return f"{data['stage']} — День {data['day']}, Час {data['hour']}"
 
-
+@appDash.callback(
+    Output('Calendar', 'children'),
+    Input('filled-cells', 'data'),
+    prevent_initial_call=True
+)
+def update_table(selected_data):
+    print(selected_data)
+    return render_table(selected_data)
 
 @appDash.callback(
     Output('BigTitle','children'),

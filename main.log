@@ -118,3 +118,9 @@ Traceback (most recent call last):
     return user.name, 'Администратор' if user.admin == 1 else 'Сотрудник', get_user_picture(db.get_user_login(user.name))
            ^^^^^^^^^
 AttributeError: 'AnonymousUserMixin' object has no attribute 'name'
+2025-07-15 22:22:46,061 - ERROR - Ошибка в SetUser: 'AnonymousUserMixin' object has no attribute 'name'
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 40, in SetUser
+    return user.name, 'Администратор' if user.admin == 1 else 'Сотрудник', get_user_picture(db.get_user_login(user.name))
+           ^^^^^^^^^
+AttributeError: 'AnonymousUserMixin' object has no attribute 'name'
