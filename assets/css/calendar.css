@@ -60,15 +60,16 @@
 
 .calendar-cell:hover{
     transition: background-color 0ms ease !important;
-    background-color: #c5c5c5 !important;
+    background: #c5c5c5 !important;
     -webkit-transition: .0s background-color;
     -moz-transition: .0s background-color;
+    color: white !important;
 }
 .calendar-cell:active{
-    background-color: #a1a1a1 !important;
+    background: #a1a1a1 !important;
 }
 .calendar-cell{
-    transition: background-color 0.03s ease-in;
+    transition: background 0.03s ease-in;
     user-select: none;
 }
 
@@ -81,6 +82,7 @@
 
     max-width: 1200px;
     max-height: inherit;
+    min-height: 200px;
     height: fit-content;
     z-index: 5;
     padding: 0;
@@ -89,6 +91,6 @@
     margin-bottom: 14px;
 }
 #Calendar{
-    max-height: calc(100vh - 390px);
+    max-height: calc(100vh - 358px);
     overflow-y: scroll;
 }

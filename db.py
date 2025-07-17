@@ -631,14 +631,15 @@ def get_user_work_data(project_id, year, month,stage=None):
             u.color AS color,
             DAY(m.dateStamp) AS day,
             m.hours AS hours,
-            s.name AS stage
+            s.name AS stage,
+            projectId
         FROM main m
         JOIN user u ON u.id = m.userId
         JOIN stage s ON s.id = m.stageId
         WHERE m.projectId = :project_id
           AND YEAR(m.dateStamp) = :year
           AND MONTH(m.dateStamp) = :month
-          {'AND stageId = :stage_id' if stage else ''}
+          {'AND s.name = :stage' if stage else ''}
         ORDER BY stageId, user_id, day 
     """)
 
@@ -647,7 +648,7 @@ def get_user_work_data(project_id, year, month,stage=None):
         "year": year,
         "month": month,
     }
-    if stage: params['stage_id'] = stage
+    if stage: params['stage'] = stage
 
     with engine.connect() as conn:
         result = conn.execute(query, params)
@@ -660,7 +661,9 @@ def get_user_work_data(project_id, year, month,stage=None):
             "color": rgba_string_to_hex(row.color),
             "day": row.day,
             "hours": row.hours,
-            "stage": row.stage
+            "stage": row.stage,
+            "project_id": row.projectId,
+
         }
         for row in rows
     ]
