@@ -20,7 +20,16 @@ def get_user_info(user_id):
             {"user_id": user_id}
         )
         return res.fetchone()
-
+def get_user_color(name):
+    with engine.connect() as con:
+        res = con.execute(
+            text('SELECT color FROM lptv.user WHERE relevant = 1 AND username LIKE :name'),
+            {"name": name}
+        )
+        if res.scalar():
+            return rgba_string_to_hex(res.scalar())
+        else:
+            return 'rgba(1,1,1,0)'
 
 def get_user(username):
     with engine.connect() as con:

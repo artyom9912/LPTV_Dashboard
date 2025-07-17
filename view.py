@@ -2,12 +2,13 @@ import datetime
 from dash import dcc
 import dash_bootstrap_components as dbc
 from dash import html
+import flask_login
 from dash import dash_table
 from datetime import date
 import plotly.graph_objects as go
 import pandas as pd
 import db
-from utils import get_user_picture
+from utils import get_user_picture, rgba_string_to_hex
 from view_specials import DATABASE
 from app import  engine
 
@@ -35,7 +36,7 @@ def GetDayName(name):
         return 'ВС'
 
 
-def LAYOUT(username, role):
+def LAYOUT(username, role, color):
     layout = html.Div([dcc.Location(id='url', refresh=False),
                        dbc.Row([
                            html.Div([

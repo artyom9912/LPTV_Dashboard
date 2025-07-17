@@ -71,13 +71,19 @@ def unathor():
     return redirect('/loginpage')
 
 #------------DASH---------------
-appDash.layout = LAYOUT('Артём Тюбаев','')
+appDash.layout = LAYOUT('Анна Бурлака','','1, 1, 1, 0')
 appDash.title = 'LPTV'
-@app.route('/dash')
-@flask_login.login_required
-def projectDesk():
-    appDash.layout = LAYOUT(flask_login.current_user.name, '')
-    return appDash.run(debug=True)
+@app.before_request
+def restrict_dash():
+    if request.path.startswith('/dash') and not flask_login.current_user.is_authenticated:
+        return redirect('/loginpage')
+# @app.route('/dash')
+# @flask_login.login_required
+# def projectDesk():
+#     # appDash.layout = LAYOUT(flask_login.current_user.name, '', flask_login.current_user.color)
+#     appDash.layout = dash.html.Div('HELLO')
+#     print(flask_login.current_user.color)
+#     return appDash.run(debug=True)
 
 # @cache.memoize()
 # def getData():

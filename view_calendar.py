@@ -1,7 +1,9 @@
+import flask_login
 from dash import dcc
 import dash_bootstrap_components as dbc
 from dash import html
 from datetime import datetime
+from utils import rgba_string_to_hex
 from dash import dash_table
 from app import cache
 import db
@@ -59,7 +61,7 @@ def render_table_div(selected_data=None):
                     "display": "flex", "justifyContent": "center", "alignItems": "center",
                     "min-width": f"{30 * len(days)}px",
                     "font-weight": "500", "font-size": "14px",
-                    "border": "0px solid #ccc", "background-color": "#f7e96c",
+                    "border": "0px solid #ccc", "background-color": rgba_string_to_hex(flask_login.current_user.color),
                     "padding": "4px", "text-align": "center",
                     "height": "30px"
                 }),

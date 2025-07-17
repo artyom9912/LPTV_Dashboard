@@ -35,12 +35,13 @@ def success_emoji():
     Output('USER', 'children'),
     Output('ROLE', 'children'),
     Output('UserPic', 'src'),
+    Output('UserPic', 'style'),
     Input('content', 'children')
 )
 def SetUser(style):
     try:
         user = flask_login.current_user
-        return user.name, 'Администратор' if user.admin == 1 else 'Сотрудник', get_user_picture(db.get_user_login(user.name))
+        return user.name, 'Администратор' if user.admin == 1 else 'Сотрудник', get_user_picture(db.get_user_login(user.name)), {'border':f'{rgba_string_to_hex(user.color)} 3px solid'}
     except Exception as e:
         logger.exception("Ошибка в SetUser: %s", str(e))
         return dash.no_update
