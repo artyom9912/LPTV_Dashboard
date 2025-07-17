@@ -11,18 +11,14 @@ HOURS = list(range(1, 13))
 days = list(range(1, 32))
 
 user_work_data = [
+    {"user_id": 6, "color": "#ADD8E6", "day": 14, "hours": 7, "stage": "ПОДГОТОВКА"},
     {"user_id": 6, "color": "#ADD8E6", "day": 15, "hours": 7, "stage": "ПОДГОТОВКА"},
     {"user_id": 6, "color": "#ADD8E6", "day": 16, "hours": 5, "stage": "ПОДГОТОВКА"},
+    {"user_id": 6, "color": "#ADD8E6", "day": 17, "hours": 2, "stage": "ПОДГОТОВКА"},
+    {"user_id": 2, "color": "#E083B9", "day": 3, "hours": 2, "stage": "ПОДГОТОВКА"},
+    {"user_id": 2, "color": "#E083B9", "day": 4, "hours": 4, "stage": "ПОДГОТОВКА"},
 ]
 
-stages = [
-    ("ПОДГОТОВКА", 12),
-    ("3D ГРАФИКА", 12),
-    ("ЗАКАЗНЫЕ ПОЗИЦИИ", 12),
-    ("СМР", 12),
-    ("КОМПЛЕКТАЦИЯ", 12),
-    ("РЕАЛИЗАЦИЯ", 12)
-]
 all_stages = [
         'ПОДГОТОВКА',
         '3D ГРАФИКА',
@@ -31,137 +27,180 @@ all_stages = [
         'КОМПЛЕКТАЦИЯ',
         'РЕАЛИЗАЦИЯ'
     ]
-def render_cell(stage_name, hour, day, selected_data=None):
-    cell_style = {
-        "cursor": "pointer",
-        "color": "white",
-        "border": "1px solid #F5F5F5",
-        "text-align": "center",
-        "font-size": "12px",
-        "font-weight": "600",
-        "min-width": "30px"
-    }
 
-    # 1. Из БД
-    for record in user_work_data:
-        if (
-            record["stage"] == stage_name and
-            record["day"] == day and
-            hour <= record["hours"]
-        ):
-            if hour == record["hours"]:
-                cell_style["border-radius"] = '0 0 10px 10px'
-            cell_style["background-color"] = record["color"]
-            cell_style["border"] = '1px rgba(255,255,255,0.18) solid'
-            cell_style["color"] = record["color"]
+def render_table_div(selected_data=None):
+    def render_header():
+        return html.Div([
+            # ЧАСЫ (растянут на 2 строки)
+            html.Div("ЧАСЫ", style={
+                "min-width": "52px", "font-weight": "400", "font-size": "12px",
+                "border-right": "0px solid #ccc", "background-color": "#F7F7F7","border-bottom": "1px solid #ccc",
+                "padding": "4px", "text-align": "center",
+                "display": "flex", "alignItems": "center", "justifyContent": "center",
+                "flexDirection": "column",
+                "height": "60px"  # высота, соответствующая 2 строкам
+            }),
 
-    # 2. Выделение по текущему клику
-    if selected_data:
-        if (
-            selected_data.get("stage") == stage_name and
-            selected_data.get("day") == day and
-            hour <= selected_data.get("hour")
-        ):
-            if hour == selected_data.get("hour"):
-                cell_style["border-radius"] = '0 0 10px 10px'
-            cell_style["background-color"] = selected_data.get("color")
-            cell_style["border"] = '1px rgba(255,255,255,0.18) solid'
-            cell_style["color"] = selected_data.get("color")
+            # ЭТАП (тоже растянут на 2 строки)
+            html.Div("ЭТАП", style={
+                "min-width": "120px", "font-weight": "400", "font-size": "12px",
+                "border-right": "2px solid #ccc", "border-left": "2px solid #ccc","border-bottom": "1px solid #ccc",
+                "background-color": "white",
+                "padding": "4px", "text-align": "center",
+                "display": "flex", "alignItems": "center", "justifyContent": "center",
+                "flexDirection": "column",
+                "height": "60px"
+            }),
 
-    return html.Td(
-        str(hour),
-        id={
-            "type": "calendar-cell",
-            "stage": stage_name,
-            "hour": hour,
-            "day": day
-        },
-        className="calendar-cell",
-        n_clicks=0,
-        style=cell_style
-    )
+            # Блок с МЕСЯЦЕМ и ДНЯМИ
+            html.Div([
+                # Первая строка: месяц
+                html.Div("ИЮЛЬ", style={
+                    "display": "flex", "justifyContent": "center", "alignItems": "center",
+                    "min-width": f"{30 * len(days)}px",
+                    "font-weight": "500", "font-size": "14px",
+                    "border": "0px solid #ccc", "background-color": "#f7e96c",
+                    "padding": "4px", "text-align": "center",
+                    "height": "30px"
+                }),
 
+                # Вторая строка: дни
+                html.Div([
+                    *[
+                        html.Div(str(day), style={
+                            "min-width": "30px", "font-weight": "400", "font-size": "12px",
+                            "border": "1px solid #EDEDED","border-bottom": "1px solid #ccc",
+                            "background-color": "white",
+                            "text-align": "center", "padding": "4px",
+                            "height": "30px"
+                        }) for day in days
+                    ]
+                ], style={"display": "flex", "flex-direction": "row"})
+            ], style={
+                "display": "flex", "flex-direction": "column"
+            })
+        ], style={
+            "display": "flex", "flex-direction": "row",
+            "position": "sticky",
+            "top": "0",
+            "zIndex": "1000",
+            "backgroundColor": "white",
+            "boxShadow": "0 2px 3px rgba(0,0,0,0.1)"
+        })
 
+    def render_stage_block_columnwise(stage_name, rows=12, selected_data=None):
+        user_work_data = db.get_user_work_data(13, 2025, 7)
+        # Часы колонка
+        hours_col = html.Div([
+            html.Div(str(h+1), style={
+                "height": "24px", "border": "solid #EDEDED", "border-width": "0px 0px 1px 0px",
+                "text-align": "center", "font-size": "12px",
+                "background-color": "#F7F7F7","min-width": "52px"
+            }) for h in range(rows)
+        ], style={"width": "52px"})
 
+        # Этап колонка (одна ячейка на весь блок)
+        stage_col = html.Div([
+            html.Div(stage_name, style={
+                "height": f"{24 * rows}px", "border-right": "2px solid #ccc", "border-left": "2px solid #ccc",
+                "text-align": "center", "font-size": "12px","align-content":"center",
+                "width": "120px", "background-size": "cover","min-width": "120px",
+                "background-image": f"url('assets/img/background{all_stages.index(stage_name)+1}.png')"
+            })
+        ], style={"min-width": "120px"})
 
-def create_stage_block(stage_name, rows, selected_data=None):
-    return [
-        html.Tr([
-            html.Td(row + 1, style={
-                "border": "1px solid #EEEEEE",
-                "background-color": "#F7F7F7",
-                "border-left": "0",
-                "text-align": "center",
-                "font-size": "12px"
-            }) if col == 0 else
-            html.Td(stage_name, rowSpan=rows, style={
-                "border": "2px solid #ccc",
-                "text-align": "center",
-                "font-size": "12px",
-                "max-width": "105px",
-                "background-image": f"url('assets/img/background{all_stages.index(stage_name)+1}.png')",
-                "background-size": "cover",
-            }) if col == 1 and row == 0 else
-            render_cell(stage_name, row + 1, col - 2 + 1, selected_data) if col >= 2 else
-            None
-            for col in range(2 + len(days))
-        ])
-        for row in range(rows)
-    ]
+        # Каждая колонка дня (1..31)
+        day_cols = []
+        for day in days:
+            cells = []
+            for hour in range(1, rows + 1):
+                style = {
+                    "height": "24px", "border": "0.5px solid #F7F7F7",
+                    "text-align": "center", "cursor": "pointer",
+                    "font-size": "12px", "font-weight": "600", "color":"white"
+                }
+                # Базовая окраска из базы
+                for i, record in enumerate(user_work_data):
+                    if record["stage"] == stage_name and record["day"] == day and hour <= record["hours"]:
+                        style["background-color"] = record["color"]
+                        style["color"] = record["color"]
+                        style["border"] = "1px rgba(255,255,255,0.10) solid"
+                        if hour == record["hours"]:
+                            left_rounded = True
+                            right_rounded = True
+                            # Проверка предыдущей записи (если есть)
+                            if i > 0:
+                                prev = user_work_data[i - 1]
+                                if (
+                                        prev["user_id"] == record["user_id"] and prev["stage"] == record["stage"] and
+                                        prev["day"] == record["day"] - 1 and prev["hours"] >= record["hours"]
+                                ):
+                                    left_rounded = False
 
+                            # Проверка следующей записи (если есть)
+                            if i < len(user_work_data) - 1:
+                                next_ = user_work_data[i + 1]
+                                if ( next_["user_id"] == record["user_id"] and next_["stage"] == record["stage"] and
+                                     next_["day"] == record["day"] + 1 and next_["hours"] >= record["hours"]
+                                ):
+                                    right_rounded = False
+                            radius = f"0 0 {'8px' if right_rounded else '0'} {'8px' if left_rounded else '0'}"
+                            style["border-radius"] = radius
 
+                # Выделение через Store
+                # if selected_data and selected_data.get("stage") == stage_name and selected_data.get("day") == day and hour <= selected_data.get("hour"):
+                #     style["background-color"] = selected_data.get("color")
+                #     style["color"] = selected_data.get("color")
+                #     style["border"] = "1px rgba(255,255,255,0.18) solid"
+                #     if hour == selected_data.get("hour"):
+                #         style["border-radius"] = "0 0 8px 8px"
 
-
-def render_table(selected_data=None):
-    content= html.Div([
-        html.Table([
-            # Заголовок таблицы
-            html.Thead([
-                html.Tr([
-                    html.Th("ЧАСЫ", rowSpan=2,
-                            style={"border": "1 solid #ccc", "border-radius": "12px 0 0 0", "text-align": "center",
-                                   "border-top": "0",
-                                   "background-color": "#F7F7F7", "font-size": "12px", "font-weight": "500", }),
-                    html.Th("ЭТАП", rowSpan=2,
-                            style={"border": "2px solid #ccc", "background-color": "", "font-size": "12px",
-                                   "border-top": "0",
-                                   "font-weight": "500", "text-align": "center", }),
-                    html.Th("ИЮЛЬ", colSpan=len(days),
-                            style={"border": "1px solid #ccc", "background-color": "#f7e96c", "text-align": "center",
-                                   "border-top": "0", "border-bottom": "0",
-                                   "font-size": "14px", "font-weight": "500", "padding": "4px 2px", })
-                ]),
-                html.Tr([
-                    html.Th(day, style={"border": "1px solid #ccc", "text-align": "center", "border-top": "0",
-                                        "font-size": "12px", "font-weight": "500", "min-width": "30px", }) for day in
-                    days
-                ], )
-            ], style={"position": "sticky", "top": "0", "zIndex": 2, "border-bottom": "2px solid #ccc",
-                      "background-color": "white", "box-shadow": "inset 0 -1px 0 #ccc", "user-select":"none"}),
-            # Секции по этапам
-            *[
-                html.Tbody(
-                    id={"type": "stage-block", "stage": all_stages[i]},
-                    children=create_stage_block(name, rows, selected_data),
-                    style={"border": "2px solid #ccc", "border-left": "0"}
+                cells.append(
+                    html.Div(
+                        str(hour),
+                        id={"type": "calendar-cell", "stage": stage_name, "hour": hour, "day": day},
+                        n_clicks=0,
+                        style=style,
+                        className='calendar-cell'
+                    )
                 )
-                for i, (name, rows) in enumerate(stages)
-            ]
-        ], style={"width": "100%", "border-collapse": "collapse", "border-spacing": "0px", })
-    ])
-    print("calendar prepared")
-    return content
+            day_cols.append(
+                html.Div(cells, style={
+                    "display": "flex", "flex-direction": "column",
+                    "min-width": "30px"
+                }, id={"type": "day-block", "stage": stage_name, "day": day})
+            )
 
+        return html.Div([
+            hours_col, stage_col, *day_cols
+        ], style={"display": "flex", "flex-direction": "row","border_bottom":"2px solid"})
+
+    return html.Div([
+        render_header(),
+        *sum([
+            [
+                render_stage_block_columnwise(name, 12, selected_data),
+                html.Div(style={
+                    "width": "100%",
+                    "height": "2px",  # или сколько нужно
+                    "backgroundColor": "#ccc"  # светло-серый цвет
+                })
+            ] for name in all_stages
+        ], [])[:-1]
+    ], style={"display": "flex", "flex-direction": "column", "gap": "0"})
 
 def CALENDAR():
     today = datetime.today()
     content = html.Div([
         dcc.Store(id='filled-cells', data={}),
         html.Div('КАЛЕНДАРНЫЙ ОТЧЁТ', className='name'),
+        html.Div([
+            html.Div([], id='popupCal',)
+        ], id='popupBoxCal', ),
 
         html.Div([
             # dcc.Loading([
-                html.Div(render_table(), id='Calendar'),
+                html.Div(render_table_div(), id='Calendar',),
 
             # ], color='grey', type='circle'),
         ], className='line calendar'),
@@ -171,14 +210,14 @@ def CALENDAR():
 
                 dbc.Row([
                     dbc.Col([
-                    dcc.Dropdown(id='ProjectFilter',placeholder='Проект',
-                                 options=[]),
-                    dcc.Dropdown(id='StageFilter',placeholder='Этап',
-                                 options=[]),
-                    dcc.Dropdown(id='YearFilterGraph', placeholder='Год',
-                                 options=[], value=today.year, clearable=False),
-                    dcc.Dropdown(id='MonthFilterGraph', placeholder='Месяц',
-                                 options=[], value=today.month),
+                    dcc.Dropdown(id='ProjectFilterCal',placeholder='Проект',
+                                 options=[{'label':'АЗЕРБАЙДЖАНСКИЕ ИСТОРИИ', 'value':13}], value=13, clearable=False),
+                    dcc.Dropdown(id='StageFilterCal',placeholder='Этап',
+                                 options = [{'label': stage, 'value': i + 1} for i, stage in enumerate(all_stages)]+[{'label':'[Все этапы]', 'value':0}],value=0,clearable=False ),
+                    dcc.Dropdown(id='YearFilterCal', placeholder='Год',
+                                 options=[{'label':'2025', 'value':2025}], value=today.year, clearable=False),
+                    dcc.Dropdown(id='MonthFilterCal', placeholder='Месяц',
+                                 options=[{'label':'Июль', 'value':7}], value=today.month, clearable=False),
                     ]),
                 ]),
         ], className='cloud', style={'margin-bottom':'0', 'padding-bottom':'14px', 'min-width':'260px'}),

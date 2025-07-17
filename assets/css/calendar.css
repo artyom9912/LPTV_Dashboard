@@ -68,7 +68,7 @@
     background-color: #a1a1a1 !important;
 }
 .calendar-cell{
-    transition: all 0.06s ease-in;
+    transition: background-color 0.03s ease-in;
     user-select: none;
 }
 
@@ -77,13 +77,18 @@
     background-color: white;
     box-shadow: 0 5px 13px #bdbdbd;
     border-radius: 10px;
-    width: 95%;
+    width: fit-content;
+
     max-width: 1200px;
-    max-height: calc(100vh - 380px);
+    max-height: inherit;
     height: fit-content;
     z-index: 5;
     padding: 0;
     transition: all 0.12s ease-in-out;
     overflow: auto;
     margin-bottom: 14px;
+}
+#Calendar{
+    max-height: calc(100vh - 390px);
+    overflow-y: scroll;
 }

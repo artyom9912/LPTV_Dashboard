@@ -130,9 +130,10 @@
     color: black;
     position: absolute;
     right: 40px;
+    top: 110px;
     font-family: Rubik, monospace !important;
     border-radius: 18px !important;
-    padding: 9px 30px 9px 48px !important;
+    padding: 9px 30px 9px 58px !important;
     width: fit-content !important;
     visibility: visible;
     opacity: 0;
@@ -140,6 +141,7 @@
     /*animation-iteration-count: 1;*/
     animation: popup 1.5s ease 1;
     animation-fill-mode: forwards;
+    overflow: clip;
 }
 .delete, .submit {
     font-family: "Golos Text", sans-serif !important;
@@ -173,10 +175,10 @@
     left: 5px;
 }
 .emoji{
-    font-size: 38px !important;
+    font-size: 34px !important;
     line-height: 25px;
     color: rgba(255, 255, 255, 1) !important;
-    left: -9px;
+    left: 0px;
 }
 @keyframes popup {
     0%{right:20px; opacity: 0}

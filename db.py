@@ -2,7 +2,7 @@ from app import engine
 from sqlalchemy import text
 from utils import month_name_ru, rgba_string_to_hex
 import pandas as pd
-from datetime import date
+from datetime import date, timedelta
 import os
 
 
@@ -579,3 +579,81 @@ def get_graph_user_data(user_id, year, month=None):
     columns = [{"name": col[:9], "id": col} for col in final_df.columns]
     print(columns)
     return final_df.to_dict('records'), columns
+
+
+# def get_project_id(name):
+#     with engine.connect() as con:
+#         res = con.execute(text(f"""
+#             SELECT id FROM project WHERE name = :pname
+#         """), {"pname":name})
+#         return res.scalar()
+def is_contiguous(user_id, project_id, stage_id, year, month, day, hour):
+    current_date = date(year, month, day)
+    left_date = (current_date - timedelta(days=1)).isoformat()
+    right_date = (current_date + timedelta(days=1)).isoformat()
+
+    query = text("""
+        SELECT 1
+        FROM main
+        WHERE userId = :user_id
+          AND projectId = :project_id
+          AND stageId = :stage_id
+          AND dateStamp = :date
+          AND hours >= :hour
+        LIMIT 1
+    """)
+
+
+    with engine.connect() as con:
+        left = con.scalar(query, {
+            "user_id": user_id, "project_id": project_id, "stage_id": stage_id,
+            "date": left_date, "hour": hour
+        })
+        right = con.scalar(query, {
+            "user_id": user_id, "project_id": project_id, "stage_id": stage_id,
+            "date": right_date, "hour": hour
+        })
+    return bool(left), bool(right)
+
+def get_user_work_data(project_id, year, month,stage=None):
+    query = text(f"""
+        SELECT 
+            m.userId AS user_id,
+            u.color AS color,
+            DAY(m.dateStamp) AS day,
+            m.hours AS hours,
+            s.name AS stage
+        FROM main m
+        JOIN user u ON u.id = m.userId
+        JOIN stage s ON s.id = m.stageId
+        WHERE m.projectId = :project_id
+          AND YEAR(m.dateStamp) = :year
+          AND MONTH(m.dateStamp) = :month
+          {'AND stageId = :stage_id' if stage else ''}
+        ORDER BY stageId, user_id, day 
+    """)
+
+    params = {
+        "project_id": project_id,
+        "year": year,
+        "month": month,
+    }
+    if stage: params['stage_id'] = stage
+
+    with engine.connect() as conn:
+        result = conn.execute(query, params)
+        rows = result.fetchall()
+
+    # Преобразуем результат в список словарей
+    user_work_data = [
+        {
+            "user_id": row.user_id,
+            "color": rgba_string_to_hex(row.color),
+            "day": row.day,
+            "hours": row.hours,
+            "stage": row.stage
+        }
+        for row in rows
+    ]
+
+    return user_work_data

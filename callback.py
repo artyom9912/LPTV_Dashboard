@@ -7,7 +7,7 @@ from dash.dependencies import Input, Output, State, ALL, MATCH
 import db
 from app import appDash, cache
 import dash
-from view_calendar import render_table, create_stage_block, stages, all_stages
+from view_calendar import all_stages
 from utils import get_user_picture, rgba_string_to_hex, hex_to_rgba01, month_name_ru
 from time import sleep
 from dash import html
@@ -15,6 +15,7 @@ from datetime import date
 from logger import logger
 import traceback
 import sys
+import random
 import plotly.graph_objects as go
 import flask_login
 from datatables import UsersTable, ProjectsTable, to_css_rgba
@@ -26,7 +27,9 @@ from dash.exceptions import PreventUpdate
 # WEEK_NUMBERS = dict(zip(WEEKDAYS, range(0, 7)))
 CACHE = {}
 
-
+def success_emoji():
+    emojis = ["😎", "🥰", "😄", "🥳"]
+    return random.choice(emojis)
 
 @appDash.callback(
     Output('USER', 'children'),
@@ -116,7 +119,7 @@ def highlight_selected_card(selected_id, all_ids):
         for id_ in all_ids
     ]
 
-@cache.memoize()
+
 @appDash.callback(
     Output('MonthFilter', 'disabled'),
     Output('DayFilter', 'disabled'),
@@ -373,58 +376,89 @@ def show_confirm(n_clicks):
 #     calendar_cache.append(query)
 #
 #     return dash.no_update
+def create_day_column(stage_name, day, rows, year,month, project_id, selected_data=None ):
+    cells = []
+    for hour in range(1, rows + 1):
+        style = {
+            "height": "24px", "border": "1px solid #F7F7F7",
+            "text-align": "center", "cursor": "pointer",
+            "font-size": "12px", "font-weight": "600", "color": "white"
+        }
 
+        if selected_data and selected_data.get("stage") == stage_name and selected_data.get(
+                "day") == day and hour <= selected_data.get("hour"):
+            if hour == selected_data.get("hour"):
+                # left, right = db.is_contiguous(flask_login.current_user.id, project_id, all_stages.index(stage_name)+1, year, month,day, selected_data.get("hour"))
+                # style["border-radius"] = f"0 0 {'0px' if right else '8px'} {'0px' if left else '8px'}"
+                style["border-radius"] = f"0 0 8px 8px"
+            style["background-color"] = selected_data.get("color")
+            style["color"] = selected_data.get("color")
+            style["border"] = "1px rgba(255,255,255,0.18) solid"
+        cells.append(
+            html.Div(
+                str(hour),
+                id={"type": "calendar-cell", "stage": stage_name, "hour": hour, "day": day},
+                n_clicks=0,
+                style=style,
+                className='calendar-cell'
+            )
+        )
+    return cells
 @appDash.callback(
-    Output({"type": "stage-block", "stage": MATCH}, "children"),
-    Input({"type": "calendar-cell", "stage": MATCH, "hour": ALL, "day": ALL}, "n_clicks"),
-    State({"type": "stage-block", "stage": MATCH}, "id"),
+    Output({"type": "day-block", "stage": MATCH, "day": MATCH}, "children"),
+    Input({"type": "calendar-cell", "stage": MATCH, "hour": ALL, "day": MATCH}, "n_clicks"),
+    State({"type": "day-block", "stage": MATCH, "day": MATCH}, "id"),
+    State('ProjectFilterCal', "value"),
+    State('YearFilterCal', "value"),
+    State('MonthFilterCal', "value"),
     prevent_initial_call=True
 )
-def update_stage_block(n_clicks_list, stage_id):
-    # triggered = callback_context.triggered_id
-    stage_index = all_stages.index(stage_id["stage"])
-    stage_name, rows = stage_id["stage"], 12
-
-
-    # Можно получить ID нажатой клетки через callback_context
+def update_day_column(n_clicks_list, day_block_id, project_id, year, month):
     triggered = callback_context.triggered_id
-
     if not triggered:
         return dash.no_update
 
     selected = {
-        "stage": stage_name,
+        "stage": day_block_id["stage"],
+        "day": day_block_id["day"],
+        "hour": triggered["hour"],
+        "color": rgba_string_to_hex(flask_login.current_user.color)
+    }
+
+    # Предположим 12 строк (часов)
+    return create_day_column(stage_name=selected["stage"], day=selected["day"], rows=12, year=year,month=month, project_id=project_id, selected_data=selected)
+
+
+@appDash.callback(
+    Output("filled-cells", "data"),
+    Input({"type": "calendar-cell", "stage": ALL, "hour": ALL, "day": ALL}, "n_clicks"),
+    State("filled-cells", "data"),
+    prevent_initial_call=True
+)
+def update_single_cell(n_clicks_list, prev_data):
+
+    ctx = callback_context
+    triggered = ctx.triggered_id
+
+
+    if not triggered:
+        return dash.no_update
+
+    # Обновляем данные
+    return {
+        "stage": triggered["stage"],
         "hour": triggered["hour"],
         "day": triggered["day"],
         "color": rgba_string_to_hex(flask_login.current_user.color)
     }
-    print(selected)
 
-    return create_stage_block(stage_name, rows, selected_data=selected)
-
-# @appDash.callback(
-#     Output("filled-cells", "data"),
-#     Input({"type": "calendar-cell", "stage": ALL, "hour": ALL, "day": ALL}, "n_clicks"),
-#     State("filled-cells", "data"),
-#     prevent_initial_call=True
-# )
-# def update_single_cell(n_clicks_list, prev_data):
-#
-#     ctx = callback_context
-#     triggered = ctx.triggered_id
-#
-#
-#     if not triggered:
-#         return dash.no_update
-#
-#     # Обновляем данные
-#     return {
-#         "stage": triggered["stage"],
-#         "hour": triggered["hour"],
-#         "day": triggered["day"],
-#         "color": rgba_string_to_hex(flask_login.current_user.color)
-#     }
-
+@appDash.callback(
+    Output('popupCal', 'children'),
+    Input("filled-cells", "data"),
+    prevent_initial_call=True
+)
+def popup_calendar(data):
+    return [html.Div([html.Span(success_emoji(), className='symbol emoji'), 'Успешно сохранено'], className='cloud line popup green', hidden=False)]
 
 @appDash.callback(
     Output("selected-cells", "children"),
@@ -437,15 +471,6 @@ def display_current_cell(data):
         return "Нет выбранной ячейки"
 
     return f"{data['stage']} — День {data['day']}, Час {data['hour']}"
-
-@appDash.callback(
-    Output('Calendar', 'children'),
-    Input('filled-cells', 'data'),
-    prevent_initial_call=True
-)
-def update_table(selected_data):
-    print(selected_data)
-    return render_table(selected_data)
 
 @appDash.callback(
     Output('BigTitle','children'),
@@ -999,18 +1024,18 @@ def UpdateDict(n_clicks1, n_clicks2, old, head, tab):
     except Exception as e:
         logger.exception(f"Ошибка при выполнении SQL: {e}")
         CACHE.clear()
-        return old + [html.Div(["😧 Ошибка при записи в базу"], className='cloud line popup orange', hidden=False)]
+        return old + [html.Div([html.Span('😧', className='symbol emoji'), 'Ошибка при записи в базу'], className='cloud line popup orange', hidden=False)]
 
     CACHE.clear()
 
     msg = {
-        'insert': "✔ Данные добавлены!",
-        'update': "✔ Данные обновлены!",
-        'delete': "✂️ Успешно удалено!"
+        'insert': [success_emoji(), "Данные добавлены!"],
+        'update': [success_emoji(), "Данные обнавлены!"],
+        'delete': ["✂️", "Успешно удалено!"],
     }[mode]
     print(msg)
 
-    return old + [html.Div([msg], className='cloud line popup green', hidden=False)]
+    return old + [html.Div([html.Span(msg[0], className='symbol emoji'), msg[1]], className='cloud line popup green', hidden=False)]
 
 
 @appDash.callback(
@@ -1026,3 +1051,15 @@ def SaveAdm(ch):
     else:
         dash.no_update()
 
+@appDash.callback(
+    Output('popupBoxCal', 'children'),
+    Input('popupCal', 'children'),
+    prevent_initial_call=True
+)
+def ClearPopCal(ch):
+    # print(ch)
+    if len(ch) != 0:
+        sleep(1.8)
+        return html.Div([], id='popupCal')
+    else:
+        dash.no_update()
