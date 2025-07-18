@@ -1,4 +1,5 @@
 import os
+import calendar
 
 def to_css_rgba(rgba_str):
     if rgba_str is None: return 'rgba(47, 47, 47, 1)'
@@ -52,3 +53,15 @@ def month_name_ru(month_number):
         12: "Декабрь"
     }
     return months.get(month_number, "")
+
+
+def get_month_info(month: int, year: int):
+    num_days = calendar.monthrange(year, month)[1]
+    weekends = []
+
+    for day in range(1, num_days + 1):
+        weekday = calendar.weekday(year, month, day)
+        if weekday in (5, 6):  # 5 = суббота, 6 = воскресенье
+            weekends.append(day)
+
+    return num_days, weekends

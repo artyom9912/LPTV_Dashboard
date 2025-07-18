@@ -115,7 +115,7 @@ def display_page(prjBtn, calBtn, graphBtn, dbBtn, admBtn):
     if 'prjBtn' in changed_id:
         content = PROJECTDESK()
     elif 'calBtn' in changed_id:
-        content = CALENDAR()
+        content = CALENDAR(13)
     elif 'dbBtn' in changed_id:
         # JOIN для отображения бд
         # getData()
@@ -126,9 +126,8 @@ def display_page(prjBtn, calBtn, graphBtn, dbBtn, admBtn):
     elif 'admBtn' in changed_id:
         content = ADMINPAGE()
     else:
-        content = CALENDAR()
+        content = CALENDAR(13)
     return content
 
 if __name__ == '__main__':
-    makedirs('cache-directory', exist_ok=True)
     app.run(host='127.0.0.1',port=8080, debug=True)

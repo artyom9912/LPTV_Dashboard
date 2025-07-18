@@ -4,22 +4,11 @@ import dash_bootstrap_components as dbc
 from dash import html
 from datetime import datetime
 from utils import rgba_string_to_hex
-from dash import dash_table
-from app import cache
+from dash_extensions import EventListener
 import db
 
-STAGES = ['ПОДГОТОВКА', '3D ГРАФИКА', 'ЗАКАЗНЫЕ ПОЗИЦИИ', 'СМР', 'КОМПЛЕКТАЦИЯ', 'РЕАЛИЗАЦИЯ']
 HOURS = list(range(1, 13))
 days = list(range(1, 32))
-
-user_work_data = [
-    {"user_id": 6, "color": "#ADD8E6", "day": 14, "hours": 7, "stage": "ПОДГОТОВКА"},
-    {"user_id": 6, "color": "#ADD8E6", "day": 15, "hours": 7, "stage": "ПОДГОТОВКА"},
-    {"user_id": 6, "color": "#ADD8E6", "day": 16, "hours": 5, "stage": "ПОДГОТОВКА"},
-    {"user_id": 6, "color": "#ADD8E6", "day": 17, "hours": 2, "stage": "ПОДГОТОВКА"},
-    {"user_id": 2, "color": "#E083B9", "day": 3, "hours": 2, "stage": "ПОДГОТОВКА"},
-    {"user_id": 2, "color": "#E083B9", "day": 4, "hours": 4, "stage": "ПОДГОТОВКА"},
-]
 
 all_stages = [
         'ПОДГОТОВКА',
@@ -31,8 +20,8 @@ all_stages = [
     ]
 
 
-def render_stage_block_columnwise(project_id, stage_name, rows=12, year=None, month=None, user_work_data=None):
-
+def render_stage_block(stage_name,deadline, year, month, user_work_data, num_days):
+    rows = 12
     # Часы колонка
     hours_col = html.Div([
         html.Div(str(h + 1), style={
@@ -44,7 +33,7 @@ def render_stage_block_columnwise(project_id, stage_name, rows=12, year=None, mo
 
     # Этап колонка
     stage_col = html.Div([
-        html.Div(stage_name, style={
+        html.Div([stage_name, html.Div(deadline, style={'color':'#B4B4B4'})], style={
             "height": f"{24 * rows}px", "border-right": "2px solid #ccc", "border-left": "2px solid #ccc",
             "text-align": "center", "font-size": "12px", "align-content": "center",
             "width": "120px", "background-size": "cover", "min-width": "120px",
@@ -52,16 +41,17 @@ def render_stage_block_columnwise(project_id, stage_name, rows=12, year=None, mo
         })
     ], style={"min-width": "120px"})
 
+
     # Каждая колонка дня
     day_cols = []
-    for day in days:
+    for day in range(1,num_days+1):
         cells = []
         for hour in range(1, rows + 1):
             style = {
                 "height": "24px",
                 "border": "1px solid #F7F7F7",
                 "text-align": "center",
-                "cursor": "pointer",
+                # "cursor": "pointer",
                 "font-size": "12px",
                 "font-weight": "600",
                 "color": "white",
@@ -132,9 +122,9 @@ def render_stage_block_columnwise(project_id, stage_name, rows=12, year=None, mo
 
     return html.Div([
         hours_col, stage_col, *day_cols
-    ], style={"display": "flex", "flex-direction": "row"}, className='stage-block')
+    ], style={"display": "flex", "flex-direction": "row", "border-bottom":"2px #ccc solid"}, className='stage-block', id={"type": "stage-block", "stage": stage_name})
 
-def render_header():
+def render_header(num_days, weekends):
     return html.Div([
         # ЧАСЫ
         html.Div("ЧАСЫ", style={
@@ -162,12 +152,12 @@ def render_header():
             # Первая строка: месяц
             html.Div("ИЮЛЬ", style={
                 "display": "flex", "justifyContent": "center", "alignItems": "center",
-                "min-width": f"{30 * len(days)}px",
+                # "min-width": f"{30 * len(days)}px",
                 "font-weight": "500", "font-size": "14px",
                 "border": "0px solid #ccc", "background-color": rgba_string_to_hex(flask_login.current_user.color),
                 "padding": "4px", "text-align": "center",
                 "height": "30px"
-            }),
+            }, id='CalendarMonth'),
 
             # Вторая строка: дни
             html.Div([
@@ -175,10 +165,10 @@ def render_header():
                     html.Div(str(day), style={
                         "min-width": "30px", "font-weight": "400", "font-size": "12px",
                         "border": "1px solid #EDEDED","border-bottom": "1px solid #ccc",
-                        "background-color": "white",
+                        "background-color": "#F1F1F1" if day in weekends else 'white',
                         "text-align": "center", "padding": "4px",
                         "height": "30px"
-                    }) for day in days
+                    }, id={"type": "day-cell", "day": day}) for day in range(1, num_days+1)
                 ]
             ], style={"display": "flex", "flex-direction": "row"})
         ], style={
@@ -193,30 +183,42 @@ def render_header():
         "boxShadow": "0 2px 3px rgba(0,0,0,0.1)"
     })
 
-@cache.memoize()
+
 def render_table_div(project_id=None, stages=None, year=None, month=None):
     return html.Div([
-        render_header(),
-        # dcc.Loading([
+        html.Div([
+            render_header(31, [])
+        ], id='CalendarHeader'),
+
+        dcc.Loading([
             html.Div(
                 children=sum([
                     [
-                        render_stage_block_columnwise(project_id, name, 12, year, month) ,
-                        html.Div(style={
-                            "width": "100%", "height": "2px", "backgroundColor": "#ccc"
-                        })
+                        render_stage_block(project_id, name, 12, year, month, 31)
+
                     ] for name in stages
-                ], [])[:-1] if project_id else '',
+                ], []) if project_id else '',
                 id='CalendarBody'
             ),
-        # ], color='grey', type='circle'),
+        ],
+            color='#1a1a1a', type='circle',
+            overlay_style={"visibility": "visible", "filter": "blur(2px)"},fullscreen=False,
+            custom_spinner=html.H3(["Загрузка данных ", dbc.Spinner(color="#1a1a1a")], className='LoadingSpinner')
+        ),
     ], style={"display": "flex", "flex-direction": "column", "gap": "0"})
 
 
-def CALENDAR():
+def CALENDAR(id):
     today = datetime.today()
+    options = db.get_graph_filters()
     content = html.Div([
-        html.Div('КАЛЕНДАРНЫЙ ОТЧЁТ', className='name'),
+        html.Div('КАЛЕНДАРНЫЙ ОТЧЁТ', className='name', id='CalendarTitle'),
+        EventListener(
+            id="key-listener",
+            events=[{"event": "keydown", "props": ["ctrlKey"]}],
+            logging=False,
+        ),
+        dcc.Store(id='ShakeTrigger'),
         html.Div(id='popupBoxCal', children=[
             html.Div(id='popupCal'),
             dcc.Interval(id='popupClearInterval', interval=1800, n_intervals=0, disabled=True)
@@ -224,8 +226,7 @@ def CALENDAR():
 
         html.Div([
 
-            html.Div([render_table_div(stages=all_stages)], id='Calendar')
-
+            html.Div([render_table_div(stages=all_stages)], id='Calendar', className='')
 
         ], className='line calendar'),
         html.Div([
@@ -235,18 +236,25 @@ def CALENDAR():
                 dbc.Row([
                     dbc.Col([
                     dcc.Dropdown(id='ProjectFilterCal',placeholder='Проект',
-                                 options=[{'label':'АЗЕРБАЙДЖАНСКИЕ ИСТОРИИ', 'value':13}], value=13, clearable=False),
+                                 options=options['project'], value=id, clearable=False),
                     dcc.Dropdown(id='StageFilterCal',placeholder='Этап',
                                  options = [{'label': stage, 'value': stage} for stage in all_stages],value=0, ),
                     dcc.Dropdown(id='YearFilterCal', placeholder='Год',
-                                 options=[{'label':'2025', 'value':2025}], value=today.year, clearable=False),
+                                 options=options['year'], value=today.year, clearable=False),
                     dcc.Dropdown(id='MonthFilterCal', placeholder='Месяц',
-                                 options=[{'label':'Июль', 'value':7}], value=today.month, clearable=False),
+                                 options=options['month'], value=6, clearable=False),
                     ]),
                 ]),
         ], className='cloud', style={'margin-bottom':'0', 'padding-bottom':'14px', 'min-width':'260px'}),
-        html.Button('Сбросить', className='clean', id='refresh'),
-        html.Div(id='selected-cells', className='cloud', style={'margin-top': '20px'}),
+        html.Button('Сбросить', className='clean', id='RefreshCal'),
+        html.Div(dbc.Checklist(
+            id='DeleteMode',
+            options=[{'label': 'Удаление ✂️', 'value': 'delete'}],
+            value=[],
+            switch=True,
+            style={'padding': '5px 2px'},
+            className='custom-switch'
+        ), className='cloud',id='delete-switch', style={'margin-top': '20px', 'transition':'all 0s ease', 'user-select':'none', 'padding-left':'8px'}),
         ], className='filters line'),
     ])
     return content

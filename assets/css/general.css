@@ -293,4 +293,12 @@ html {
 .graph{
     padding: 0 !important;
 }
+.form-check-input:focus{
+    box-shadow: none;
+}
+.red{
+    background-color: #ea003f;
+    color: white;
+}
+
 

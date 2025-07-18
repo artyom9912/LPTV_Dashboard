@@ -7,12 +7,12 @@ from dash.dependencies import Input, Output, State, ALL, MATCH
 import db
 from app import appDash, cache
 import dash
-from utils import get_user_picture, rgba_string_to_hex, hex_to_rgba01, month_name_ru
-from time import sleep
+from utils import get_user_picture, rgba_string_to_hex, hex_to_rgba01, month_name_ru, get_month_info
+from time import sleep, time
 from dash import html
 from datetime import date
 from logger import logger
-from view_calendar import render_stage_block_columnwise, all_stages
+from view_calendar import render_stage_block, all_stages
 import random
 import plotly.graph_objects as go
 import flask_login
@@ -376,39 +376,143 @@ def show_confirm(n_clicks):
 #
 #     return dash.no_update
 @cache.memoize()
-def get_calendar_body_cached(project_id, stage, year, month):
-    user_work_data = db.get_user_work_data(project_id, year, month, stage)
-    stages = [stage] if stage else all_stages
+def get_calendar_body_cached(project_id, year, month, num_days):
+    user_work_data = db.get_user_work_data(project_id, year, month)
+    deadlines = db.get_project_stages(project_id)
+    print(user_work_data)
+    # stages = [stage] if stage else all_stages
     return sum([
         [
-            render_stage_block_columnwise(project_id, name, 12, year, month, user_work_data),
-            html.Div(style={
-                "width": "100%",
-                "height": "2px",
-                "backgroundColor": "#ccc"
-            })
-        ] for name in stages
-    ], [])[:-1]
+            render_stage_block(name, deadline, year, month, user_work_data, num_days),
+        ] for name, deadline in dict(zip(all_stages, deadlines)).items()
+    ], [])
+
+@appDash.callback(
+    Output({"type": "stage-block", "stage": ALL}, "className"),
+    Input("StageFilterCal", "value"),
+    prevent_initial_call=True
+)
+def filter_stages(selected_stage):
+    print(selected_stage)
+    if not selected_stage or selected_stage == 0:
+        # Показываем все этапы
+        return ["" for _ in all_stages]
+
+    return [
+        "" if stage == selected_stage else "hidden-stage"
+        for stage in all_stages
+    ]
+
+def style_day_cells(year, month, num_days, weekends):
+
+    base_style = {
+        "min-width": "30px", "font-weight": "400", "font-size": "12px",
+        "border": "1px solid #EDEDED", "border-bottom": "1px solid #ccc",
+        "text-align": "center", "padding": "4px", "height": "30px"
+    }
+
+    styles = []
+    for day in range(1,32):
+        day_style = base_style.copy()
+        day_style["background-color"] = "#EEEEEE" if day in weekends else "white"
+        day_style["display"] = "none" if day > num_days else "block"
+        styles.append(day_style)
+
+    return styles
+
 
 @appDash.callback(
     Output('CalendarBody', 'children'),
+    Output('CalendarTitle', 'children'),
+    Output('CalendarMonth', 'children'),
+    Output({"type": "day-cell", "day": ALL}, 'style'),
     Input('ProjectFilterCal', 'value'),
-    Input('StageFilterCal', 'value'),
     Input('YearFilterCal', 'value'),
-    Input('MonthFilterCal', 'value'),
+    Input('MonthFilterCal', 'value')
+
+)
+def update_calendar_body(project_id, year, month):
+    num_days, weekends = get_month_info(month, year)
+    title = [html.Span('КАЛЕНДАРЬ ', style={"font-family":'"Futura PT Medium", monospace'}),db.get_project_name(project_id).upper()]
+    return get_calendar_body_cached(project_id, year, month, num_days), title, month_name_ru(month).upper(), style_day_cells(year, month, num_days, weekends)
+
+@appDash.callback(
+    Output({"type": "calendar-cell", "stage": MATCH, "day": MATCH, "hour": ALL}, "style"),
+    Input({"type": "calendar-cell", "stage": MATCH, "hour": ALL, "day": MATCH}, "n_clicks"),
+    State({"type": "calendar-cell", "stage": MATCH, "hour": ALL, "day": MATCH}, "id"),
+    State("ProjectFilterCal", "value"),
+    State("YearFilterCal", "value"),
+    State("MonthFilterCal", "value"),
+    State("DeleteMode", "value"),
     prevent_initial_call=True
 )
-def update_calendar_body(project_id, stage, year, month):
-    return get_calendar_body_cached(project_id, stage, year, month)
+def update_cell_styles(n_clicks, cell_ids, project_id, year, month, delete_mode):
+    triggered = callback_context.triggered_id
+    if not triggered:
+        raise dash.exceptions.PreventUpdate
 
-
-
-def create_day_column(stage_name, day, rows, year, month, project_id, selected_data=None, user_work_data=None):
-    cells = []
     user_id = flask_login.current_user.id
-    user_color = selected_data.get("color") if selected_data else rgba_string_to_hex(flask_login.current_user.color)
+    user_color = rgba_string_to_hex(flask_login.current_user.color)
 
-    for hour in range(1, rows + 1):
+    selected_stage = triggered["stage"]
+    selected_day = triggered["day"]
+    selected_hour = triggered["hour"]
+
+    # Получаем работу за месяц
+    user_work_data = db.get_user_work_data(project_id, year, month)
+
+    # Моя запись
+    my_record = next((r for r in user_work_data or []
+                      if r["stage"] == selected_stage and r["day"] == selected_day and r["user_id"] == user_id), None)
+
+    my_hours = my_record["hours"] if my_record else 0
+
+    # Чужая запись
+    other = next((r for r in user_work_data or []
+                  if r["stage"] == selected_stage and r["day"] == selected_day and r["user_id"] != user_id), None)
+
+    other_hours = other["hours"] if other else 0
+    other_color = other["color"] if other else None
+
+    rows = len(cell_ids)
+    styles = []
+
+    is_delete = "delete" in (delete_mode or [])
+
+    # === DELETE MODE ===
+    if is_delete:
+        if not my_record or selected_hour > my_hours:
+            # чужая запись или нет моей
+            return [dash.no_update] * len(cell_ids)
+
+        for i in range(rows):
+            hour = cell_ids[i]["hour"]
+            style = {
+                "height": "24px",
+                "border": "1px solid #F7F7F7",
+                "text-align": "center",
+                # "cursor": "pointer",
+                "font-size": "12px",
+                "font-weight": "600",
+                "color": "white",
+                "position": "relative"
+            }
+
+            # Оставляем чужие закраски
+            if other and hour <= other_hours:
+                style["border"] = "1px rgba(255,255,255,0.18) solid"
+                style["background-color"] = other_color
+                style["color"] = other_color
+                if hour == other_hours:
+                    style["border-radius"] = "0 0 8px 8px"
+
+            styles.append(style)
+
+        return styles
+
+    # === NORMAL MODE === (добавление/изменение записи)
+    for i in range(rows):
+        hour = cell_ids[i]["hour"]
         style = {
             "height": "24px",
             "border": "1px solid #F7F7F7",
@@ -420,79 +524,39 @@ def create_day_column(stage_name, day, rows, year, month, project_id, selected_d
             "position": "relative"
         }
 
-        # Найти чужую запись на эту ячейку
-        other = next((r for r in user_work_data or []
-                      if r["stage"] == stage_name and r["day"] == day and hour <= r["hours"]
-                      and r["user_id"] != user_id), None)
+        my_occupied = hour <= selected_hour
+        other_occupied = other and hour <= other_hours
 
-        my_occupied = selected_data and selected_data.get("stage") == stage_name \
-                      and selected_data.get("day") == day and hour <= selected_data.get("hour")
-
-        if my_occupied and other:
-            my_hours = selected_data.get("hour")
-            other_hours = other["hours"]
-            other_color = other["color"]
-
+        if my_occupied and other_occupied:
             style["color"] = "rgba(255,255,255,0.05)"
             style["box-shadow"] = "inset 0 0 0 1px rgba(255,255,255,0.1)"
             style["border"] = "none"
             style["background"] = f"linear-gradient(to right, {user_color} 50%, {other_color} 50%)"
 
-            # Если часы равны и это последняя ячейка — скругляем
-            if my_hours == other_hours and hour == my_hours:
+            if selected_hour == other_hours and hour == selected_hour:
                 style["border-radius"] = "0 0 8px 8px"
 
         elif my_occupied:
             style["background-color"] = user_color
             style["color"] = user_color
             style["border"] = "1px rgba(255,255,255,0.18) solid"
-            if hour == selected_data.get("hour"):
+            if hour == selected_hour:
                 style["border-radius"] = "0 0 8px 8px"
 
-        elif other:
+        elif other_occupied:
             style["border"] = "1px rgba(255,255,255,0.18) solid"
-            style["background-color"] = other["color"]
-            style["color"] = other["color"]
-            if hour == other["hours"]:
+            style["background-color"] = other_color
+            style["color"] = other_color
+            if hour == other_hours:
                 style["border-radius"] = "0 0 8px 8px"
 
-        cells.append(
-            html.Div(
-                str(hour),
-                id={"type": "calendar-cell", "stage": stage_name, "hour": hour, "day": day},
-                n_clicks=0,
-                style=style,
-                className='calendar-cell'
-            )
-        )
+        styles.append(style)
 
-    return cells
+    return styles
 
 
-@appDash.callback(
-    Output({"type": "day-block", "stage": MATCH, "day": MATCH}, "children"),
-    Input({"type": "calendar-cell", "stage": MATCH, "hour": ALL, "day": MATCH}, "n_clicks"),
-    State({"type": "day-block", "stage": MATCH, "day": MATCH}, "id"),
-    State('ProjectFilterCal', "value"),
-    State('YearFilterCal', "value"),
-    State('MonthFilterCal', "value"),
-    prevent_initial_call=True
-)
-def update_day_column(n_clicks_list, day_block_id, project_id, year, month):
-    triggered = callback_context.triggered_id
-    if not triggered:
-        return dash.no_update
 
-    user_work_data = db.get_user_work_data(project_id, year, month)
 
-    selected = {
-        "stage": day_block_id["stage"],
-        "day": day_block_id["day"],
-        "hour": triggered["hour"],
-        "color": rgba_string_to_hex(flask_login.current_user.color)
-    }
-
-    return create_day_column(stage_name=selected["stage"], day=selected["day"], rows=12, year=year,month=month, project_id=project_id, selected_data=selected, user_work_data=user_work_data)
 
 
 
@@ -500,9 +564,13 @@ def update_day_column(n_clicks_list, day_block_id, project_id, year, month):
     Output('popupCal', 'children'),
     Input({"type": "calendar-cell", "stage": ALL, "hour": ALL, "day": ALL}, "n_clicks_timestamp"),
     State({"type": "calendar-cell", "stage": ALL, "hour": ALL, "day": ALL}, "id"),
+    State("ProjectFilterCal", "value"),
+    State("YearFilterCal", "value"),
+    State("MonthFilterCal", "value"),
+    State("DeleteMode", "value"),
     prevent_initial_call=True
 )
-def handle_cell_click(timestamps, ids):
+def handle_cell_click(timestamps, ids, project_id, year, month, delete_mode):
     if not timestamps or all(ts is None for ts in timestamps):
         raise dash.exceptions.PreventUpdate
 
@@ -516,6 +584,14 @@ def handle_cell_click(timestamps, ids):
     # 🚀 Здесь будет SQL-запрос: INSERT или DELETE
     # пример:
     # db.insert_or_delete_record(user_id, project_id, triggered["stage"], triggered["day"], triggered["hour"])
+    if 'delete' in delete_mode:
+        return [
+            html.Div(
+                [html.Span("✂️", className='symbol emoji'), 'Запись удалена'],
+                className='cloud line popup green',
+                hidden=False
+            )
+        ]
 
     return [
         html.Div(
@@ -527,16 +603,28 @@ def handle_cell_click(timestamps, ids):
 
 
 @appDash.callback(
-    Output("selected-cells", "children"),
-    Input("filled-cells", "data"),
+    Output('delete-switch','className'),
+    Output('Calendar','className'),
+    Input('DeleteMode', 'value'),
     prevent_initial_call=True
 )
-def display_current_cell(data):
-    print(data)
-    if not data:
-        return "Нет выбранной ячейки"
+def DeleteMode(delete_mode):
+    if 'delete' in delete_mode:
+        return 'red cloud', 'delete-mode'
+    else: return 'cloud', ''
 
-    return f"{data['stage']} — День {data['day']}, Час {data['hour']}"
+@appDash.callback(
+    Output('DeleteMode', 'value'),
+    Input('key-listener', 'n_events'),
+    State('key-listener', 'event'),
+    State('DeleteMode', 'value'),
+    prevent_initial_call=True
+)
+def toggle_delete_mode_by_ctrl(n, event, current_val):
+    if event and event.get('ctrlKey'):
+        # Если уже включено — выключим, иначе включим
+        return [] if 'delete' in current_val else ['delete']
+    return dash.no_update
 
 @appDash.callback(
     Output('BigTitle','children'),
@@ -544,7 +632,7 @@ def display_current_cell(data):
     State('GraphMode', 'data'),
 )
 def update_graph_title(id, is_project):
-    return db.get_project_name(id) if is_project else db.get_user_name(id).upper()
+    return [html.Span('ГРАФИК ', style={"font-family":'"Futura PT Medium", monospace'}),db.get_project_name(id) if is_project else db.get_user_name(id).upper()]
 
 @appDash.callback(
     Output('YearFilterGraph', 'value'),
@@ -554,11 +642,27 @@ def update_graph_title(id, is_project):
 )
 def update_graph_filters(click):
     if click:
-        print("CLEAR")
         today = datetime.datetime.now()
         return today.year, today.month
     return dash.no_update, dash.no_update
 
+@appDash.callback(
+    Output('YearFilterCal', 'value'),
+    Output('MonthFilterCal', 'value'),
+    Output('StageFilterCal', 'value'),
+    Input('RefreshCal','n_clicks'),
+    State('YearFilterCal', 'value'),
+    State('MonthFilterCal', 'value'),
+    State('StageFilterCal', 'value'),
+    prevent_initial_call=True
+)
+def update_cal_filters(click, year, month, stage):
+    today = datetime.datetime.now()
+    if year != today.year or month != today.month or stage is not None:
+        if click:
+            today = datetime.datetime.now()
+            return today.year, today.month, None
+    return dash.no_update, dash.no_update, dash.no_update
 @appDash.callback(
     Output('Graph','figure'),
     Output('GraphTable','data'),
@@ -1096,7 +1200,7 @@ def UpdateDict(n_clicks1, n_clicks2, old, head, tab):
 
     msg = {
         'insert': [success_emoji(), "Данные добавлены!"],
-        'update': [success_emoji(), "Данные обнавлены!"],
+        'update': [success_emoji(), "Данные обновлены!"],
         'delete': ["✂️", "Успешно удалено!"],
     }[mode]
     print(msg)
@@ -1125,7 +1229,7 @@ def SaveAdm(ch):
 def SaveAdm(ch):
     # print(ch)
     if len(ch) != 0:
-        sleep(1.7)
+        sleep(1.5)
         return html.Div([], id='popupCal', )
     else:
         return dash.no_update

@@ -59,7 +59,7 @@
 /*}*/
 
 .calendar-cell:hover{
-    transition: background-color 0ms ease !important;
+    transition: background 0ms ease !important;
     background: #c5c5c5 !important;
     -webkit-transition: .0s background-color;
     -moz-transition: .0s background-color;
@@ -69,8 +69,9 @@
     background: #a1a1a1 !important;
 }
 .calendar-cell{
-    transition: background 0.03s ease-in;
+    transition: background 0.07s ease-in, color 0s ease;
     user-select: none;
+    cursor: pointer;
 }
 
 .calendar{
@@ -93,4 +94,35 @@
 #Calendar{
     max-height: calc(100vh - 358px);
     overflow-y: scroll;
+    user-select: none;
+}
+.hidden-stage {
+    display: none !important;
+}
+/* Это можно добавить в твой assets/custom.css */
+
+.LoadingSpinner{
+    position: absolute;
+    top: 100px;
+    font-family: "Rubik", sans-serif;
+    font-weight: 500;
+}
+.custom-switch .form-check-input:checked{
+    background-color: #600012;
+    border-color: #600012;
+}
+.custom-switch .form-check-input {
+    width: 36px;
+    height: 20px;
+    margin-top: 4px;
+}
+
+.custom-switch .form-check-label {
+    padding-left: 10px;
+}
+
+
+
+.delete-mode *.calendar-cell{
+    cursor: url("../img/del_cursor.svg") 12 0, pointer !important;
 }
