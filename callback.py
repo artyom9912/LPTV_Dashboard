@@ -20,6 +20,8 @@ from datatables import UsersTable, ProjectsTable, to_css_rgba
 from dash.exceptions import PreventUpdate
 from PIL import Image
 import io
+from plotly.graph_objs import Bar, Figure, Layout
+import plotly.colors as pc
 import base64
 
 
@@ -49,6 +51,26 @@ def SetUser(style):
     except Exception as e:
         logger.exception("Ошибка в SetUser: %s", str(e))
         return dash.no_update
+
+@appDash.callback(
+    Output('menu', 'className'),
+    Output('main', 'className'),
+    Output('miniBtnSpan', 'className'),
+    Input('miniBtn', 'n_clicks'),
+    State('miniBtnSpan', 'className'),
+    prevent_initial_call=True
+)
+def change_menu_mode(clicks, classname):
+    triggered = callback_context.triggered
+    print(triggered)
+    print(classname)
+    if not triggered:
+        return dash.no_update, dash.no_update, dash.no_update
+    if classname == 'ico7':
+        return 'mini side menu', 'side main minimain', 'ico8'
+    else:
+        return 'side menu', 'side main', 'ico7'
+
 
 @appDash.callback(
     Output('UploadBlock', 'children'),
@@ -102,6 +124,7 @@ def update_photo_block(children,clicks,contents, filename):
     buffered = io.BytesIO()
     image.save(path, format="PNG")
     image.save(buffered, format="PNG")
+    CACHE['img'] ='new'
     encoded_img = base64.b64encode(buffered.getvalue()).decode()
 
     return html.Img(
@@ -253,200 +276,7 @@ def show_confirm(n_clicks):
         return True, 'Вы уверены? Все связанные записи также безвозвратно удалятся!'
     return dash.no_update
 
-#
-#
-# calendar = None
-#
-#
-# @appDash.callback(
-#     Output('Datepicker', 'date'),
-#     Output('EndDate', 'children'),
-#     Output('CalendarTable', 'data'),
-#     Output('CalendarTable', 'columns'),
-#     Output('AddProjectCal', 'value'),
-#     Input('AddProjectCal', 'value'),
-#     Input('Datepicker', 'date'),
-# )
-# def SetDatesCalendar(addProject, start_date):
-#     con = engine.connect()
-#     # con = connect('clickhouse://10.200.2.113')
-#     try:
-#         start_date = dt.strptime(start_date, '%Y-%m-%d')
-#     except:
-#         start_date = dt.strptime(start_date, '%Y-%m-%dT%H:%M:%S')
-#     weekday = int(start_date.weekday())
-#     start = start_date + datetime.timedelta(days=-1 * weekday)
-#     end = start_date + datetime.timedelta(days=6 - weekday)
-#     # В ЦИКЛЕ СОБИРАЕМ ВСЕ ДНИ НЕДЕЛИ
-#     for i in range(0, 7):
-#         day = (start + datetime.timedelta(days=i)).strftime('%Y-%m-%d')
-#         # СБОР ДАННЫХ КАЛЕНДАРЯ (ПРИСОЕДИНЕНИЕ ЧЕРЕЗ WHERE)
-#         df = pd.read_sql \
-#             (f"""
-#             SELECT title, timestamp, hours FROM skameyka.main_table m, skameyka.project_table p
-#             WHERE m.timestamp = '{day}' AND user_id = (SELECT id FROM user_table WHERE fullname like '{flask_login.current_user.name}')
-#             AND m.project_id = p.id;
-#         """, con)
-#         df = df.drop('timestamp', axis=1)
-#         df.columns = ['НАЗВАНИЕ ПРОЕКТА', WEEKDAYS[i]]
-#
-#         if i == 0:
-#             calendar = df
-#         else:
-#             calendar = calendar.merge(df, on='НАЗВАНИЕ ПРОЕКТА', how='outer')
-#     if addProject is not None:
-#         newdf = pd.DataFrame({'НАЗВАНИЕ ПРОЕКТА': [addProject], 'ПН': [None], 'ВТ': [None], 'СР': [None], 'ЧТ': [None], 'ПТ': [None], 'СБ': [None], 'ВС': [None]})
-#         calendar = pd.concat([calendar,newdf])
-#     columns = [{"name": i, "id": i} for i in ['НАЗВАНИЕ ПРОЕКТА'] + WEEKDAYS]
-#     columns[0]['editable'] = False
-#
-#     return start, end.strftime('%d.%m.%Y'), calendar.to_dict('records'), columns, None
-#
-# @appDash.callback(
-#     Output('popup', 'children'),
-#     Input('CalendarSave', 'n_clicks'),
-#     State('popup', 'children'),
-#     prevent_initial_call=True
-# )
-# def SaveCalendar(n_clicks, old):
-#     con = engine.connect()
-#     # con = connect('clickhouse://10.200.2.113')
-#     if len(calendar_cache) == 0:
-#         for i in range(0, len(calendar_cache)): del calendar_cache[0]
-#         return old + [
-#             html.Div([html.Span('😬', className='symbol emoji'), 'Нет изменений'], className='cloud line popup white',hidden=False)]
-#     try:
-#         for sql in calendar_cache:
-#             con.execute(text(sql))
-#         con.commit()
-#         for i in range(0, len(calendar_cache)): del calendar_cache[0]
-#         return old + [html.Div([html.Span('✔', className='symbol'), 'Успешно сохранено'], className='cloud line popup green', hidden=False)]
-#
-#     except Exception as e:
-#         e_type, e_val, e_tb = sys.exc_info()
-#         traceback.print_exception(e_type, e_val, e_tb, file=open('log.txt', 'a'))
-#         for i in range(0, len(calendar_cache)): del calendar_cache[0]
-#         return old + [html.Div([html.Span('😧', className='symbol emoji'), 'Возникла ошибка!'], className='cloud line popup orange', hidden=False)]
-#
-#
-#
-# @appDash.callback(
-#     Output('popupBox', 'children'),
-#     Input('popup', 'children'),
-#     prevent_initial_call=True
-# )
-# def SaveCalendar(ch):
-#     if len(ch) != 0:
-#         sleep(2.5)
-#         return html.Div([], id='popup', className='line')
-#     else:
-#         dash.no_update()
-#
-#
-# @appDash.callback(
-#     Output('pie-chart', 'figure'),
-#     Output('pie-chart', 'style'),
-#     Input('CalendarTable', 'data'),
-# )
-# def UpdatePie(data):
-#     global calendar
-#     calendar = pd.DataFrame(data)
-#     if calendar.empty:
-#         style = dict(display='none')
-#         return dash.no_update, style
-#     else:
-#         style = dict(visibility='visible')
-#         calendar[WEEKDAYS] = calendar[WEEKDAYS].apply(pd.to_numeric)
-#
-#     # calendar.info()
-#     colors = ['#393E46', '#00ADB5', '#AAD8D3', '#EEEEEE', '#8ee8e4', '#F3F4ED', '#30475E', '4CA1A3']
-#     mart = calendar.fillna(0)
-#
-#     # print(style)
-#     mart['sum'] = mart['ПН'] + mart['ВТ'] + mart['СР'] + mart['ЧТ'] + mart['ПТ'] + mart['СБ'] + mart['ВС']
-#     mart = mart[['НАЗВАНИЕ ПРОЕКТА', 'sum']]
-#     labels = mart['НАЗВАНИЕ ПРОЕКТА'].tolist()
-#     values = mart['sum'].tolist()
-#     # print(mart)
-#     # print(mart.info())
-#     fig = go.Figure(data=[go.Pie(labels=labels, values=values, hole=.5)])
-#     fig.update_traces(automargin=False, selector=dict(type='pie'),
-#                       marker=dict(colors=colors), textfont_size=12,
-#                       hoverinfo='label+percent', textinfo='none')
-#     fig.update_layout(
-#         font_family="Roboto",
-#         font_color="black",
-#         font_size=16,
-#         margin=dict(l=4, r=12, t=20, b=40),
-#         height=280,
-#         width=410,
-#         legend=dict(font=dict(family="Rubik", size=12, color="black")),
-#         hoverlabel=dict(
-#             font_size=14,
-#             font_family="Rubik",
-#         )
-#     )
-#     return fig, style
-#
-#
-# @appDash.callback(
-#     Output('CalendarSave', 'style'),
-#     [Input('CalendarTable', 'data')],
-#     [State('CalendarTable', 'data_previous')],
-#     [State('Datepicker', 'date')],
-#     prevent_initial_call=True
-# )
-# def CalendarChanges(current, previous, start_date):
-#
-#     if previous is None: return dash.no_update
-#     total = []
-#     i = 0
-#     for project in current:
-#         old_project = previous[i]
-#         i += 1
-#         diff = [[k, project[k]] for k in project if k in old_project and project[k] != old_project[k]]
-#         if len(diff) != 0:
-#             if old_project[diff[0][0]] is None: status = 'INS'
-#             elif project[diff[0][0]] == '0' or project[diff[0][0]] is None: status = 'DEL'
-#             else: status = 'UPD'
-#             total.append([project['НАЗВАНИЕ ПРОЕКТА']] + diff[0]+[status])
-#             break
-#     UPDATE = total[0]
-#
-#     user = flask_login.current_user.name
-#
-#     start_date = dt.strptime(start_date, '%Y-%m-%dT%H:%M:%S')
-#     date = start_date + datetime.timedelta(days=WEEK_NUMBERS[UPDATE[1]])
-#     date = date.strftime('%Y-%m-%d')
-#     # КУЧА ПОДЗАПРОСОВ CRUD
-#     if UPDATE[3] == 'UPD':
-#         query = f"""
-#                 UPDATE skameyka.main_table SET hours = {UPDATE[2]} WHERE user_id =
-#                 (SELECT id FROM skameyka.user_table WHERE fullname like '{user}')
-#                 AND project_id =
-#                 (SELECT id FROM skameyka.project_table WHERE title like '{UPDATE[0]}')
-#                 AND timestamp = '{date}'
-#         """
-#     elif UPDATE[3] == 'DEL':
-#         query = f"""
-#                 DELETE FROM skameyka.main_table WHERE user_id =
-#                 (SELECT id FROM skameyka.user_table WHERE fullname like '{user}')
-#                 AND project_id =
-#                 (SELECT id FROM skameyka.project_table WHERE title like '{UPDATE[0]}')
-#                 AND timestamp = '{date}'
-#         """
-#     else:
-#         query = f"""
-#                 INSERT INTO skameyka.main_table (user_id, project_id, timestamp, hours) VALUES
-#                 (
-#                     (SELECT id FROM skameyka.user_table WHERE fullname like '{user}'),
-#                     (SELECT id FROM skameyka.project_table WHERE title like '{UPDATE[0]}'),
-#                     '{date}', {UPDATE[2]}
-#                 )
-#                 """
-#     calendar_cache.append(query)
-#
-#     return dash.no_update
+
 
 def get_calendar_body_cached(project_id, year, month, num_days, user_work_data):
 
@@ -638,11 +468,6 @@ def update_cell_styles(n_clicks, cell_ids, project_id, year, month, delete_mode)
         print(len(styles))
 
     return styles
-
-
-
-
-
 
 
 @appDash.callback(
@@ -874,7 +699,7 @@ def update_graph(id, year, month, is_project):
     fig.update_layout(
         font=dict(family="Rubik, sans-serif", size=14, color="black"),
         title=f'{month_name_ru(month)} {year}' if year else 'Нет данных',
-        xaxis=dict(title='', dtick=1, range=[0, num_days] if month else [0,12]),
+        xaxis=dict(title='', dtick=1, range=[0, num_days+0.2] if month else [0,12]),
         yaxis=dict(title='', range=[0, 12] ) if month else dict(autorange=True, fixedrange=False),
         plot_bgcolor='#fff',
         paper_bgcolor='#fff',
@@ -1041,6 +866,7 @@ def RenderModal(tab, row, clickE, clickA, clickS, clickD):
                     UserColor='0.3,0.3,0.3,1'
                 )
 
+
             modal = [
                 dbc.ModalHeader(
                     [user_data['Title'], html.Span(user_data['Span'], style=dict(fontFamily='"Noah Regular", monospace', marginLeft=6, fontSize=18))],
@@ -1173,8 +999,8 @@ def RenderModal(tab, row, clickE, clickA, clickS, clickD):
                 dbc.ModalBody([
                     dbc.Row([dbc.Col([
                         dbc.Label("Название проекта", style={'margin-top': '12px'}),
-                        dcc.Input(id='PrjName', placeholder='Введите название', className='inp long',
-                                  value=prj_data['PrjName'])
+                        dbc.Input(id='PrjName', placeholder='Введите название', className='inp long',
+                                  value=prj_data['PrjName'], required=True)
                     ], width=6)]),
                     dbc.Row([
                         dbc.Col([
@@ -1299,6 +1125,9 @@ def UpdateUser(n_clicks1, old):
     if not n_clicks1:
         return dash.no_update
 
+    if len(CACHE) == 0:
+        return dash.no_update
+
     try:
         db.execute_user_queries(CACHE, flask_login.current_user.id, 'update')
 
@@ -1352,7 +1181,6 @@ def UserChanges(UserName, UserLogin, UserPass, UserRole, UserActual, UserColor):
     prevent_initial_call=True
 )
 def UpdateDict(n_clicks1, n_clicks2, old, head, tab):
-
     triggered = dash.callback_context.triggered
     if not triggered or triggered[0]['value'] is None:
         return dash.no_update
@@ -1373,6 +1201,27 @@ def UpdateDict(n_clicks1, n_clicks2, old, head, tab):
 
     item_id = CACHE.pop('id', None)
 
+    # ВАЛИДАЦИЯ ПОЛЕЙ ПРИ ДОБАВЛЕНИИ
+    if mode == 'insert':
+        if tab == 'tab-c':
+            # для пользователя
+            required_fields = ['UserName', 'UserLogin', 'UserPass']
+            missing = [f for f in required_fields if not CACHE.get(f)]
+            if missing:
+                return old + [html.Div(
+                    [html.Span('⚠️', className='symbol emoji'), f"Заполните все поля!"],
+                    className='cloud line popup orange'
+                )]
+        elif tab == 'tab-p':
+            # для проекта
+            required_fields = ['PrjName', 'PrjStart', 'PrjSqr']
+            missing = [f for f in required_fields if not CACHE.get(f)]
+            if missing:
+                return old + [html.Div(
+                    [html.Span('⚠️', className='symbol emoji'), f"Заполните все поля!"],
+                    className='cloud line popup orange'
+                )]
+
     try:
         if tab == 'tab-c':
             db.execute_user_queries(CACHE, item_id, mode)
@@ -1383,7 +1232,7 @@ def UpdateDict(n_clicks1, n_clicks2, old, head, tab):
     except Exception as e:
         logger.exception(f"Ошибка при выполнении SQL: {e}")
         CACHE.clear()
-        return old + [html.Div([html.Span('😧', className='symbol emoji'), 'Ошибка при записи в базу'], className='cloud line popup orange', hidden=False)]
+        return old + [html.Div([html.Span('😧', className='symbol emoji'), 'Ошибка при записи в базу'], className='cloud line popup orange')]
 
     CACHE.clear()
 
@@ -1392,9 +1241,80 @@ def UpdateDict(n_clicks1, n_clicks2, old, head, tab):
         'update': [success_emoji(), "Данные обновлены!"],
         'delete': ["✂️", "Успешно удалено!"],
     }[mode]
-    print(msg)
 
-    return old + [html.Div([html.Span(msg[0], className='symbol emoji'), msg[1]], className='cloud line popup green', hidden=False)]
+    return old + [html.Div([html.Span(msg[0], className='symbol emoji'), msg[1]], className='cloud line popup green')]
+
+@appDash.callback(
+    Output('GraphGantt', 'figure'),
+    Input('YearFilterGantt', 'value'),
+    Input('RelevantFilterGantt', 'value'),
+    Input('PaletteFilterGantt', 'value'),
+)
+def update_gantt_chart(year, relevance, palette_name):
+    gantt_data = db.get_gantt_data(year, relevance)
+    num_projects = len(gantt_data)
+
+    # Базовая высота на проект
+    base_height_per_project = 40
+    calculated_height = min(720, max(300, num_projects * base_height_per_project))
+
+    # Выбираем палитру
+    colorscale = getattr(pc.sequential, palette_name, pc.sequential.Aggrnyl)
+    colors = [pc.sample_colorscale(colorscale, i / max(num_projects - 1, 1)) for i in range(num_projects)]
+
+    bars = []
+    for idx, proj in enumerate(gantt_data):
+        duration = proj['end'] - proj['start']
+        bars.append(Bar(
+            x=[duration if duration != 0 else 0.2],
+            y=[proj['name']],
+            base=[proj['start']],
+            orientation='h',
+            name=proj['name'],
+            marker=dict(color=colors[idx % len(colors)]),
+            width=0.8,
+            hoverinfo='text',
+            hovertext=f"{proj['name']}: {proj['start']} → {proj['end']}",
+        ))
+
+    layout = Layout(
+        barmode='stack',
+        xaxis=dict(
+            tickmode='array',
+            tick0=1,
+            dtick=1,
+            range=[0.9, 12.1],
+            tickvals=list(range(1, 13)),
+            ticktext=[month_name_ru(m) for m in range(1, 13)],
+            showgrid=False,
+            showline=True,
+            linecolor='#E8E8E8',
+            linewidth=1.6,
+            ticks='outside',
+            ticklen=6,
+            tickcolor='#E8E8E8',
+            tickwidth=1.5,
+            title=None
+        ),
+        yaxis=dict(
+            title=None,
+            showgrid=False,
+            automargin=True,
+            tickfont=dict(size=12 if num_projects > 10 else 14)
+        ),
+        font=dict(
+            family="Rubik, sans-serif",
+            size=14,
+            color="#333"
+        ),
+        paper_bgcolor='white',
+        plot_bgcolor='white',
+        margin=dict(l=120, r=30, t=20, b=40),
+        height=calculated_height,
+        showlegend=False
+    )
+
+    return Figure(data=bars, layout=layout)
 
 
 @appDash.callback(

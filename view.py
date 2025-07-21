@@ -22,6 +22,9 @@ def LAYOUT(username, role, color):
     layout = html.Div([dcc.Location(id='url', refresh=False),
                        dbc.Row([
                            html.Div([
+                               html.A(html.Button([
+                                   html.Span([], className='ico7', id='miniBtnSpan'), '',
+                               ], className='sm'), id='miniBtn', n_clicks=0),
                                html.Div([
                                    html.Img(src=get_user_picture(db.get_user_login(username)), className='userPic', id='UserPic'),
                                    html.Div(username, className='userName', id='USER'),
@@ -41,13 +44,16 @@ def LAYOUT(username, role, color):
                                        html.Span([], className='ico5'), 'График',
                                    ], className='button option'), id='graphBtn', n_clicks=0),
                                    html.A(html.Button([
+                                       html.Span([], className='ico9'), 'Диаграмма Ганта',
+                                   ], className='button option'), id='ganttBtn', n_clicks=0),
+                                   html.A(html.Button([
                                        html.Span([], className='ico6'), 'Личный кабинет',
                                    ], className='button option'), id='cabinetBtn', n_clicks=0),
                                    html.A(html.Button([
                                        html.Span([], className='ico4'), 'Администрация',
                                    ], className='button option'), id='admBtn', n_clicks=0)
                                ], className='options')
-                           ], className='side menu'),
+                           ], className='side menu', id='menu'),
                            html.Div([
                                html.Div([
                                    html.Div([
@@ -70,7 +76,7 @@ def LAYOUT(username, role, color):
                                # -------------CONTENT-------------#
                                html.Div([],
                                         className='content', id='content')
-                           ], className='side main')
+                           ], className='side main', id='main')
                        ])
                        ])
     return layout

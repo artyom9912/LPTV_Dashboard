@@ -7,7 +7,7 @@ import pandas as pd
 import dash
 from view import LAYOUT, PROJECTDESK, USERCABINET
 from view_specials import DATABASE, ADMINPAGE
-from view_analysis import GRAPHIC
+from view_analysis import GRAPHIC, GANTT
 from view_calendar import CALENDAR
 from dash.dependencies import Input, Output, State
 from sqlalchemy import text
@@ -83,6 +83,7 @@ def restrict_dash():
     Input('prjBtn', 'n_clicks'),
     Input('calBtn', 'n_clicks'),
     Input('graphBtn', 'n_clicks'),
+    Input('ganttBtn', 'n_clicks'),
     Input('dbBtn', 'n_clicks'),
     Input('admBtn', 'n_clicks'),
     Input('cabinetBtn', 'n_clicks'),
@@ -90,11 +91,11 @@ def restrict_dash():
     Input('graphAction', 'n_clicks',  allow_optional=True),
     State('selected-project-id', 'data', allow_optional=True)
 )
-def display_page(prjBtn, calBtn, graphBtn, dbBtn, admBtn,cabinetBtn, calAction, graphAction, project_id):
+def display_page(prjBtn, calBtn, graphBtn,ganttBtn, dbBtn, admBtn,cabinetBtn, calAction, graphAction, project_id):
     triggered = dash.callback_context.triggered
     CACHE.clear()
     if not triggered:
-        return USERCABINET()
+        return PROJECTDESK()
 
     changed_id = triggered[0]['prop_id'].split('.')[0]
     if not project_id:
@@ -107,6 +108,8 @@ def display_page(prjBtn, calBtn, graphBtn, dbBtn, admBtn,cabinetBtn, calAction, 
             return CALENDAR(project_id)
         case 'graphBtn':
             return GRAPHIC()
+        case 'ganttBtn':
+            return GANTT()
         case 'graphAction':
             return GRAPHIC(project_id, True)
         case 'dbBtn':
@@ -116,7 +119,7 @@ def display_page(prjBtn, calBtn, graphBtn, dbBtn, admBtn,cabinetBtn, calAction, 
         case 'cabinetBtn':
             return USERCABINET()
         case _:
-            return USERCABINET()
+            return PROJECTDESK()
 
 
 if __name__ == '__main__':

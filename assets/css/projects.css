@@ -57,7 +57,7 @@
     background: linear-gradient(to left, #2d2d2d 36px, rgba(243, 243, 243, 0) 20px) !important;}
 }
 @media (max-width: 1330px){
-    .dash-dropdown{display: inline-block; margin-right: 8px; margin-top: 0 !important;}
+    /*.dash-dropdown{display: inline-block; margin-right: 8px; margin-top: 0 !important;}*/
     .Select-control{  margin-top: 0 !important;}
     .silence{font-size: 12px}
     .filter{height: fit-content}

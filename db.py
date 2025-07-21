@@ -619,7 +619,7 @@ def get_graph_user_data(user_id, year, month=None):
     final_df = final_df.drop(final_df.index[0])
     final_df = final_df.reset_index()
 
-    columns = [{"name": col[:20], "id": col} for col in final_df.columns]
+    columns = [{"name": col[:30], "id": col} for col in final_df.columns]
 
     return final_df.to_dict('records'), columns
 
@@ -833,3 +833,38 @@ def delete_work_record(user_id, project_id, stage_id, day, hour, year, month):
             return True  # Успешное удаление
 
         return False
+
+def get_gantt_data(year, relevance=None):
+    query = text(f"""
+        SELECT 
+            project.name, 
+            MONTH(MIN(main.datestamp)) AS start_month, 
+            MONTH(MAX(main.datestamp)) AS end_month
+        FROM project
+        JOIN main ON main.projectId = project.id
+        WHERE YEAR(main.datestamp) = :year
+        {'AND project.isDone = :is_done' if relevance is not None else ''}
+        GROUP BY project.name, project.startdate
+        -- ORDER BY project.startdate
+    """)
+
+    params = {"year": year}
+    results = []
+
+    if relevance is not None:
+       params['is_done'] = not relevance
+
+    with engine.connect() as con:
+        q = con.execute(query, params)
+        results = q.fetchall()
+
+        gantt_data = []
+        for row in results:
+
+            gantt_data.append({
+                "name": row[0],
+                "start": row[1],
+                "end": row[2],
+            })
+
+        return gantt_data

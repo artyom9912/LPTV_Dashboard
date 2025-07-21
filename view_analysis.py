@@ -1,11 +1,13 @@
 from dash import dcc, html, dash_table
 import dash_bootstrap_components as dbc
-from utils import rgba_string_to_hex
+from utils import rgba_string_to_hex, month_name_ru
 from datetime import datetime
+from plotly.graph_objs import Figure, Bar, Layout
 import flask_login
 import pandas as pd
 from app import cache
 import db
+import plotly.colors as pc
 import plotly.graph_objs as go
 
 def GRAPHIC(id=None, is_project=False):
@@ -135,3 +137,100 @@ def GRAPHIC(id=None, is_project=False):
         ], style={'width':'100%'}),
     ])
     return content
+
+
+
+def GANTT():
+    today = datetime.today()
+    options = db.get_graph_filters()
+    palette_names = ['Aggrnyl', 'Viridis', 'Cividis', 'Plasma', 'Magma', 'Purpor', 'Turbo', 'Sunset']
+
+    # Палитры
+    palette_options = []
+    for name in palette_names:
+
+        scale = getattr(pc.sequential, name)
+        samples = [pc.sample_colorscale(scale, i / 4) for i in range(5)]
+
+        swatch = html.Span([
+            html.Span(style={
+                'display': 'inline-block',
+                'width': '12px',
+                'height': '12px',
+                'backgroundColor': color,
+                'marginRight': '2px',
+                'borderRadius': '2px',
+
+            }) for color in samples
+        ])
+
+        palette_options.append({
+            'label': html.Div([swatch, html.Span(f'  {name if name != "Aggrnyl" else "Seaweed"}', style={'margin-left':'8px'})], style={'display': 'flex', 'alignItems': 'center'}),
+            'value': name
+        })
+
+
+    content = html.Div([
+        html.Div('ДИАГРАММА ГАНТА', className='name', id='BigTitle'),
+        html.Div([
+            dcc.Loading([
+                html.Div([
+                    dcc.Graph(
+                        id='GraphGantt',
+                        # figure=gantt_figure,
+                        config={"displayModeBar": False},
+                        # style={'height': '400px'}
+                        style={'height': 'auto'}
+                    )
+                ], className='cloud', style={
+                    'width': '94%',
+                    'max-width': '1320px',
+                    'padding': '10px 20px 5px 0',
+                    'box-sizing': 'border-box'
+                })
+            ],  color='#1a1a1a', type='circle',
+            overlay_style={"visibility": "visible", "filter": "blur(2px)"},fullscreen=False,
+            custom_spinner=html.H3(["Загрузка ", dbc.Spinner(color="#1a1a1a")], className='LoadingSpinner'),
+            ),
+            dbc.Row([
+                dbc.Col([
+                    html.Div([
+                        html.Div([
+                            html.Div('Настройки',
+                                     style={'margin-bottom': '8px', 'margin-top': '8px', 'font-weight': '500',
+                                            'font-size': '16px', 'color': 'black'}),
+                            dbc.Row([
+                                dbc.Col([
+                                    dcc.Dropdown(id='YearFilterGantt', placeholder='Год',
+                                                 options=options['year'], value=today.year, clearable=False),
+                                    dcc.Dropdown(id='RelevantFilterGantt', placeholder='Актуальность',
+                                                 options=[{'label': 'Только актуальные', 'value': 1},
+                                                          {'label': 'Только завершенные', 'value': 0, }], ),
+                                ]),
+                            ]),
+                        ], className='cloud',
+                            style={'margin-bottom': '0', 'padding-bottom': '14px', 'min-width': '260px'}),
+                        # html.Button('Сбросить', className='clean w100', id='RefreshGraph')
+                    ], className='filters line'),
+                ], width="auto"),
+                dbc.Col([
+                    html.Div([
+                        html.Div('Цветовая палитра',
+                                 style={'margin-bottom': '8px', 'margin-top': '8px', 'font-weight': '500',
+                                        'font-size': '16px', 'color': 'black'}),
+                        dcc.Dropdown(
+                            id='PaletteFilterGantt',
+                            placeholder='Цвета',
+                            options=palette_options,
+                            value='Aggrnyl',
+                            clearable=False,
+                        )
+                    ], className='cloud',
+                        style={'margin-bottom': '0', 'padding-bottom': '14px', 'min-width': '250px'}),
+                ], width="auto"),
+            ], className='g-1'),
+        ], style={'width': '100%'}),
+    ])
+    return content
+
+

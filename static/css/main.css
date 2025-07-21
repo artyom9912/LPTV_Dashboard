@@ -145,7 +145,8 @@ form button{
   font-size: 20px;
   font-weight: 500;
   cursor: pointer;
-  background: linear-gradient(-135deg,  #fac904, #c850c0,#4158d0);
+  /*background: linear-gradient(-135deg,  #fac904, #c850c0,#4158d0);*/
+  background: #1a1a1a;
   background-size: 175%;
   background-position: left;
   transition: background-position 0.5s ease, transform 0.3s ease;
@@ -168,6 +169,7 @@ button:active{
 }
 button:hover {
   background-position: right;
+  background: #313131;
 }
 /*button:hover::before {*/
 /*  opacity: 1;*/

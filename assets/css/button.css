@@ -50,7 +50,10 @@
 .ico4{background: url('../img/edit.png') no-repeat;}
 .ico5{background: url('../img/graph.png') no-repeat;}
 .ico6{background: url('../img/user.png') no-repeat;}
-.option .ico1, .ico2, .ico3, .ico4, .ico5, .ico6, .iconEdit, .symbol, .emoji {
+.ico7{background: url('../img/left-arrow.png') no-repeat;}
+.ico8{background: url('../img/right-arrow.png') no-repeat;}
+.ico9{background: url('../img/gantt2.png') no-repeat;}
+.option .ico1, .ico2, .ico3, .ico4, .ico5, .ico6, .ico9, .iconEdit, .symbol, .emoji {
     float: left;
     vertical-align: middle;
     width: 24px;
@@ -58,9 +61,47 @@
     margin-right: 20px;
     transition: all 0.1s ease-in;
 }
-.ico1, .ico2, .ico3, .ico4, .ico5 {
 
+.ico7, .ico8{
+    float: left;
+    vertical-align: middle;
+    margin: 0;
+    width: 16px;
+    height: 16px;
+    transition: all 0.1s ease-in;
 }
+#miniBtn{
+    box-shadow: rgba(0, 0, 0, 0.18) 1px 1px 8px;
+    margin-bottom: 12px;
+    background-color: white;
+    border-radius: 24px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    opacity:20%;
+    transition: opacity 0.4s ease;
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    padding: 6px !important;
+    width: auto;
+    height: auto;
+}
+.sm{width: auto; height: fit-content; background-color: white; border: none}
+#miniBtn:hover{
+    opacity:100%;
+    margin-left: 0;
+    /*background-color: white;*/
+}
+
+#miniBtn .option:hover{
+    opacity:100%;
+    /*background-color: white;*/
+    margin-left: 0 !important;
+}
+#cabinetBtn .option{background-color: #f6eedf
+}
+#admBtn .option{background-color: #f6eedf }
 .iconEdit{
     /*background: url('../img/edit.png') no-repeat;*/
 }

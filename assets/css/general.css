@@ -44,13 +44,15 @@ body,html{
     /*min-width: 300px;*/
     z-index: 5;
     text-align: center;
+    box-shadow: inset -2px -2px 8px rgba(0, 0, 0, 0.16);
     background: #b4a790;
     background-image: url("../img/ScrollBack.png");
-
+    transition: width 80ms ease-in;
 }
 .main{
     width: 80%;
     background-color: #F2F3F4;
+    transition: width 80ms ease-in;
 }
 .header{
     background-color: white;
@@ -103,7 +105,7 @@ body,html{
 .userPic{
     border-radius: 50%;
     width: 120px;
-    box-shadow: rgba(0, 0, 0, 0.16) 1px 1px 8px;
+    box-shadow: rgba(0, 0, 0, 0.08) 1px 1px 8px;
 }
 .userBox{
     margin-top:35%;
@@ -167,6 +169,8 @@ body,html{
     padding-left: 40px;
     /*background-color: aquamarine;*/
     height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 .name{
     font-family: "Futura PT Light", monospace;
@@ -233,6 +237,31 @@ body,html{
 .dropdown-toggle:hover{
     background-color: #f5f5f5;
 }
+.mini .userName{font-size: 0px;  }
+.mini .userRole{font-size: 0px}
+.mini .option{font-size: 0px; display: block; height: auto;
+    margin-left: 25px; width: fit-content;padding: 14px; border-radius: 50px}
+.mini .option:hover{margin-left: 32px}
+.mini .userBox>img{
+    width: inherit;
+    max-width: 80px;
+}
+.mini .userBox{margin-top: 50%}
+.mini .options{
+    padding-left: 18px;
+    margin-top: 20px;
+}
+.mini .ico1, .mini .ico2, .mini .ico3, .mini .ico4, .mini .ico5, .mini .ico6, .mini .ico9 {
+    margin: 0;
+}
+
+.mini {
+    width: 140px !important;
+    max-width: 140px;
+
+}
+.minimain {width: calc(100% - 140px)}
+.minimain .content{max-width: 100%}
 
 @media (max-width: 1008px){
     .userName{font-size: 16px; margin-top: 2px}
