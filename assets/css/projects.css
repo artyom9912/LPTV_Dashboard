@@ -99,7 +99,7 @@
     /*padding-left: 4px;*/
 }
 .card:active{
-    border-width: 3px;
+    border-width: 2px;
     /*box-shadow: 3px 3px 1px #e5e5e5;*/
 }
 .card:active .prjName{

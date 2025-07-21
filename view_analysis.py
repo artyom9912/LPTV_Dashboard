@@ -1,14 +1,10 @@
 from dash import dcc, html, dash_table
 import dash_bootstrap_components as dbc
-from utils import rgba_string_to_hex, month_name_ru
 from datetime import datetime
 from plotly.graph_objs import Figure, Bar, Layout
 import flask_login
-import pandas as pd
-from app import cache
 import db
 import plotly.colors as pc
-import plotly.graph_objs as go
 
 def GRAPHIC(id=None, is_project=False):
     today = datetime.today()

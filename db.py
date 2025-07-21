@@ -6,7 +6,6 @@ from datetime import date, timedelta
 import os
 
 
-
 def execute_query(con, query: str):
     if query:
         res= con.execute(text(query))

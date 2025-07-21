@@ -24,9 +24,6 @@ from plotly.graph_objs import Bar, Figure, Layout
 import plotly.colors as pc
 import base64
 
-
-
-# WEEK_NUMBERS = dict(zip(WEEKDAYS, range(0, 7)))
 CACHE = {}
 
 def success_emoji():
@@ -630,7 +627,10 @@ def update_cal_filters(click, year, month, stage):
 )
 def update_graph(id, year, month, is_project):
     raw_data = db.get_lines_users(project_id=id, month=month, year=year) if is_project else db.get_lines_projects(user_id=id, month=month, year=year)
-    num_days, weekends = get_month_info(month, year)
+    if month:
+        num_days, weekends = get_month_info(month, year)
+    else:
+        num_days, weekends = None, None
 
     palette = ["#66C2A5", "#FC8D62", "#8DA0CB", "#E78AC3", "#A6D854", "#FFD92F", "#E5C494", "#B3B3B3"]
 
@@ -700,7 +700,7 @@ def update_graph(id, year, month, is_project):
         font=dict(family="Rubik, sans-serif", size=14, color="black"),
         title=f'{month_name_ru(month)} {year}' if year else 'Нет данных',
         xaxis=dict(title='', dtick=1, range=[0, num_days+0.2] if month else [0,12]),
-        yaxis=dict(title='', range=[0, 12] ) if month else dict(autorange=True, fixedrange=False),
+        yaxis=dict(title='', range=[0, 12.1] ) if month else dict(autorange=True, fixedrange=False),
         plot_bgcolor='#fff',
         paper_bgcolor='#fff',
         autosize=True,

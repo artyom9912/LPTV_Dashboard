@@ -1,0 +1,8 @@
+flask
+flask-login
+dash
+dash-bootstrap-components
+pandas
+sqlalchemy
+plotly
+Pillow

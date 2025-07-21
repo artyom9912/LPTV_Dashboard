@@ -3,19 +3,16 @@ from flask import Flask, render_template, request, redirect, flash
 import flask_login
 from flask_login import login_required
 from user import User
-import pandas as pd
 import dash
 from view import LAYOUT, PROJECTDESK, USERCABINET
 from view_specials import DATABASE, ADMINPAGE
 from view_analysis import GRAPHIC, GANTT
 from view_calendar import CALENDAR
 from dash.dependencies import Input, Output, State
-from sqlalchemy import text
 import db
-from os import makedirs
 from callback import CACHE
 import callback
-from app import appDash, app, login_manager, engine, cache
+from app import appDash, app, login_manager
 
 
 @login_manager.user_loader

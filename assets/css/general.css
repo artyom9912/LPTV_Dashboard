@@ -14,6 +14,14 @@
     src: url("../fonts/FuturaPT-Light.ttf");
 }
 @font-face {
+    font-family: 'Futura PT Medium';
+    src: url("../fonts/FuturaPT-Medium.ttf");
+}
+@font-face {
+    font-family: 'Kepler 296';
+    src: url("../fonts/Kepler 296.otf");
+}
+@font-face {
     font-family: 'Bahnschrift SemiBold';
     src: url("../fonts/bahnschrift.ttf");
 }
@@ -293,7 +301,7 @@ html::-webkit-scrollbar-thumb:hover {
 }
 /* Firefox scrollbar styling */
 html {
-  scrollbar-width: 6px;           /* thin scrollbar */
+  scrollbar-width: thin;           /* thin scrollbar */
   scrollbar-color: rgba(0,0,0,0.55) transparent; /* thumb & track */
 }
 
