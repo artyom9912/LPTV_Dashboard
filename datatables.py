@@ -24,7 +24,7 @@ style_table={
 style_cell={'font-family': 'Rubik', 'text-align': 'left', 'width':'auto',
             'border': '3px solid white', 'background-color': '#f7f7f7',
             'font-size': '14px', 'padding-left':'12px','cursor':'pointer'}
-style_header={'background-color': '#E1E1E1', 'color': 'black', 'height': '35px','z-index':'5',
+style_header={'background-color': '#E1E1E1', 'color': 'black', 'height': '35px','z-index':'5','padding-left':'6px',
               'border': '0px solid white', 'font-family': 'Rubik', 'font-size': '14px','cursor':'default'}
 def get_style_data_conditional():
     return [
@@ -98,7 +98,7 @@ def ProjectsTable():
 def AdmTableContent(tab):
     if tab == 'tab-c':
         df = db.get_users()
-        df.columns = ['id', 'ИМЯ', 'ЦВЕТ', 'АДМИН', 'СТАТУС']
+        df.columns = ['id', 'ИМЯ', 'ЛОГИН', 'ЦВЕТ', 'АДМИН', 'СТАТУС']
         df['АДМИН'] = df['АДМИН'].map(lambda x: 'Да' if x == 1 else 'Нет')
         df['СТАТУС'] = df['СТАТУС'].map(lambda x: 'Актуальный' if x == 1 else 'Не актуальный')
         return df.to_dict('records'), [{"name": i, "id": i} for i in df.columns]

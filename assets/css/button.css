@@ -49,7 +49,8 @@
 .ico3{background: url('../img/grid.png') no-repeat;}
 .ico4{background: url('../img/edit.png') no-repeat;}
 .ico5{background: url('../img/graph.png') no-repeat;}
-.option .ico1, .ico2, .ico3, .ico4, .ico5, .iconEdit, .symbol, .emoji {
+.ico6{background: url('../img/user.png') no-repeat;}
+.option .ico1, .ico2, .ico3, .ico4, .ico5, .ico6, .iconEdit, .symbol, .emoji {
     float: left;
     vertical-align: middle;
     width: 24px;

@@ -66,12 +66,13 @@
     color: white !important;
 }
 .calendar-cell:active{
-    background: #a1a1a1 !important;
+    background: #707070 !important;
 }
 .calendar-cell{
     transition: background 0.07s ease-in, color 0s ease;
     user-select: none;
     cursor: pointer;
+    min-width: 30px;
 }
 
 .calendar{
@@ -121,8 +122,16 @@
     padding-left: 10px;
 }
 
-
-
 .delete-mode *.calendar-cell{
     cursor: url("../img/del_cursor.svg") 12 0, pointer !important;
+}
+
+#UserList{
+    font-size: 14px;
+    padding-top: 8px;
+    min-width: 187px;
+}
+#delete-switch{ min-width: 187px}
+#RefreshCal{
+    box-shadow: 0px 0px 3px #d0d0d0;;
 }

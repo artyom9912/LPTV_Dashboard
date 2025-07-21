@@ -41,14 +41,14 @@ def render_stage_block(stage_name,deadline, year, month, user_work_data, num_day
         })
     ], style={"min-width": "120px"})
 
-
     # Каждая колонка дня
     day_cols = []
-    for day in range(1,num_days+1):
+    for day in range(1,32):
         cells = []
         for hour in range(1, rows + 1):
             style = {
                 "height": "24px",
+                # "min-width": "30px",
                 "border": "1px solid #F7F7F7",
                 "text-align": "center",
                 # "cursor": "pointer",
@@ -58,6 +58,18 @@ def render_stage_block(stage_name,deadline, year, month, user_work_data, num_day
                 "position": "relative"
             }
 
+            if day > num_days:
+                style['display'] = 'none'
+                style['min-width'] = '0'
+                cells.append(html.Div(
+                    str(hour),
+                    id={"type": "calendar-cell", "stage": stage_name, "hour": hour, "day": day, "month": month, "year": year},
+                    n_clicks=0,
+                    style=style,
+                    className='calendar-cell'
+                ))
+                continue
+
             # Найди записи, которые касаются этой ячейки
             records = [r for r in user_work_data if
                        r["stage"] == stage_name and r["day"] == day and hour <= r["hours"]]
@@ -65,7 +77,7 @@ def render_stage_block(stage_name,deadline, year, month, user_work_data, num_day
                 # Пустая ячейка
                 cells.append(html.Div(
                     str(hour),
-                    id={"type": "calendar-cell", "stage": stage_name, "hour": hour, "day": day},
+                    id={"type": "calendar-cell", "stage": stage_name, "hour": hour, "day": day, "month": month, "year": year},
                     n_clicks=0,
                     style=style,
                     className='calendar-cell'
@@ -86,7 +98,7 @@ def render_stage_block(stage_name,deadline, year, month, user_work_data, num_day
                     style["border-radius"] = f"0 0 {'0' if right else '8px'} {'0' if left else '8px'}"
                 cells.append(html.Div(
                     str(hour),
-                    id={"type": "calendar-cell", "stage": stage_name, "hour": hour, "day": day},
+                    id={"type": "calendar-cell", "stage": stage_name, "hour": hour, "day": day, "month": month, "year": year},
                     n_clicks=0,
                     style=style,
                     className='calendar-cell'
@@ -107,7 +119,7 @@ def render_stage_block(stage_name,deadline, year, month, user_work_data, num_day
 
                 cells.append(html.Div(
                     str(hour),
-                    id={"type": "calendar-cell", "stage": stage_name, "hour": hour, "day": day},
+                    id={"type": "calendar-cell", "stage": stage_name, "hour": hour, "day": day, "month": month, "year": year},
                     n_clicks=0,
                     style=style,
                     className='calendar-cell'
@@ -116,7 +128,7 @@ def render_stage_block(stage_name,deadline, year, month, user_work_data, num_day
         day_cols.append(
             html.Div(cells, style={
                 "display": "flex", "flex-direction": "column",
-                "min-width": "30px"
+                # "min-width": "30px"
             }, id={"type": "day-block", "stage": stage_name, "day": day})
         )
 
@@ -164,7 +176,7 @@ def render_header(num_days, weekends):
                 *[
                     html.Div(str(day), style={
                         "min-width": "30px", "font-weight": "400", "font-size": "12px",
-                        "border": "1px solid #EDEDED","border-bottom": "1px solid #ccc",
+                        "border": "1px solid #EDEDED","border-bottom": "1px solid #ccc", "border-right": "1px solid #E4E4E4" if day in weekends else '#EDEDED',
                         "background-color": "#F1F1F1" if day in weekends else 'white',
                         "text-align": "center", "padding": "4px",
                         "height": "30px"
@@ -186,9 +198,9 @@ def render_header(num_days, weekends):
 
 def render_table_div(project_id=None, stages=None, year=None, month=None):
     return html.Div([
-        html.Div([
-            render_header(31, [])
-        ], id='CalendarHeader'),
+
+            render_header(31, []),
+
 
         dcc.Loading([
             html.Div(
@@ -242,11 +254,12 @@ def CALENDAR(id):
                     dcc.Dropdown(id='YearFilterCal', placeholder='Год',
                                  options=options['year'], value=today.year, clearable=False),
                     dcc.Dropdown(id='MonthFilterCal', placeholder='Месяц',
-                                 options=options['month'], value=6, clearable=False),
+                                 options=options['month'], value=today.month, clearable=False),
                     ]),
                 ]),
+            html.Button('Сбросить', className='clean', id='RefreshCal'),
         ], className='cloud', style={'margin-bottom':'0', 'padding-bottom':'14px', 'min-width':'260px'}),
-        html.Button('Сбросить', className='clean', id='RefreshCal'),
+
         html.Div(dbc.Checklist(
             id='DeleteMode',
             options=[{'label': 'Удаление ✂️', 'value': 'delete'}],
@@ -254,7 +267,12 @@ def CALENDAR(id):
             switch=True,
             style={'padding': '5px 2px'},
             className='custom-switch'
-        ), className='cloud',id='delete-switch', style={'margin-top': '20px', 'transition':'all 0s ease', 'user-select':'none', 'padding-left':'8px'}),
+        ), className='cloud',id='delete-switch', style={'margin-top': '25px', 'transition':'all 0s ease', 'user-select':'none', 'padding-left':'8px'}),
+            html.Div([
+                html.Div([html.Span([], style={'background-color':'lightgray', 'border-radius':'50px','padding':'2px 4px', 'margin-right':'10px'}),'Нет данных'],style={'margin-bottom':'8px'}),
+            ], className='cloud', id='UserList',
+                style={'margin-top': '20px', 'user-select': 'none',
+                       'padding-left': '8px'}),
         ], className='filters line'),
     ])
     return content

@@ -47,7 +47,7 @@ def DATABASE():
                 },
                 style_cell={'font-family': 'Rubik', 'text-align': 'left', 'width':'auto',
                             'border': '2px solid white', 'background-color': '#f7f7f7',
-                            'font-size': '14px', 'padding-left':'12px', 'cursor':'default'},
+                            'font-size': '14px', 'padding-left':'2px', 'cursor':'default'},
                 style_header={'background-color': '#313131', 'color': 'white', 'height': '35px','z-index':'5',
                               'border': '0px solid white', 'font-family': 'Rubik', 'font-size': '14px',  'padding-left':'2px',},
                 style_data_conditional=[
@@ -113,6 +113,8 @@ def DATABASE():
                                  options=options['stage']+[{'label': '[Все Этапы]', 'value': 'Все'}]),
                     dcc.Dropdown(id='SquareFilter', placeholder='Площадь',
                                      options=options['square'] + [{'label': '[Все]', 'value': 'Все'}]),
+                    dcc.Dropdown(id='RelevantFilter', placeholder='Актуальность',
+                                 options=[{'label': 'Только актуальные', 'value': 1},{'label': 'Только завершенные', 'value': 0,}]),
                     ]),
                 ]),
         ], className='cloud', style={'margin-bottom':'0', 'padding-bottom':'14px', 'min-width':'260px'}),

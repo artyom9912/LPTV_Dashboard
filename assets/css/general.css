@@ -240,7 +240,7 @@ body,html{
     .option{font-size: 0px; display: block; margin-left: 25px; width: fit-content; padding-left: 25px}
     .userBox>img{
     width: inherit;
-        padding: 10px 20px;
+    max-width: 80px;
 }
 }
 
@@ -299,6 +299,10 @@ html {
 .red{
     background-color: #ea003f;
     color: white;
+}
+.column-header-name{
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 

@@ -16,7 +16,7 @@ def execute_query(con, query: str):
 def get_user_info(user_id):
     with engine.connect() as con:
         res = con.execute(
-            text('SELECT id, username, relevant, admin, name, color FROM lptv.user WHERE id = :user_id'),
+            text('SELECT id, username, relevant, admin, name, color, password FROM lptv.user WHERE id = :user_id'),
             {"user_id": user_id}
         )
         return res.fetchone()
@@ -86,6 +86,13 @@ def get_user_name(id):
             {"id": id}
         )
         return res.scalar()
+def get_user_last_project(user_id):
+    with engine.connect() as con:
+        res = con.execute(
+            text('SELECT projectId FROM lptv.main WHERE userId = :user_id ORDER BY id DESC LIMIT 1'),
+            {"user_id": user_id}
+        )
+        return res.scalar()
 
 def get_project_count(is_relevant=1):
     with engine.connect() as con:
@@ -94,7 +101,17 @@ def get_project_count(is_relevant=1):
             {"is_relevant": is_relevant}
         )
         return res.scalar()
-
+def get_project_count_by_user(is_relevant=1, user_id=None):
+    with engine.connect() as con:
+        res = con.execute(
+            text('SELECT count(DISTINCT projectId) FROM lptv.main '
+                 'JOIN project p ON projectId=p.id '
+                 'WHERE isDone != :is_relevant '
+                 'AND userId = :user_id'),
+            {"is_relevant": is_relevant,
+             "user_id":user_id}
+        )
+        return res.scalar()
 
 def get_years():
     with engine.connect() as con:
@@ -105,8 +122,9 @@ def get_years():
 
 def get_users():
     with engine.connect() as con:
-        df = pd.read_sql("SELECT id, name, color, admin, relevant  FROM lptv.user", con)
+        df = pd.read_sql("SELECT id, name, username, color, admin, relevant  FROM lptv.user", con)
         return df
+
 
 def get_projects():
     with engine.connect() as con:
@@ -176,6 +194,7 @@ def get_project_cards(relevant, year):
     return df
 
 def execute_user_queries(cache, user_id, mode):
+    print(cache)
     MAP = {
         'UserName': 'name',
         'UserLogin': 'username',
@@ -287,9 +306,9 @@ def execute_project_queries(cache, project_id, mode):
             execute_query(con,sql3)
 
 
-def get_db_chunk(page_current, page_size):
+def get_db_chunk(page_current, page_size, relevant=None):
     offset = page_current * page_size
-    query = text("""
+    query = text(f"""
         SELECT 
             YEAR(dateStamp) AS year,
             MONTH(dateStamp) AS month,
@@ -303,38 +322,53 @@ def get_db_chunk(page_current, page_size):
         JOIN user u ON u.id = main.userId
         JOIN project p ON main.projectId = p.id
         JOIN stage s ON main.stageId = s.id
+        {'WHERE p.isDone = :relevant ' if relevant is not None else ''}
         ORDER BY dateStamp DESC
         LIMIT :limit OFFSET :offset
     """)
 
     with engine.connect() as con:
-        result = con.execute(query, {"limit": page_size, "offset": offset})
+        result = con.execute(query, {"limit": page_size, "offset": offset, 'relevant':relevant})
         rows = result.fetchall()
         columns = result.keys()
         data = [dict(zip(columns, row)) for row in rows]
         return data, columns
 
-def get_filtered_data(select, group_by, filters, join, order_by):
-    query = text(f"""
+def get_filtered_data(select, group_by, filters, join, order_by, params=None):
+    query_str = f"""
         SELECT {select}, SUM(hours) AS hours 
         FROM lptv.main
         {join}
         WHERE {filters}
         GROUP BY {group_by}
         ORDER BY {order_by} SUM(hours) DESC
-    """)
+    """
+
+    # 🚨 Только для отладки — подставляем параметры вручную
+    debug_query = query_str
+    if params:
+        for k, v in params.items():
+            val = f"'{v}'" if isinstance(v, str) else str(v)
+            debug_query = debug_query.replace(f":{k}", val)
+
+    print("Executing SQL:\n", debug_query)  # ← В консоль Python
+
+    query = text(query_str)
 
     with engine.connect() as con:
-        result = con.execute(query)
+        result = con.execute(query, params or {})
         rows = result.fetchall()
         columns = result.keys()
         data = [dict(zip(columns, row)) for row in rows]
         return data, columns
 
 
-def get_main_count():
+
+def get_main_count(relevant=None):
     with engine.connect() as con:
-        res = con.execute(text(""" SELECT COUNT(*) FROM main"""))
+        res = con.execute(text(f""" SELECT COUNT(*) FROM main 
+         {'JOIN project p on p.id = projectId'
+          ' WHERE p.isDone = :relevant ' if relevant is not None else ''}"""),{'relevant':not relevant})
         return res.scalar()
 
 
@@ -555,7 +589,7 @@ def get_graph_project_data(project_id, year, month=None):
     final_df = pivot.reset_index()
 
     columns = [{"name": col.partition(" ")[0], "id": col} for col in final_df.columns]
-    print(columns)
+
     return final_df.to_dict('records'), columns
 
 def get_graph_user_data(user_id, year, month=None):
@@ -584,9 +618,9 @@ def get_graph_user_data(user_id, year, month=None):
     final_df.columns = final_df.iloc[0]
     final_df = final_df.drop(final_df.index[0])
     final_df = final_df.reset_index()
-    print(final_df)
-    columns = [{"name": col[:9], "id": col} for col in final_df.columns]
-    print(columns)
+
+    columns = [{"name": col[:20], "id": col} for col in final_df.columns]
+
     return final_df.to_dict('records'), columns
 
 
@@ -667,5 +701,135 @@ def get_user_work_data(project_id, year, month,stage=None):
         }
         for row in rows
     ]
-
     return user_work_data
+
+def get_user_legend(project_id, year, month):
+    with engine.connect() as con:
+        res = con.execute(
+            text('''
+                SELECT DISTINCT u.id, u.name, u.color
+                FROM lptv.user u
+                JOIN lptv.main m ON m.userId = u.id
+                WHERE m.projectId = :project_id
+                  AND YEAR(m.dateStamp) = :year
+                  AND MONTH(m.dateStamp) = :month
+            '''),
+            {
+                "project_id": project_id,
+                "year": year,
+                "month": month
+            }
+        )
+        return [
+            {"user_id": row[0], "name": row[1], "color": row[2]}
+            for row in res
+        ]
+
+def insert_or_update_record(user_id, project_id, stage_id, day, hours, year, month):
+    with engine.begin() as con:
+        # Проверка количества чужих записей на этот день и стадию
+        other_count = con.execute(
+            text("""
+                SELECT COUNT(*) FROM main
+                WHERE projectId = :project_id
+                  AND stageId = :stage_id
+                  AND DAY(dateStamp) = :day
+                  AND YEAR(dateStamp) = :year
+                  AND MONTH(dateStamp) = :month
+                  AND userId != :user_id
+            """),
+            {
+                "project_id": project_id,
+                "stage_id": stage_id,
+                "day": day,
+                "year": year,
+                "month": month,
+                "user_id": user_id
+            }
+        ).scalar()
+
+        if other_count >= 2:
+            return False  # Блокирую вставку
+
+        # Проверка: есть ли уже своя запись
+        existing = con.execute(
+            text("""
+                SELECT id FROM main
+                WHERE projectId = :project_id
+                  AND stageId = :stage_id
+                  AND DAY(dateStamp) = :day
+                  AND YEAR(dateStamp) = :year
+                  AND MONTH(dateStamp) = :month
+                  AND userId = :user_id
+            """),
+            {
+                "project_id": project_id,
+                "stage_id": stage_id,
+                "day": day,
+                "year": year,
+                "month": month,
+                "user_id": user_id
+            }
+        ).fetchone()
+
+        date_str = f"{year:04d}-{month:02d}-{day:02d}"
+
+        if existing:
+            # Обновление записи
+            con.execute(
+                text("""
+                    UPDATE main
+                    SET hours = :hours
+                    WHERE id = :id
+                """),
+                {"hours": hours, "id": existing[0]}
+            )
+        else:
+            # Вставка новой записи
+            con.execute(
+                text("""
+                    INSERT INTO main (userId, projectId, stageId, dateStamp, hours)
+                    VALUES (:user_id, :project_id, :stage_id, :date_stamp, :hours)
+                """),
+                {
+                    "user_id": user_id,
+                    "project_id": project_id,
+                    "stage_id": stage_id,
+                    "date_stamp": date_str,
+                    "hours": hours
+                }
+            )
+        return True
+
+def delete_work_record(user_id, project_id, stage_id, day, hour, year, month):
+    with engine.begin() as con:
+        # Ищем если уже есть запись
+        record = con.execute(
+            text("""
+                SELECT id, hours FROM main
+                WHERE userId = :user_id
+                  AND projectId = :project_id
+                  AND stageId = :stage_id
+                  AND DAY(dateStamp) = :day
+                  AND YEAR(dateStamp) = :year
+                  AND MONTH(dateStamp) = :month
+            """),
+            {
+                "user_id": user_id,
+                "project_id": project_id,
+                "stage_id": stage_id,
+                "day": day,
+                "year": year,
+                "month": month
+            }
+        ).fetchone()
+
+        if record and hour <= record.hours:
+            # Удаляем запись
+            con.execute(
+                text("DELETE FROM main WHERE id = :id"),
+                {"id": record.id}
+            )
+            return True  # Успешное удаление
+
+        return False

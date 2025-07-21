@@ -5,15 +5,15 @@ from flask_login import login_required
 from user import User
 import pandas as pd
 import dash
-from view import LAYOUT, PROJECTDESK
+from view import LAYOUT, PROJECTDESK, USERCABINET
 from view_specials import DATABASE, ADMINPAGE
 from view_analysis import GRAPHIC
 from view_calendar import CALENDAR
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 from sqlalchemy import text
 import db
 from os import makedirs
-# from callback import update_db
+from callback import CACHE
 import callback
 from app import appDash, app, login_manager, engine, cache
 
@@ -21,7 +21,6 @@ from app import appDash, app, login_manager, engine, cache
 @login_manager.user_loader
 def loadUser(user_id):
     user=db.get_user_info(user_id)
-    # print(user)
     if user is None: return
     USER = User()
     USER.id = user[0]
@@ -30,6 +29,7 @@ def loadUser(user_id):
     USER.admin = user[3]
     USER.name = user[4]
     USER.color = user[5]
+    USER.passord = user[6]
     return USER
 
 @app.route('/')
@@ -77,57 +77,47 @@ appDash.title = 'LPTV'
 def restrict_dash():
     if request.path.startswith('/dash') and not flask_login.current_user.is_authenticated:
         return redirect('/loginpage')
-# @app.route('/dash')
-# @flask_login.login_required
-# def projectDesk():
-#     # appDash.layout = LAYOUT(flask_login.current_user.name, '', flask_login.current_user.color)
-#     appDash.layout = dash.html.Div('HELLO')
-#     print(flask_login.current_user.color)
-#     return appDash.run(debug=True)
 
-# @cache.memoize()
-# def getData():
-#     con = engine.connect()
-#     dbDF[0] = (pd.read_sql("""
-#             SELECT YEAR(timestamp), MONTH(timestamp), DAY(timestamp), fullname, title, code, customer, hours
-#             FROM skameyka.main_table
-#             JOIN skameyka.project_table ON project_table.id = project_id
-#             JOIN skameyka.user_table ON user_table.id = user_id
-#             ORDER BY timestamp desc
-#         """, con))
-#     head = ['ГОД', 'ММ', 'ДД', 'СОТРУДНИК', 'ПРОЕКТ', 'ШИФР', 'ЗАКАЗЧИК', 'ЧАСЫ']
-#     dbDF[0].columns = head
+@appDash.callback(
+    Output('content', 'children'),
+    Input('prjBtn', 'n_clicks'),
+    Input('calBtn', 'n_clicks'),
+    Input('graphBtn', 'n_clicks'),
+    Input('dbBtn', 'n_clicks'),
+    Input('admBtn', 'n_clicks'),
+    Input('cabinetBtn', 'n_clicks'),
+    Input('calAction', 'n_clicks',  allow_optional=True),
+    Input('graphAction', 'n_clicks',  allow_optional=True),
+    State('selected-project-id', 'data', allow_optional=True)
+)
+def display_page(prjBtn, calBtn, graphBtn, dbBtn, admBtn,cabinetBtn, calAction, graphAction, project_id):
+    triggered = dash.callback_context.triggered
+    CACHE.clear()
+    if not triggered:
+        return USERCABINET()
 
+    changed_id = triggered[0]['prop_id'].split('.')[0]
+    if not project_id:
+        project_id = db.get_user_last_project(flask_login.current_user.id)
 
-@appDash.callback(Output('content', 'children'),
-              Input('prjBtn', 'n_clicks'),
-              Input('calBtn', 'n_clicks'),
-              Input('graphBtn', 'n_clicks'),
-              Input('dbBtn', 'n_clicks'),
-              Input('admBtn', 'n_clicks'))
-def display_page(prjBtn, calBtn, graphBtn, dbBtn, admBtn):
-    changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
-    # global dbDF
-    # for i in range(0,len(calendar_cache)): del calendar_cache[0]
+    match changed_id:
+        case 'prjBtn':
+            return PROJECTDESK()
+        case 'calBtn' | 'calAction':
+            return CALENDAR(project_id)
+        case 'graphBtn':
+            return GRAPHIC()
+        case 'graphAction':
+            return GRAPHIC(project_id, True)
+        case 'dbBtn':
+            return DATABASE()
+        case 'admBtn':
+            return ADMINPAGE()
+        case 'cabinetBtn':
+            return USERCABINET()
+        case _:
+            return USERCABINET()
 
-
-
-    if 'prjBtn' in changed_id:
-        content = PROJECTDESK()
-    elif 'calBtn' in changed_id:
-        content = CALENDAR(13)
-    elif 'dbBtn' in changed_id:
-        # JOIN для отображения бд
-        # getData()
-        # print(dbDF[0].shape)
-        content = DATABASE()
-    elif 'graphBtn' in changed_id:
-        content = GRAPHIC(13, True)
-    elif 'admBtn' in changed_id:
-        content = ADMINPAGE()
-    else:
-        content = CALENDAR(13)
-    return content
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1',port=8080, debug=True)

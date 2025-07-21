@@ -13,15 +13,7 @@ def GRAPHIC(id=None, is_project=False):
     options = db.get_graph_filters()
     if not is_project and not id:
         id = flask_login.current_user.id
-    # p = db.get_project_full(id)
-    # prj_data = dict(
-    #     Title=p[1],
-    #     PrjName=p[1],
-    #     PrjSqr=p[2],
-    #     PrjLvl=p[3],
-    #     PrjStart=p[4],
-    #     PrjDone=p[5],
-    # )
+
     content = html.Div([
         dcc.Store(id='GraphMode', data=1 if is_project else 0),
         html.Div('', className='name', id='BigTitle'),
@@ -32,12 +24,12 @@ def GRAPHIC(id=None, is_project=False):
                             id='Graph',
                             # figure=generate_graph(project_id, 7, 2025),
                             config={"displayModeBar": False,},
-                            style={'height': '400px'}  # фиксируем только высоту
+                            style={'height': '400px',}  # фиксируем только высоту
                         )
                     ],className='cloud' , style={
                         'width': '94%',
                         'max-width': '1320px',
-                        'padding': '10px 30px 10px 0',  # отступы слева и справа
+                        'padding': '10px 20px 5px 0',  # отступы слева и справа
                         'box-sizing': 'border-box'
                     })
             ], ),
@@ -100,12 +92,12 @@ def GRAPHIC(id=None, is_project=False):
                                 },
                                 style_cell={'font-family': 'Rubik', 'text-align': 'left', 'min-width': '70px',
                                             'border': '2px solid white', 'background-color': '#f7f7f7','whiteSpace': 'nowrap','overflow': 'hidden','textOverflow': 'ellipsis',
-                                            'font-size': '14px', 'padding-left': '6px', 'cursor': 'default'},
+                                            'font-size': '14px', 'padding-left': '6px', 'cursor': 'default', },
                                 style_header={'background-color': '#646464', 'color': 'white', 'height': '30px','z-index': '5',
                                               'border': '0px solid white', 'border-right': '2px solid white',
                                               'border-left': '2px solid white','border-bottom': '1px solid white', 'font-family': 'Rubik', 'font-size': '13px',
                                               'padding-left': '2px', 'whiteSpace': 'nowrap',
-                                                'overflow': 'hidden',
+                                                'overflow': 'hidden', 'max-width':'150px' if not is_project else 'auto',
                                                 'textOverflow': 'ellipsis',
                                                   # <-- обязательно с единицами
                                                 'textAlign': 'left'},

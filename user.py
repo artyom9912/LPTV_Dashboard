@@ -7,3 +7,4 @@ class User(UserMixin):
     relevant = 1
     admin = 0
     color = None
+    password = None

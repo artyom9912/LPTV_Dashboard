@@ -18,7 +18,9 @@ import plotly.graph_objects as go
 import flask_login
 from datatables import UsersTable, ProjectsTable, to_css_rgba
 from dash.exceptions import PreventUpdate
-
+from PIL import Image
+import io
+import base64
 
 
 
@@ -34,15 +36,78 @@ def success_emoji():
     Output('ROLE', 'children'),
     Output('UserPic', 'src'),
     Output('UserPic', 'style'),
+    Output('admBtn', 'className'),
     Input('content', 'children')
 )
 def SetUser(style):
     try:
         user = flask_login.current_user
-        return user.name, 'Администратор' if user.admin == 1 else 'Сотрудник', get_user_picture(db.get_user_login(user.name)), {'border':f'{rgba_string_to_hex(user.color)} 3px solid'}
+        return user.name, 'Администратор' if user.admin == 1 else 'Сотрудник',\
+               get_user_picture(db.get_user_login(user.name)), \
+               {'border':f'{rgba_string_to_hex(user.color)} 3px solid'}, \
+                '' if user.admin == 1 else 'hidden'
     except Exception as e:
         logger.exception("Ошибка в SetUser: %s", str(e))
         return dash.no_update
+
+@appDash.callback(
+    Output('UploadBlock', 'children'),
+    Input('UploadBlock', 'children'),
+    Input('ChangePic', 'n_clicks'),
+    Input('UploadPhoto', 'contents', allow_optional=True),
+    State('UploadPhoto', 'filename', allow_optional=True)
+)
+def update_photo_block(children,clicks,contents, filename):
+    triggered = callback_context.triggered
+    user = flask_login.current_user
+    if contents is None:
+        if 'ChangePic' not in triggered[0]['prop_id']:
+            path = get_user_picture(user.username)
+            return html.Img(
+                src=path,
+                style={'width': '200px', 'border-radius': '6px'}
+            )
+
+        # Показываем upload до загрузки
+        return dcc.Upload(
+                    id='UploadPhoto',
+                    children=html.Div([
+                        'Перетащи файл или ',
+                        html.A('выбери на устройстве', style={'color':rgba_string_to_hex(user.color)})
+                    ], style={'padding-top':'20%', 'color':'gray'}),
+                    style={
+                        'width': '100%',
+                        'height': '200px',
+                        'user-select':'none',
+                        'cursor': 'pointer',
+                        'borderWidth': '2px',
+                        'border-color': 'gray',
+                        'borderStyle': 'dashed',
+                        'borderRadius': '6px',
+                        'textAlign': 'center',
+                        'margin-bottom': '10px'
+                    },
+                    multiple=False
+                ),
+
+    # Если файл загружен — обрабатываем и показываем картинку
+    content_type, content_string = contents.split(',')
+    decoded = base64.b64decode(content_string)
+
+    # Обработка изображения
+    image = Image.open(io.BytesIO(decoded)).convert("RGB")
+    image = image.resize((200, 200))
+    path = f'assets/img/users/{user.username}.png'
+
+    buffered = io.BytesIO()
+    image.save(path, format="PNG")
+    image.save(buffered, format="PNG")
+    encoded_img = base64.b64encode(buffered.getvalue()).decode()
+
+    return html.Img(
+        src=f"data:image/png;base64,{encoded_img}",
+        style={ 'width': '200px', 'border-radius': '6px'}
+    )
 
 @appDash.callback(
     Output('ProjectDesk', 'children'),
@@ -62,7 +127,7 @@ def UpdateProjectDesk(relevant, year):
                         html.Div([project['count_users'], html.Span('чел.', className='tail')], className='num line dim'),
                         html.Div([project['level']], className='num line last'),
                     ], className='line-wrap prjInfo', style={'background':'linear-gradient(to right, rgba(243, 243, 243, 0) 210px, #E1D2BEFF 20px)'} if project['isDone']==1 else {}),
-                  ], className='card',id={'type': 'project-card', 'id': project['id']}, style={'border-color':'#E1D2BEFF'} if project['isDone']==1 else {}) for id, project in projects.iterrows()]
+                  ], className="archive card" if project["isDone"]==1 else "card", id={'type': 'project-card', 'id': project['id']}, ) for id, project in projects.iterrows()]
         return content
     except Exception as e:
         logger.exception("Ошибка в UpdateProjectDesk: %s", str(e))
@@ -71,13 +136,17 @@ def UpdateProjectDesk(relevant, year):
 @appDash.callback(
     Output('selected-project-id', 'data'),
     Input({'type': 'project-card', 'id': ALL}, 'n_clicks'),
+    Input('RelevantFilterDesk', 'value'),
+    Input('YearFilterDesk', 'value'),
     State({'type': 'project-card', 'id': ALL}, 'id'),
     prevent_initial_call=True
 )
-def store_selected_card(n_clicks_list, ids):
+def store_selected_card(n_clicks_list,relevant, year, ids):
     triggered = callback_context.triggered
     if not triggered:
         return dash.no_update
+    if 'RelevantFilterDesk' in triggered[0]['prop_id'] or 'YearFilterDesk' in triggered[0]['prop_id']:
+        return None
 
     prop_id = triggered[0]['prop_id'].split('.')[0]
     try:
@@ -96,18 +165,21 @@ def store_selected_card(n_clicks_list, ids):
 
 @appDash.callback(
     Output({'type': 'project-card', 'id': ALL}, 'style'),
+    Output('ProjectInfo', 'className'),
     Input('selected-project-id', 'data'),
-    State({'type': 'project-card', 'id': ALL}, 'id')
+    State({'type': 'project-card', 'id': ALL}, 'id'),
+    prevent_initial_call=True
 )
 def highlight_selected_card(selected_id, all_ids):
     if selected_id is None:
-        return [{} for _ in all_ids]
+        return [{} for _ in all_ids], 'cloud filter hidden'
 
     color = to_css_rgba(flask_login.current_user.color)
     selected_style = {
-        'border-color': 'black',
-        'background-color': color,
-        # 'background-image': 'url("assets/img/prjActive1.png")',
+        'border-color': '#343434',
+        'border-width': '3px',
+        # 'background-color': color,
+        'background-image': 'url("assets/img/prjActive1.png")',
         # 'box-shadow': f'0 0 0 2px {color}'
     }
     default_style = {}
@@ -116,7 +188,7 @@ def highlight_selected_card(selected_id, all_ids):
     return [
         selected_style if id_['id'] == selected_id else default_style
         for id_ in all_ids
-    ]
+    ], 'cloud filter'
 
 
 @appDash.callback(
@@ -375,9 +447,9 @@ def show_confirm(n_clicks):
 #     calendar_cache.append(query)
 #
 #     return dash.no_update
-@cache.memoize()
-def get_calendar_body_cached(project_id, year, month, num_days):
-    user_work_data = db.get_user_work_data(project_id, year, month)
+
+def get_calendar_body_cached(project_id, year, month, num_days, user_work_data):
+
     deadlines = db.get_project_stages(project_id)
     print(user_work_data)
     # stages = [stage] if stage else all_stages
@@ -415,6 +487,7 @@ def style_day_cells(year, month, num_days, weekends):
     for day in range(1,32):
         day_style = base_style.copy()
         day_style["background-color"] = "#EEEEEE" if day in weekends else "white"
+        day_style["border-right"] = "1px #E4E4E4 solid" if day in weekends else "1px #EDEDED solid"
         day_style["display"] = "none" if day > num_days else "block"
         styles.append(day_style)
 
@@ -426,20 +499,27 @@ def style_day_cells(year, month, num_days, weekends):
     Output('CalendarTitle', 'children'),
     Output('CalendarMonth', 'children'),
     Output({"type": "day-cell", "day": ALL}, 'style'),
+    Output('UserList', 'children'),
     Input('ProjectFilterCal', 'value'),
     Input('YearFilterCal', 'value'),
     Input('MonthFilterCal', 'value')
 
 )
 def update_calendar_body(project_id, year, month):
+    user_work_data = db.get_user_work_data(project_id, year, month)
     num_days, weekends = get_month_info(month, year)
-    title = [html.Span('КАЛЕНДАРЬ ', style={"font-family":'"Futura PT Medium", monospace'}),db.get_project_name(project_id).upper()]
-    return get_calendar_body_cached(project_id, year, month, num_days), title, month_name_ru(month).upper(), style_day_cells(year, month, num_days, weekends)
+    title = [html.Span('КАЛЕНДАРЬ ', style={"font-family": '"Futura PT Medium", monospace'}),
+             db.get_project_name(project_id).upper()]
+    userlines = db.get_user_legend(project_id,year,month)
+
+    userlist = [html.Div([html.Span([], style={'background-color':rgba_string_to_hex(line['color']), 'border-radius':'50px','padding':'2px 4px', 'margin-right':'10px'})
+                             ,line['name']],style={'margin-bottom':'8px'}) for line in userlines] if len(userlines)>0 else [html.Div([html.Span([], style={'background-color':'lightgray', 'border-radius':'50px','padding':'2px 4px', 'margin-right':'10px'}),'Нет данных'],style={'margin-bottom':'8px'})]
+    return get_calendar_body_cached(project_id, year, month, num_days, user_work_data), title, month_name_ru(month).upper(), style_day_cells(year, month, num_days, weekends), userlist
 
 @appDash.callback(
-    Output({"type": "calendar-cell", "stage": MATCH, "day": MATCH, "hour": ALL}, "style"),
-    Input({"type": "calendar-cell", "stage": MATCH, "hour": ALL, "day": MATCH}, "n_clicks"),
-    State({"type": "calendar-cell", "stage": MATCH, "hour": ALL, "day": MATCH}, "id"),
+    Output({"type": "calendar-cell", "stage": MATCH, "day": MATCH, "hour": ALL, "month": MATCH, "year": MATCH }, "style"),
+    Input({"type": "calendar-cell", "stage": MATCH, "hour": ALL, "day": MATCH,  "month": MATCH, "year": MATCH}, "n_clicks"),
+    State({"type": "calendar-cell", "stage": MATCH, "hour": ALL, "day": MATCH,  "month": MATCH, "year": MATCH}, "id"),
     State("ProjectFilterCal", "value"),
     State("YearFilterCal", "value"),
     State("MonthFilterCal", "value"),
@@ -450,6 +530,7 @@ def update_cell_styles(n_clicks, cell_ids, project_id, year, month, delete_mode)
     triggered = callback_context.triggered_id
     if not triggered:
         raise dash.exceptions.PreventUpdate
+
 
     user_id = flask_login.current_user.id
     user_color = rgba_string_to_hex(flask_login.current_user.color)
@@ -468,8 +549,11 @@ def update_cell_styles(n_clicks, cell_ids, project_id, year, month, delete_mode)
     my_hours = my_record["hours"] if my_record else 0
 
     # Чужая запись
-    other = next((r for r in user_work_data or []
-                  if r["stage"] == selected_stage and r["day"] == selected_day and r["user_id"] != user_id), None)
+    records = [r for r in user_work_data or []
+                  if r["stage"] == selected_stage and r["day"] == selected_day and r["user_id"] != user_id]
+    if len(records) > 1:
+        return [dash.no_update] * 12
+    other = records[0] if len(records)>0 else None
 
     other_hours = other["hours"] if other else 0
     other_color = other["color"] if other else None
@@ -551,6 +635,7 @@ def update_cell_styles(n_clicks, cell_ids, project_id, year, month, delete_mode)
                 style["border-radius"] = "0 0 8px 8px"
 
         styles.append(style)
+        print(len(styles))
 
     return styles
 
@@ -562,8 +647,8 @@ def update_cell_styles(n_clicks, cell_ids, project_id, year, month, delete_mode)
 
 @appDash.callback(
     Output('popupCal', 'children'),
-    Input({"type": "calendar-cell", "stage": ALL, "hour": ALL, "day": ALL}, "n_clicks_timestamp"),
-    State({"type": "calendar-cell", "stage": ALL, "hour": ALL, "day": ALL}, "id"),
+    Input({"type": "calendar-cell", "stage": ALL, "hour": ALL, "day": ALL, "month": ALL, "year": ALL }, "n_clicks_timestamp"),
+    State({"type": "calendar-cell", "stage": ALL, "hour": ALL, "day": ALL, "month": ALL, "year": ALL }, "id"),
     State("ProjectFilterCal", "value"),
     State("YearFilterCal", "value"),
     State("MonthFilterCal", "value"),
@@ -571,35 +656,78 @@ def update_cell_styles(n_clicks, cell_ids, project_id, year, month, delete_mode)
     prevent_initial_call=True
 )
 def handle_cell_click(timestamps, ids, project_id, year, month, delete_mode):
-    if not timestamps or all(ts is None for ts in timestamps):
-        raise dash.exceptions.PreventUpdate
+    try:
+        if not timestamps or all(ts is None for ts in timestamps):
+            return dash.no_update
 
-    # Найди последнюю кликнутую ячейку
-    latest_idx = max(
-        ((i, ts) for i, ts in enumerate(timestamps) if ts is not None),
-        key=lambda x: x[1]
-    )[0]
-    triggered = ids[latest_idx]
+        # Найди последнюю кликнутую ячейку
+        latest_idx = max(
+            ((i, ts) for i, ts in enumerate(timestamps) if ts is not None),
+            key=lambda x: x[1]
+        )[0]
+        triggered = ids[latest_idx]
+        stageId = all_stages.index(triggered["stage"]) + 1
+        user_id = flask_login.current_user.id
 
-    # 🚀 Здесь будет SQL-запрос: INSERT или DELETE
-    # пример:
-    # db.insert_or_delete_record(user_id, project_id, triggered["stage"], triggered["day"], triggered["hour"])
-    if 'delete' in delete_mode:
+        if 'delete' in delete_mode:
+
+            success = db.delete_work_record(
+                user_id,
+                project_id,
+                stageId,
+                triggered["day"],
+                triggered["hour"],
+                year,
+                month
+            )
+            if not success:
+                return dash.no_update
+            else:
+                return [
+                    html.Div(
+                        [html.Span("✂️", className='symbol emoji'), 'Запись удалена'],
+                        className='cloud line popup green',
+                        hidden=False
+                    )
+                ]
+
+        success = db.insert_or_update_record(
+            user_id,
+            project_id,
+            stageId,
+            triggered["day"],
+            triggered["hour"],
+            year,
+            month
+        )
+
+        if not success:
+            return [
+                html.Div(
+                    [html.Span("⚠️", className='symbol emoji'), 'День уже занят'],
+                    className='cloud line popup orange',
+                    hidden=False
+                )
+            ]
+
         return [
             html.Div(
-                [html.Span("✂️", className='symbol emoji'), 'Запись удалена'],
+                [html.Span(success_emoji(), className='symbol emoji'), 'Запись сохранена'],
                 className='cloud line popup green',
                 hidden=False
             )
         ]
 
-    return [
-        html.Div(
-            [html.Span(success_emoji(), className='symbol emoji'), 'Успешно сохранено'],
-            className='cloud line popup green',
-            hidden=False
-        )
-    ]
+    except Exception as e:
+        logger.exception("Ошибка при обработке нажатия в календаре: %s", str(e))
+        return [
+            html.Div(
+                [html.Span("❌", className='symbol emoji'), 'Необработанная ошибка!'],
+                className='cloud line popup red',
+                hidden=False
+            )
+        ]
+
 
 
 @appDash.callback(
@@ -677,6 +805,7 @@ def update_cal_filters(click, year, month, stage):
 )
 def update_graph(id, year, month, is_project):
     raw_data = db.get_lines_users(project_id=id, month=month, year=year) if is_project else db.get_lines_projects(user_id=id, month=month, year=year)
+    num_days, weekends = get_month_info(month, year)
 
     palette = ["#66C2A5", "#FC8D62", "#8DA0CB", "#E78AC3", "#A6D854", "#FFD92F", "#E5C494", "#B3B3B3"]
 
@@ -745,13 +874,13 @@ def update_graph(id, year, month, is_project):
     fig.update_layout(
         font=dict(family="Rubik, sans-serif", size=14, color="black"),
         title=f'{month_name_ru(month)} {year}' if year else 'Нет данных',
-        xaxis=dict(title='', dtick=1, range=[0, 31] if month else [0,12]),
+        xaxis=dict(title='', dtick=1, range=[0, num_days] if month else [0,12]),
         yaxis=dict(title='', range=[0, 12] ) if month else dict(autorange=True, fixedrange=False),
         plot_bgcolor='#fff',
         paper_bgcolor='#fff',
         autosize=True,
         legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1),
-        margin=dict(l=20, r=20, t=50, b=40),
+        margin=dict(l=10, r=10, t=50, b=20),
     )
     fig.layout.xaxis.fixedrange = True
     fig.layout.yaxis.fixedrange = True
@@ -767,8 +896,8 @@ def update_graph(id, year, month, is_project):
     return fig, table_data, table_columns, style_header_conditional
 
 @cache.memoize()
-def get_raw_data_cached(page_current, page_size):
-    return db.get_db_chunk(page_current, page_size)
+def get_raw_data_cached(page_current, page_size, relevant):
+    return db.get_db_chunk(page_current, page_size, relevant)
 
 @cache.memoize()
 def get_filtered_data_cached(select, group_by, filters, join, order_by):
@@ -795,8 +924,9 @@ def get_filtered_data_cached(select, group_by, filters, join, order_by):
     Input('DayFilter', 'value'),
     Input('MonthFilter', 'value'),
     Input('YearFilter', 'value'),
+    Input('RelevantFilter', 'value'),
 )
-def update_table(page_current, page_size, user, project, square, stage, day, month, year):
+def update_table(page_current, page_size, user, project, square, stage, day, month, year, relevant):
     try:
         HEAD_MAP = {
             'year': 'ГОД',
@@ -813,28 +943,35 @@ def update_table(page_current, page_size, user, project, square, stage, day, mon
             'year': [year, 'YEAR(dateStamp) year', None, 'YEAR(dateStamp)'],
             'month': [month,'MONTH(dateStamp) month', None, 'MONTH(dateStamp)'],
             'day': [day,'DAY(dateStamp) day', None, 'DAY(dateStamp)'],
+            'relevant': [None if relevant is None else not relevant, None, 'JOIN project p ON main.projectId=p.id\n', 'p.isDone'],
             'user': [user, 'u.name user', 'JOIN user u ON main.userId=u.id\n', 'u.name'],
             'project': [project, 'p.name project', 'JOIN project p ON main.projectId=p.id\n', 'p.name'],
             'square': [square, 'p.square square', 'JOIN project p ON main.projectId=p.id\n', 'p.square'],
             'stage': [stage, 's.name stage', 'JOIN stage s ON main.stageId=s.id\n', 's.name'],
         }
 
+
         # Если ни один фильтр не выбран — показать "сырые" данные
-        if all(v[0] is None for v in field_map.values()):
-            data, columns = get_raw_data_cached(page_current, page_size)
-            page_size= 40
-            page_action='custom'
-            count = db.get_main_count()
+        if all(v[0] is None for k, v in field_map.items() if k != 'relevant'):
+            data, columns = get_raw_data_cached(page_current, page_size, relevant)
+            page_size = 40
+            page_action = 'custom'
+            count = db.get_main_count(relevant)
 
 
         else:
             page_size = 250
             page_action = 'native'
-
+            print('isDONE')
+            print(relevant)
             # Фильтрация и группировка по выбранным
-            select_keys = [field_map[k][1] for k, v in field_map.items() if v[0] is not None]
-            group_by_keys = [k for k, v in field_map.items() if v[0] is not None]
-            filters = [f"{field_map[k][-1]} = '{v[0]}'" for k, v in field_map.items() if v[0] is not None and 'Все' != v[0] ]
+            select_keys = [field_map[k][1] for k, v in field_map.items() if v[0] is not None and v[1] is not None]
+            group_by_keys = [k for k, v in field_map.items() if v[0] is not None and k != 'relevant']
+            filters = [
+                f"{field_map[k][-1]} = {v[0] if k == 'relevant' else repr(v[0])}"
+                for k, v in field_map.items()
+                if v[0] is not None and v[0] != 'Все'
+            ]
             joins = [field_map[k][2] for k, v in field_map.items() if v[0] is not None and v[2] is not None]
             order = [k+" DESC" for k, v in list(field_map.items())[:3] if v[0] is not None]
 
@@ -1124,6 +1261,58 @@ def ProjectChanges(PrjName, PrjStart, PrjSqr, PrjLvl, PrjDone,
         return dash.no_update
 
 @appDash.callback(
+    Output('popupCab', 'style'),
+    [Input('UserNameCab', 'value')],
+    [Input('UserLoginCab', 'value')],
+    [Input('UserPassCab', 'value')],
+    [Input('UserColorCab', 'value')],
+    prevent_initial_call=True
+)
+def UserChangesCab(UserName, UserLogin, UserPass, UserColor):
+    try:
+        changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
+        if 'UserName' in changed_id:
+            CACHE['UserName'] = f"{UserName}"
+        elif 'UserLogin' in changed_id:
+            CACHE['UserLogin'] = f"{UserLogin}"
+        elif 'UserPass' in changed_id:
+            CACHE['UserPass'] = f"{UserPass}"
+        elif 'UserColor' in changed_id:
+            CACHE['UserColor'] = hex_to_rgba01(UserColor)
+        return dash.no_update
+    except Exception as e:
+        logger.exception("Ошибка в UserChangesCab: %s", str(e))
+        return dash.no_update
+
+@appDash.callback(
+    Output('popupCab', 'children'),
+    [Input('CabinetSubmit', 'n_clicks')],
+    [State('popupCab', 'children')],
+    prevent_initial_call=True
+)
+def UpdateUser(n_clicks1, old):
+
+    triggered = dash.callback_context.triggered
+    if not triggered or triggered[0]['value'] is None:
+        return dash.no_update
+
+    if not n_clicks1:
+        return dash.no_update
+
+    try:
+        db.execute_user_queries(CACHE, flask_login.current_user.id, 'update')
+
+    except Exception as e:
+        logger.exception(f"Ошибка при обновлении User: {e}")
+        CACHE.clear()
+        return old + [html.Div([html.Span('😧', className='symbol emoji'), 'Ошибка при записи в базу'], className='cloud line popup red', hidden=False)]
+
+    CACHE.clear()
+
+    return old + [html.Div([html.Span('💾', className='symbol emoji'), 'Данные обновлены'], className='cloud line popup green', hidden=False)]
+
+
+@appDash.callback(
     Output('popupAdm', 'style'),
     [Input('UserName', 'value')],
     [Input('UserLogin', 'value')],
@@ -1230,6 +1419,19 @@ def SaveAdm(ch):
     # print(ch)
     if len(ch) != 0:
         sleep(1.5)
+        return html.Div([], id='popupCal', )
+    else:
+        return dash.no_update
+
+@appDash.callback(
+    Output('popupBoxCab', 'children'),
+    Input('popupCab', 'children'),
+    prevent_initial_call=True
+)
+def SaveAdm(ch):
+    # print(ch)
+    if len(ch) != 0:
+        sleep(1.9)
         return html.Div([], id='popupCal', )
     else:
         return dash.no_update

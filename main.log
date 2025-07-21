@@ -1,0 +1,1032 @@
+2025-07-20 17:20:52,026 - ERROR - Ошибка при обработке нажатия в календаре: 
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 589, in handle_cell_click
+    raise dash.exceptions.PreventUpdate
+dash.exceptions.PreventUpdate
+2025-07-20 17:21:13,902 - ERROR - Ошибка при обработке нажатия в календаре: Неверное значение
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 601, in handle_cell_click
+    raise ValueError("Неверное значение")
+ValueError: Неверное значение
+2025-07-20 17:21:19,854 - ERROR - Ошибка при обработке нажатия в календаре: Неверное значение
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 601, in handle_cell_click
+    raise ValueError("Неверное значение")
+ValueError: Неверное значение
+2025-07-20 17:21:22,505 - ERROR - Ошибка при обработке нажатия в календаре: Неверное значение
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 601, in handle_cell_click
+    raise ValueError("Неверное значение")
+ValueError: Неверное значение
+2025-07-20 17:21:24,647 - ERROR - Ошибка при обработке нажатия в календаре: Неверное значение
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 601, in handle_cell_click
+    raise ValueError("Неверное значение")
+ValueError: Неверное значение
+2025-07-20 17:21:26,920 - ERROR - Ошибка при обработке нажатия в календаре: Неверное значение
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 601, in handle_cell_click
+    raise ValueError("Неверное значение")
+ValueError: Неверное значение
+2025-07-20 17:21:29,154 - ERROR - Ошибка при обработке нажатия в календаре: Неверное значение
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 601, in handle_cell_click
+    raise ValueError("Неверное значение")
+ValueError: Неверное значение
+2025-07-20 17:21:31,167 - ERROR - Ошибка при обработке нажатия в календаре: Неверное значение
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 601, in handle_cell_click
+    raise ValueError("Неверное значение")
+ValueError: Неверное значение
+2025-07-20 17:21:33,741 - ERROR - Ошибка при обработке нажатия в календаре: Неверное значение
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 601, in handle_cell_click
+    raise ValueError("Неверное значение")
+ValueError: Неверное значение
+2025-07-20 17:21:35,838 - ERROR - Ошибка при обработке нажатия в календаре: Неверное значение
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 601, in handle_cell_click
+    raise ValueError("Неверное значение")
+ValueError: Неверное значение
+2025-07-20 17:21:37,629 - ERROR - Ошибка при обработке нажатия в календаре: Неверное значение
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 601, in handle_cell_click
+    raise ValueError("Неверное значение")
+ValueError: Неверное значение
+2025-07-20 17:21:39,773 - ERROR - Ошибка при обработке нажатия в календаре: Неверное значение
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 601, in handle_cell_click
+    raise ValueError("Неверное значение")
+ValueError: Неверное значение
+2025-07-20 17:21:41,889 - ERROR - Ошибка при обработке нажатия в календаре: Неверное значение
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 601, in handle_cell_click
+    raise ValueError("Неверное значение")
+ValueError: Неверное значение
+2025-07-20 17:21:44,074 - ERROR - Ошибка при обработке нажатия в календаре: Неверное значение
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 601, in handle_cell_click
+    raise ValueError("Неверное значение")
+ValueError: Неверное значение
+2025-07-20 17:21:46,401 - ERROR - Ошибка при обработке нажатия в календаре: Неверное значение
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 601, in handle_cell_click
+    raise ValueError("Неверное значение")
+ValueError: Неверное значение
+2025-07-20 17:21:48,734 - ERROR - Ошибка при обработке нажатия в календаре: Неверное значение
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 601, in handle_cell_click
+    raise ValueError("Неверное значение")
+ValueError: Неверное значение
+2025-07-20 17:21:51,060 - ERROR - Ошибка при обработке нажатия в календаре: Неверное значение
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 601, in handle_cell_click
+    raise ValueError("Неверное значение")
+ValueError: Неверное значение
+2025-07-20 17:21:53,801 - ERROR - Ошибка при обработке нажатия в календаре: Неверное значение
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 601, in handle_cell_click
+    raise ValueError("Неверное значение")
+ValueError: Неверное значение
+2025-07-20 17:22:03,153 - ERROR - Ошибка при обработке нажатия в календаре: 
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 589, in handle_cell_click
+    raise dash.exceptions.PreventUpdate
+dash.exceptions.PreventUpdate
+2025-07-20 17:22:16,937 - ERROR - Ошибка при обработке нажатия в календаре: 
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 589, in handle_cell_click
+    raise dash.exceptions.PreventUpdate
+dash.exceptions.PreventUpdate
+2025-07-20 17:22:34,320 - ERROR - Ошибка при обработке нажатия в календаре: 
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 589, in handle_cell_click
+    raise dash.exceptions.PreventUpdate
+dash.exceptions.PreventUpdate
+2025-07-21 02:06:49,211 - ERROR - Ошибка при обновлении User: can only concatenate str (not "NoneType") to str
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 1297, in UpdateUser
+    db.execute_user_queries(CACHE, item_id, 'update')
+  File "D:\PROJECTS\LPTV_Dashboard\db.py", line 221, in execute_user_queries
+    if os.path.isfile(path+old_name+'.png'):
+                      ~~~~^~~~~~~~~
+TypeError: can only concatenate str (not "NoneType") to str
+2025-07-21 02:40:27,994 - ERROR - Ошибка в update_table: (pymysql.err.ProgrammingError) (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ', SUM(hours) AS hours \n        FROM lptv.main\n        JOIN project p ON main.pro' at line 1")
+[SQL: 
+        SELECT , SUM(hours) AS hours 
+        FROM lptv.main
+        JOIN project p ON main.projectId=p.id
+
+        WHERE p.relevant = '1'
+        GROUP BY relevant
+        ORDER BY  SUM(hours) DESC
+    ]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+Traceback (most recent call last):
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1963, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\default.py", line 943, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\cursors.py", line 153, in execute
+    result = self._query(query)
+             ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\cursors.py", line 322, in _query
+    conn.query(q)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 563, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 825, in _read_query_result
+    result.read()
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 1199, in read
+    first_packet = self.connection._read_packet()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 775, in _read_packet
+    packet.raise_for_error()
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\protocol.py", line 219, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\err.py", line 150, in raise_mysql_exception
+    raise errorclass(errno, errval)
+pymysql.err.ProgrammingError: (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ', SUM(hours) AS hours \n        FROM lptv.main\n        JOIN project p ON main.pro' at line 1")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 978, in update_table
+    data, columns = get_filtered_data_cached(select_clause, group_by_clause, where_clause, join_clause, order_by_clause)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\flask_caching\__init__.py", line 899, in decorated_function
+    rv = self._call_fn(f, *args, **kwargs)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\flask_caching\__init__.py", line 185, in _call_fn
+    return ensure_sync(fn)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 904, in get_filtered_data_cached
+    return db.get_filtered_data(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\PROJECTS\LPTV_Dashboard\db.py", line 347, in get_filtered_data
+    result = con.execute(query)
+             ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1415, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\sql\elements.py", line 523, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1637, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1842, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1982, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 2351, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1963, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\default.py", line 943, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\cursors.py", line 153, in execute
+    result = self._query(query)
+             ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\cursors.py", line 322, in _query
+    conn.query(q)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 563, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 825, in _read_query_result
+    result.read()
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 1199, in read
+    first_packet = self.connection._read_packet()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 775, in _read_packet
+    packet.raise_for_error()
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\protocol.py", line 219, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\err.py", line 150, in raise_mysql_exception
+    raise errorclass(errno, errval)
+sqlalchemy.exc.ProgrammingError: (pymysql.err.ProgrammingError) (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ', SUM(hours) AS hours \n        FROM lptv.main\n        JOIN project p ON main.pro' at line 1")
+[SQL: 
+        SELECT , SUM(hours) AS hours 
+        FROM lptv.main
+        JOIN project p ON main.projectId=p.id
+
+        WHERE p.relevant = '1'
+        GROUP BY relevant
+        ORDER BY  SUM(hours) DESC
+    ]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-07-21 02:45:57,535 - ERROR - Ошибка в update_table: (pymysql.err.ProgrammingError) (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ', SUM(hours) AS hours \n        FROM lptv.main\n        JOIN project p ON main.pro' at line 1")
+[SQL: 
+        SELECT , SUM(hours) AS hours 
+        FROM lptv.main
+        JOIN project p ON main.projectId=p.id
+
+        WHERE p.relevant = 1
+        GROUP BY relevant
+        ORDER BY  SUM(hours) DESC
+    ]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+Traceback (most recent call last):
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1963, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\default.py", line 943, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\cursors.py", line 153, in execute
+    result = self._query(query)
+             ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\cursors.py", line 322, in _query
+    conn.query(q)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 563, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 825, in _read_query_result
+    result.read()
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 1199, in read
+    first_packet = self.connection._read_packet()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 775, in _read_packet
+    packet.raise_for_error()
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\protocol.py", line 219, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\err.py", line 150, in raise_mysql_exception
+    raise errorclass(errno, errval)
+pymysql.err.ProgrammingError: (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ', SUM(hours) AS hours \n        FROM lptv.main\n        JOIN project p ON main.pro' at line 1")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 982, in update_table
+    data, columns = get_filtered_data_cached(select_clause, group_by_clause, where_clause, join_clause, order_by_clause)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\flask_caching\__init__.py", line 899, in decorated_function
+    rv = self._call_fn(f, *args, **kwargs)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\flask_caching\__init__.py", line 185, in _call_fn
+    return ensure_sync(fn)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 904, in get_filtered_data_cached
+    return db.get_filtered_data(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\PROJECTS\LPTV_Dashboard\db.py", line 347, in get_filtered_data
+    result = con.execute(query)
+             ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1415, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\sql\elements.py", line 523, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1637, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1842, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1982, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 2351, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1963, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\default.py", line 943, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\cursors.py", line 153, in execute
+    result = self._query(query)
+             ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\cursors.py", line 322, in _query
+    conn.query(q)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 563, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 825, in _read_query_result
+    result.read()
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 1199, in read
+    first_packet = self.connection._read_packet()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 775, in _read_packet
+    packet.raise_for_error()
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\protocol.py", line 219, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\err.py", line 150, in raise_mysql_exception
+    raise errorclass(errno, errval)
+sqlalchemy.exc.ProgrammingError: (pymysql.err.ProgrammingError) (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ', SUM(hours) AS hours \n        FROM lptv.main\n        JOIN project p ON main.pro' at line 1")
+[SQL: 
+        SELECT , SUM(hours) AS hours 
+        FROM lptv.main
+        JOIN project p ON main.projectId=p.id
+
+        WHERE p.relevant = 1
+        GROUP BY relevant
+        ORDER BY  SUM(hours) DESC
+    ]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-07-21 02:51:27,230 - ERROR - Ошибка в update_table: (pymysql.err.ProgrammingError) (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '== 1\n        ORDER BY dateStamp DESC\n        LIMIT 40 OFFSET 0' at line 14")
+[SQL: 
+        SELECT 
+            YEAR(dateStamp) AS year,
+            MONTH(dateStamp) AS month,
+            DAY(dateStamp) AS day,
+            u.name AS user,
+            p.name AS project,
+            s.name AS stage,
+            p.square,
+            main.hours
+        FROM main
+        JOIN user u ON u.id = main.userId
+        JOIN project p ON main.projectId = p.id
+        JOIN stage s ON main.stageId = s.id
+        AND p.relevant == %(relevant)s
+        ORDER BY dateStamp DESC
+        LIMIT %(limit)s OFFSET %(offset)s
+    ]
+[parameters: {'relevant': 1, 'limit': 40, 'offset': 0}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+Traceback (most recent call last):
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1963, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\default.py", line 943, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\cursors.py", line 153, in execute
+    result = self._query(query)
+             ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\cursors.py", line 322, in _query
+    conn.query(q)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 563, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 825, in _read_query_result
+    result.read()
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 1199, in read
+    first_packet = self.connection._read_packet()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 775, in _read_packet
+    packet.raise_for_error()
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\protocol.py", line 219, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\err.py", line 150, in raise_mysql_exception
+    raise errorclass(errno, errval)
+pymysql.err.ProgrammingError: (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '== 1\n        ORDER BY dateStamp DESC\n        LIMIT 40 OFFSET 0' at line 14")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 955, in update_table
+    data, columns = get_raw_data_cached(page_current, page_size, relevant)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\flask_caching\__init__.py", line 899, in decorated_function
+    rv = self._call_fn(f, *args, **kwargs)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\flask_caching\__init__.py", line 185, in _call_fn
+    return ensure_sync(fn)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 900, in get_raw_data_cached
+    return db.get_db_chunk(page_current, page_size, relevant)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\PROJECTS\LPTV_Dashboard\db.py", line 331, in get_db_chunk
+    result = con.execute(query, {"limit": page_size, "offset": offset, 'relevant':relevant})
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1415, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\sql\elements.py", line 523, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1637, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1842, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1982, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 2351, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1963, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\default.py", line 943, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\cursors.py", line 153, in execute
+    result = self._query(query)
+             ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\cursors.py", line 322, in _query
+    conn.query(q)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 563, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 825, in _read_query_result
+    result.read()
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 1199, in read
+    first_packet = self.connection._read_packet()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 775, in _read_packet
+    packet.raise_for_error()
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\protocol.py", line 219, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\err.py", line 150, in raise_mysql_exception
+    raise errorclass(errno, errval)
+sqlalchemy.exc.ProgrammingError: (pymysql.err.ProgrammingError) (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '== 1\n        ORDER BY dateStamp DESC\n        LIMIT 40 OFFSET 0' at line 14")
+[SQL: 
+        SELECT 
+            YEAR(dateStamp) AS year,
+            MONTH(dateStamp) AS month,
+            DAY(dateStamp) AS day,
+            u.name AS user,
+            p.name AS project,
+            s.name AS stage,
+            p.square,
+            main.hours
+        FROM main
+        JOIN user u ON u.id = main.userId
+        JOIN project p ON main.projectId = p.id
+        JOIN stage s ON main.stageId = s.id
+        AND p.relevant == %(relevant)s
+        ORDER BY dateStamp DESC
+        LIMIT %(limit)s OFFSET %(offset)s
+    ]
+[parameters: {'relevant': 1, 'limit': 40, 'offset': 0}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-07-21 02:52:43,311 - ERROR - Ошибка в update_table: (pymysql.err.ProgrammingError) (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '== 1\n        ORDER BY dateStamp DESC\n        LIMIT 40 OFFSET 0' at line 14")
+[SQL: 
+        SELECT 
+            YEAR(dateStamp) AS year,
+            MONTH(dateStamp) AS month,
+            DAY(dateStamp) AS day,
+            u.name AS user,
+            p.name AS project,
+            s.name AS stage,
+            p.square,
+            main.hours
+        FROM main
+        JOIN user u ON u.id = main.userId
+        JOIN project p ON main.projectId = p.id
+        JOIN stage s ON main.stageId = s.id
+        WHERE p.relevant == %(relevant)s
+        ORDER BY dateStamp DESC
+        LIMIT %(limit)s OFFSET %(offset)s
+    ]
+[parameters: {'relevant': 1, 'limit': 40, 'offset': 0}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+Traceback (most recent call last):
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1963, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\default.py", line 943, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\cursors.py", line 153, in execute
+    result = self._query(query)
+             ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\cursors.py", line 322, in _query
+    conn.query(q)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 563, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 825, in _read_query_result
+    result.read()
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 1199, in read
+    first_packet = self.connection._read_packet()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 775, in _read_packet
+    packet.raise_for_error()
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\protocol.py", line 219, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\err.py", line 150, in raise_mysql_exception
+    raise errorclass(errno, errval)
+pymysql.err.ProgrammingError: (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '== 1\n        ORDER BY dateStamp DESC\n        LIMIT 40 OFFSET 0' at line 14")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 955, in update_table
+    data, columns = get_raw_data_cached(page_current, page_size, relevant)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\flask_caching\__init__.py", line 899, in decorated_function
+    rv = self._call_fn(f, *args, **kwargs)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\flask_caching\__init__.py", line 185, in _call_fn
+    return ensure_sync(fn)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 900, in get_raw_data_cached
+    return db.get_db_chunk(page_current, page_size, relevant)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\PROJECTS\LPTV_Dashboard\db.py", line 331, in get_db_chunk
+    result = con.execute(query, {"limit": page_size, "offset": offset, 'relevant':relevant})
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1415, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\sql\elements.py", line 523, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1637, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1842, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1982, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 2351, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1963, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\default.py", line 943, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\cursors.py", line 153, in execute
+    result = self._query(query)
+             ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\cursors.py", line 322, in _query
+    conn.query(q)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 563, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 825, in _read_query_result
+    result.read()
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 1199, in read
+    first_packet = self.connection._read_packet()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 775, in _read_packet
+    packet.raise_for_error()
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\protocol.py", line 219, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\err.py", line 150, in raise_mysql_exception
+    raise errorclass(errno, errval)
+sqlalchemy.exc.ProgrammingError: (pymysql.err.ProgrammingError) (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '== 1\n        ORDER BY dateStamp DESC\n        LIMIT 40 OFFSET 0' at line 14")
+[SQL: 
+        SELECT 
+            YEAR(dateStamp) AS year,
+            MONTH(dateStamp) AS month,
+            DAY(dateStamp) AS day,
+            u.name AS user,
+            p.name AS project,
+            s.name AS stage,
+            p.square,
+            main.hours
+        FROM main
+        JOIN user u ON u.id = main.userId
+        JOIN project p ON main.projectId = p.id
+        JOIN stage s ON main.stageId = s.id
+        WHERE p.relevant == %(relevant)s
+        ORDER BY dateStamp DESC
+        LIMIT %(limit)s OFFSET %(offset)s
+    ]
+[parameters: {'relevant': 1, 'limit': 40, 'offset': 0}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-07-21 02:53:23,749 - ERROR - Ошибка в update_table: (pymysql.err.ProgrammingError) (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '== 1 \n        ORDER BY dateStamp DESC\n        LIMIT 40 OFFSET 0' at line 14")
+[SQL: 
+        SELECT 
+            YEAR(dateStamp) AS year,
+            MONTH(dateStamp) AS month,
+            DAY(dateStamp) AS day,
+            u.name AS user,
+            p.name AS project,
+            s.name AS stage,
+            p.square,
+            main.hours
+        FROM main
+        JOIN user u ON u.id = main.userId
+        JOIN project p ON main.projectId = p.id
+        JOIN stage s ON main.stageId = s.id
+        WHERE p.relevant == %(relevant)s 
+        ORDER BY dateStamp DESC
+        LIMIT %(limit)s OFFSET %(offset)s
+    ]
+[parameters: {'relevant': 1, 'limit': 40, 'offset': 0}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+Traceback (most recent call last):
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1963, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\default.py", line 943, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\cursors.py", line 153, in execute
+    result = self._query(query)
+             ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\cursors.py", line 322, in _query
+    conn.query(q)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 563, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 825, in _read_query_result
+    result.read()
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 1199, in read
+    first_packet = self.connection._read_packet()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 775, in _read_packet
+    packet.raise_for_error()
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\protocol.py", line 219, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\err.py", line 150, in raise_mysql_exception
+    raise errorclass(errno, errval)
+pymysql.err.ProgrammingError: (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '== 1 \n        ORDER BY dateStamp DESC\n        LIMIT 40 OFFSET 0' at line 14")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 955, in update_table
+    data, columns = get_raw_data_cached(page_current, page_size, relevant)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\flask_caching\__init__.py", line 899, in decorated_function
+    rv = self._call_fn(f, *args, **kwargs)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\flask_caching\__init__.py", line 185, in _call_fn
+    return ensure_sync(fn)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 900, in get_raw_data_cached
+    return db.get_db_chunk(page_current, page_size, relevant)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\PROJECTS\LPTV_Dashboard\db.py", line 331, in get_db_chunk
+    result = con.execute(query, {"limit": page_size, "offset": offset, 'relevant':relevant})
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1415, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\sql\elements.py", line 523, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1637, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1842, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1982, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 2351, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1963, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\default.py", line 943, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\cursors.py", line 153, in execute
+    result = self._query(query)
+             ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\cursors.py", line 322, in _query
+    conn.query(q)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 563, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 825, in _read_query_result
+    result.read()
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 1199, in read
+    first_packet = self.connection._read_packet()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 775, in _read_packet
+    packet.raise_for_error()
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\protocol.py", line 219, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\err.py", line 150, in raise_mysql_exception
+    raise errorclass(errno, errval)
+sqlalchemy.exc.ProgrammingError: (pymysql.err.ProgrammingError) (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '== 1 \n        ORDER BY dateStamp DESC\n        LIMIT 40 OFFSET 0' at line 14")
+[SQL: 
+        SELECT 
+            YEAR(dateStamp) AS year,
+            MONTH(dateStamp) AS month,
+            DAY(dateStamp) AS day,
+            u.name AS user,
+            p.name AS project,
+            s.name AS stage,
+            p.square,
+            main.hours
+        FROM main
+        JOIN user u ON u.id = main.userId
+        JOIN project p ON main.projectId = p.id
+        JOIN stage s ON main.stageId = s.id
+        WHERE p.relevant == %(relevant)s 
+        ORDER BY dateStamp DESC
+        LIMIT %(limit)s OFFSET %(offset)s
+    ]
+[parameters: {'relevant': 1, 'limit': 40, 'offset': 0}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-07-21 02:54:02,562 - ERROR - Ошибка в update_table: (pymysql.err.OperationalError) (1054, "Unknown column 'p.relevant' in 'where clause'")
+[SQL: 
+        SELECT 
+            YEAR(dateStamp) AS year,
+            MONTH(dateStamp) AS month,
+            DAY(dateStamp) AS day,
+            u.name AS user,
+            p.name AS project,
+            s.name AS stage,
+            p.square,
+            main.hours
+        FROM main
+        JOIN user u ON u.id = main.userId
+        JOIN project p ON main.projectId = p.id
+        JOIN stage s ON main.stageId = s.id
+        WHERE p.relevant = %(relevant)s 
+        ORDER BY dateStamp DESC
+        LIMIT %(limit)s OFFSET %(offset)s
+    ]
+[parameters: {'relevant': 1, 'limit': 40, 'offset': 0}]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+Traceback (most recent call last):
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1963, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\default.py", line 943, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\cursors.py", line 153, in execute
+    result = self._query(query)
+             ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\cursors.py", line 322, in _query
+    conn.query(q)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 563, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 825, in _read_query_result
+    result.read()
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 1199, in read
+    first_packet = self.connection._read_packet()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 775, in _read_packet
+    packet.raise_for_error()
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\protocol.py", line 219, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\err.py", line 150, in raise_mysql_exception
+    raise errorclass(errno, errval)
+pymysql.err.OperationalError: (1054, "Unknown column 'p.relevant' in 'where clause'")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 955, in update_table
+    data, columns = get_raw_data_cached(page_current, page_size, relevant)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\flask_caching\__init__.py", line 899, in decorated_function
+    rv = self._call_fn(f, *args, **kwargs)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\flask_caching\__init__.py", line 185, in _call_fn
+    return ensure_sync(fn)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 900, in get_raw_data_cached
+    return db.get_db_chunk(page_current, page_size, relevant)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\PROJECTS\LPTV_Dashboard\db.py", line 331, in get_db_chunk
+    result = con.execute(query, {"limit": page_size, "offset": offset, 'relevant':relevant})
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1415, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\sql\elements.py", line 523, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1637, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1842, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1982, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 2351, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1963, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\default.py", line 943, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\cursors.py", line 153, in execute
+    result = self._query(query)
+             ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\cursors.py", line 322, in _query
+    conn.query(q)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 563, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 825, in _read_query_result
+    result.read()
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 1199, in read
+    first_packet = self.connection._read_packet()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 775, in _read_packet
+    packet.raise_for_error()
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\protocol.py", line 219, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\err.py", line 150, in raise_mysql_exception
+    raise errorclass(errno, errval)
+sqlalchemy.exc.OperationalError: (pymysql.err.OperationalError) (1054, "Unknown column 'p.relevant' in 'where clause'")
+[SQL: 
+        SELECT 
+            YEAR(dateStamp) AS year,
+            MONTH(dateStamp) AS month,
+            DAY(dateStamp) AS day,
+            u.name AS user,
+            p.name AS project,
+            s.name AS stage,
+            p.square,
+            main.hours
+        FROM main
+        JOIN user u ON u.id = main.userId
+        JOIN project p ON main.projectId = p.id
+        JOIN stage s ON main.stageId = s.id
+        WHERE p.relevant = %(relevant)s 
+        ORDER BY dateStamp DESC
+        LIMIT %(limit)s OFFSET %(offset)s
+    ]
+[parameters: {'relevant': 1, 'limit': 40, 'offset': 0}]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-07-21 02:58:21,615 - ERROR - Ошибка в update_table: text() takes 1 positional argument but 2 were given
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 958, in update_table
+    count = db.get_main_count()
+            ^^^^^^^^^^^^^^^^^^^
+  File "D:\PROJECTS\LPTV_Dashboard\db.py", line 357, in get_main_count
+    res = con.execute(text(f""" SELECT COUNT(*) FROM main
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: text() takes 1 positional argument but 2 were given
+2025-07-21 02:58:49,605 - ERROR - Ошибка в update_table: text() takes 1 positional argument but 2 were given
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 958, in update_table
+    count = db.get_main_count(relevant)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\PROJECTS\LPTV_Dashboard\db.py", line 357, in get_main_count
+    res = con.execute(text(f""" SELECT COUNT(*) FROM main
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: text() takes 1 positional argument but 2 were given
+2025-07-21 02:59:59,628 - ERROR - Ошибка в update_table: (pymysql.err.ProgrammingError) (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WEHRE p.isDone = 0' at line 2")
+[SQL:  SELECT COUNT(*) FROM main 
+         JOIN project p on p.id = projectId WEHRE p.isDone = %(relevant)s ]
+[parameters: {'relevant': False}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+Traceback (most recent call last):
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1963, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\default.py", line 943, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\cursors.py", line 153, in execute
+    result = self._query(query)
+             ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\cursors.py", line 322, in _query
+    conn.query(q)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 563, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 825, in _read_query_result
+    result.read()
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 1199, in read
+    first_packet = self.connection._read_packet()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 775, in _read_packet
+    packet.raise_for_error()
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\protocol.py", line 219, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\err.py", line 150, in raise_mysql_exception
+    raise errorclass(errno, errval)
+pymysql.err.ProgrammingError: (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WEHRE p.isDone = 0' at line 2")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 958, in update_table
+    count = db.get_main_count(relevant)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\PROJECTS\LPTV_Dashboard\db.py", line 357, in get_main_count
+    res = con.execute(text(f""" SELECT COUNT(*) FROM main
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1415, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\sql\elements.py", line 523, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1637, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1842, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1982, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 2351, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1963, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\default.py", line 943, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\cursors.py", line 153, in execute
+    result = self._query(query)
+             ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\cursors.py", line 322, in _query
+    conn.query(q)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 563, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 825, in _read_query_result
+    result.read()
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 1199, in read
+    first_packet = self.connection._read_packet()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 775, in _read_packet
+    packet.raise_for_error()
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\protocol.py", line 219, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\err.py", line 150, in raise_mysql_exception
+    raise errorclass(errno, errval)
+sqlalchemy.exc.ProgrammingError: (pymysql.err.ProgrammingError) (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WEHRE p.isDone = 0' at line 2")
+[SQL:  SELECT COUNT(*) FROM main 
+         JOIN project p on p.id = projectId WEHRE p.isDone = %(relevant)s ]
+[parameters: {'relevant': False}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-07-21 03:01:33,125 - ERROR - Ошибка в update_table: (pymysql.err.ProgrammingError) (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ', u.name user, SUM(hours) AS hours \n        FROM lptv.main\n        JOIN project ' at line 1")
+[SQL: 
+        SELECT , u.name user, SUM(hours) AS hours 
+        FROM lptv.main
+        JOIN project p ON main.projectId=p.id
+JOIN user u ON main.userId=u.id
+
+        WHERE p.isDone = True
+        GROUP BY user
+        ORDER BY  SUM(hours) DESC
+    ]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+Traceback (most recent call last):
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1963, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\default.py", line 943, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\cursors.py", line 153, in execute
+    result = self._query(query)
+             ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\cursors.py", line 322, in _query
+    conn.query(q)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 563, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 825, in _read_query_result
+    result.read()
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 1199, in read
+    first_packet = self.connection._read_packet()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 775, in _read_packet
+    packet.raise_for_error()
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\protocol.py", line 219, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\err.py", line 150, in raise_mysql_exception
+    raise errorclass(errno, errval)
+pymysql.err.ProgrammingError: (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ', u.name user, SUM(hours) AS hours \n        FROM lptv.main\n        JOIN project ' at line 1")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 982, in update_table
+    data, columns = get_filtered_data_cached(select_clause, group_by_clause, where_clause, join_clause, order_by_clause)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\flask_caching\__init__.py", line 899, in decorated_function
+    rv = self._call_fn(f, *args, **kwargs)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\flask_caching\__init__.py", line 185, in _call_fn
+    return ensure_sync(fn)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 904, in get_filtered_data_cached
+    return db.get_filtered_data(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\PROJECTS\LPTV_Dashboard\db.py", line 348, in get_filtered_data
+    result = con.execute(query)
+             ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1415, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\sql\elements.py", line 523, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1637, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1842, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1982, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 2351, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\base.py", line 1963, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\sqlalchemy\engine\default.py", line 943, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\cursors.py", line 153, in execute
+    result = self._query(query)
+             ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\cursors.py", line 322, in _query
+    conn.query(q)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 563, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 825, in _read_query_result
+    result.read()
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 1199, in read
+    first_packet = self.connection._read_packet()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\connections.py", line 775, in _read_packet
+    packet.raise_for_error()
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\protocol.py", line 219, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "C:\Users\Artem\AppData\Roaming\Python\Python312\site-packages\pymysql\err.py", line 150, in raise_mysql_exception
+    raise errorclass(errno, errval)
+sqlalchemy.exc.ProgrammingError: (pymysql.err.ProgrammingError) (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ', u.name user, SUM(hours) AS hours \n        FROM lptv.main\n        JOIN project ' at line 1")
+[SQL: 
+        SELECT , u.name user, SUM(hours) AS hours 
+        FROM lptv.main
+        JOIN project p ON main.projectId=p.id
+JOIN user u ON main.userId=u.id
+
+        WHERE p.isDone = True
+        GROUP BY user
+        ORDER BY  SUM(hours) DESC
+    ]
+(Background on this error at: https://sqlalche.me/e/20/f405)
