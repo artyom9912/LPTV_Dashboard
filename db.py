@@ -422,7 +422,7 @@ def get_graph_filters():
         options['user'] = [{'label': row[0], 'value': row[1]} for row in res.fetchall()]
 
         # Проекты
-        res = con.execute(text("SELECT DISTINCT p.name, p.id FROM main JOIN project p ON p.id = main.projectId ORDER BY p.name"))
+        res = con.execute(text("SELECT DISTINCT p.name, p.id FROM  project p ORDER BY p.name"))
         options['project'] = [{'label': row[0], 'value': row[1]} for row in res.fetchall()]
 
     return options

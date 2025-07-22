@@ -1194,3 +1194,57 @@ Traceback (most recent call last):
 sqlalchemy.exc.DataError: (pymysql.err.DataError) (1366, "Incorrect integer value: 'NULL' for column 'square' at row 1")
 [SQL: INSERT INTO lptv.project (name, startdate, square, level, isDone) VALUES ('NULL', '2025-07-21', 'NULL', 1, 0)]
 (Background on this error at: https://sqlalche.me/e/20/9h9h)
+2025-07-22 14:29:23,565 - ERROR - Ошибка в RenderModal: list index out of range
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 1016, in RenderModal
+    dbc.Row([dbc.Col(generate_stage_rows(prj_data['stages'], today))]),
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 956, in generate_stage_rows
+    ("3. Заказные позиции", 'StageDate3', stages[2]),
+                                          ~~~~~~^^^
+IndexError: list index out of range
+2025-07-22 14:29:24,994 - ERROR - Ошибка в RenderModal: list index out of range
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 1016, in RenderModal
+    dbc.Row([dbc.Col(generate_stage_rows(prj_data['stages'], today))]),
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 956, in generate_stage_rows
+    ("3. Заказные позиции", 'StageDate3', stages[2]),
+                                          ~~~~~~^^^
+IndexError: list index out of range
+2025-07-22 14:29:25,482 - ERROR - Ошибка в RenderModal: list index out of range
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 1016, in RenderModal
+    dbc.Row([dbc.Col(generate_stage_rows(prj_data['stages'], today))]),
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 956, in generate_stage_rows
+    ("3. Заказные позиции", 'StageDate3', stages[2]),
+                                          ~~~~~~^^^
+IndexError: list index out of range
+2025-07-22 14:29:25,760 - ERROR - Ошибка в RenderModal: list index out of range
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 1016, in RenderModal
+    dbc.Row([dbc.Col(generate_stage_rows(prj_data['stages'], today))]),
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 956, in generate_stage_rows
+    ("3. Заказные позиции", 'StageDate3', stages[2]),
+                                          ~~~~~~^^^
+IndexError: list index out of range
+2025-07-22 14:29:27,105 - ERROR - Ошибка в RenderModal: list index out of range
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 1016, in RenderModal
+    dbc.Row([dbc.Col(generate_stage_rows(prj_data['stages'], today))]),
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 956, in generate_stage_rows
+    ("3. Заказные позиции", 'StageDate3', stages[2]),
+                                          ~~~~~~^^^
+IndexError: list index out of range
+2025-07-22 14:29:27,557 - ERROR - Ошибка в RenderModal: list index out of range
+Traceback (most recent call last):
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 1016, in RenderModal
+    dbc.Row([dbc.Col(generate_stage_rows(prj_data['stages'], today))]),
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\PROJECTS\LPTV_Dashboard\callback.py", line 956, in generate_stage_rows
+    ("3. Заказные позиции", 'StageDate3', stages[2]),
+                                          ~~~~~~^^^
+IndexError: list index out of range

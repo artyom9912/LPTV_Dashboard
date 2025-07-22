@@ -34,7 +34,7 @@
     margin-bottom: 14px;
 }
 #Calendar{
-    max-height: calc(100vh - 358px);
+    max-height: calc(100vh - 268px);
     overflow-y: scroll;
     user-select: none;
 }

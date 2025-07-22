@@ -98,6 +98,8 @@ def display_page(prjBtn, calBtn, graphBtn,ganttBtn, dbBtn, admBtn,cabinetBtn, ca
     if not project_id:
         project_id = db.get_user_last_project(flask_login.current_user.id)
 
+    print(project_id)
+
     match changed_id:
         case 'prjBtn':
             return PROJECTDESK()

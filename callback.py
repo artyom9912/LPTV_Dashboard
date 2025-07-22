@@ -1214,7 +1214,7 @@ def UpdateDict(n_clicks1, n_clicks2, old, head, tab):
                 )]
         elif tab == 'tab-p':
             # для проекта
-            required_fields = ['PrjName', 'PrjStart', 'PrjSqr']
+            required_fields = ['PrjName', 'PrjSqr'] + [f'StageDate{str(i)}'for i in range(1,7)]
             missing = [f for f in required_fields if not CACHE.get(f)]
             if missing:
                 return old + [html.Div(
