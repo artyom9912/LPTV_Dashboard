@@ -20,6 +20,7 @@ from datatables import UsersTable, ProjectsTable, to_css_rgba
 from dash.exceptions import PreventUpdate
 from PIL import Image
 import io
+import os
 from plotly.graph_objs import Bar, Figure, Layout
 import plotly.colors as pc
 import base64
@@ -29,6 +30,19 @@ CACHE = {}
 def success_emoji():
     emojis = ["😎", "🥰", "😄", "🥳"]
     return random.choice(emojis)
+
+@appDash.callback(
+    Output("DownloadLogs", "data"),
+    Input("DownloadLogsBtn", "n_clicks"),
+    prevent_initial_call=True
+)
+def download_logs(n_clicks):
+    log_path = os.path.join(os.getcwd(), "main.log")
+    if os.path.exists(log_path):
+        return dcc.send_file(log_path)
+    else:
+        raise FileNotFoundError("Файл логов не найден.")
+
 
 @appDash.callback(
     Output('USER', 'children'),

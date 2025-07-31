@@ -148,6 +148,12 @@
     padding: 10px 35px !important;
     width: 150px !important;
 }
+.dwnld{
+    /*padding: 10px 35px !important;*/
+    margin-top: 20px !important;
+    height: 47px !important;
+    width: 190px !important;
+}
 .clean{
     font-family: Rubik, monospace;
     background-color: #ffffff;

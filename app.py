@@ -17,7 +17,7 @@ appDash = Dash(__name__,
                      server=app,
                      url_base_pathname='/dash/',
                     external_stylesheets=[dbc.themes.BOOTSTRAP],
-                    suppress_callback_exceptions=True)
+                    suppress_callback_exceptions=True,)
 
 cache = Cache(appDash.server, config={
     'CACHE_TYPE': 'FileSystemCache',
