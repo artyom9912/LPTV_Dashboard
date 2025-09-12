@@ -6,3 +6,7 @@ pandas
 sqlalchemy
 plotly
 Pillow
+flask_caching
+pymysql
+dash_extensions
+cryptography

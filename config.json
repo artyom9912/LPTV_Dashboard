@@ -2,5 +2,5 @@
   "username":"root",
   "psswd":"root",
   "db":"lptv",
-  "ip": "localhost"
+  "ip": "db"
 }

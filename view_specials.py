@@ -106,9 +106,9 @@ def DATABASE():
                 dbc.Row([
                     dbc.Col([
                     dcc.Dropdown(id='UserFilter',placeholder='Сотрудник',
-                                 options=options['user']+[{'label': '[Все сотрудники]', 'value': 'Все'}]),
+                                 options=[{'label': '[Все сотрудники]', 'value': 'Все'}] + options['user']),
                     dcc.Dropdown(id='ProjectFilter',placeholder='Проект',
-                                 options=options['project']+[{'label': '[Все проекты]', 'value': 'Все'}]),
+                                 options=[{'label': '[Все проекты]', 'value': 'Все'}] + options['project']),
                     dcc.Dropdown(id='StageFilter',placeholder='Этап',
                                  options=options['stage']+[{'label': '[Все Этапы]', 'value': 'Все'}]),
                     dcc.Dropdown(id='SquareFilter', placeholder='Площадь',
@@ -157,8 +157,6 @@ def ADMINPAGE():
             html.Button('📄 Скачать логи', id='DownloadLogsBtn', className='clean dwnld line'),
             dcc.Download(id="DownloadLogs")
         ], className='line-wrap'),
-
-        # 💾 Кнопка скачивания логов
 
 
         # Модалка

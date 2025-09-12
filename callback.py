@@ -24,6 +24,32 @@ import os
 from plotly.graph_objs import Bar, Figure, Layout
 import plotly.colors as pc
 import base64
+import datetime
+from datetime import datetime as dt
+import dash_bootstrap_components as dbc
+from dash import dcc, callback_context
+from dash.dependencies import Input, Output, State, ALL, MATCH
+# from app import appDash, calendar_cache, WEEKDAYS, engine, dbDF, cache
+import db
+from app import appDash, cache
+import dash
+from utils import get_user_picture, rgba_string_to_hex, hex_to_rgba01, month_name_ru, get_month_info
+from time import sleep, time
+from dash import html
+from datetime import date
+from logger import logger
+from view_calendar import render_stage_block, all_stages
+import random
+import plotly.graph_objects as go
+import flask_login
+from datatables import UsersTable, ProjectsTable, to_css_rgba
+from dash.exceptions import PreventUpdate
+from PIL import Image
+import io
+import os
+from plotly.graph_objs import Bar, Figure, Layout
+import plotly.colors as pc
+import base64
 
 CACHE = {}
 
@@ -292,7 +318,7 @@ def show_confirm(n_clicks):
 def get_calendar_body_cached(project_id, year, month, num_days, user_work_data):
 
     deadlines = db.get_project_stages(project_id)
-    print(user_work_data)
+    # print(user_work_data)
     # stages = [stage] if stage else all_stages
     return sum([
         [
@@ -334,6 +360,116 @@ def style_day_cells(year, month, num_days, weekends):
 
     return styles
 
+def collect_stage_styles(stage_name, deadline, year, month, user_work_data, num_days):
+    styles = {}
+    rows = 12
+
+    for day in range(1, 32):
+        for hour in range(1, rows + 1):
+            cell_id = {
+                "type": "calendar-cell",
+                "stage": stage_name,
+                "hour": hour,
+                "day": day,
+                "month": month,
+                "year": year
+            }
+
+            if day > num_days:
+                # Прячем несуществующие дни
+                styles[str(cell_id)] = {"display": "none", "min-width": "0"}
+                continue
+
+            # Найди записи для ячейки
+            records = [
+                r for r in user_work_data
+                if r["stage"] == stage_name and r["day"] == day and hour <= r["hours"]
+            ]
+            if not records:
+                # Пустые ячейки — пропускаем, вернётся дефолтный стиль
+                continue
+
+            style = {
+                "box-shadow": "inset 0 0 0 1px rgba(255,255,255,0.1)",
+                "border": "none"
+            }
+
+            # Один пользователь
+            if len(records) == 1:
+                rec = records[0]
+                style["background-color"] = rec["color"]
+                style["color"] = rec["color"]
+
+                if hour == rec["hours"]:
+                    left, right = db.is_contiguous(
+                        rec['user_id'], rec['project_id'],
+                        all_stages.index(rec['stage']) + 1, year, month, day, hour
+                    )
+                    style["border-radius"] = f"0 0 {'0' if right else '8px'} {'0' if left else '8px'}"
+
+            # Два и больше пользователей
+            else:
+                rec1, rec2 = records[:2]
+                style["background"] = f"linear-gradient(to right, {rec1['color']} 50%, {rec2['color']} 50%)"
+                style["color"] = "rgba(255,255,255,0.05)"
+                if hour == rec1["hours"] == rec2["hours"]:
+                    style["border-radius"] = "0 0 8px 8px"
+
+            styles[str(cell_id)] = style
+
+    return styles
+
+
+# @appDash.callback(
+#     Output({"type": "calendar-cell", "stage": dash.ALL, "hour": dash.ALL,
+#             "day": dash.ALL, "month": dash.ALL, "year": dash.ALL}, "style"),
+#     Output('CalendarTitle', 'children'),
+#     Output('CalendarMonth', 'children'),
+#     Input("YearFilterCal", "value"),
+#     Input("MonthFilterCal", "value"),
+#     Input("ProjectFilterCal", "value"),
+#     State({"type": "calendar-cell", "stage": dash.ALL, "hour": dash.ALL,
+#            "day": dash.ALL, "month": dash.ALL, "year": dash.ALL}, "id"),
+# )
+# def update_calendar_styles(year, month, project_id, cell_ids):
+#     if not year or not month or not project_id:
+#         raise dash.exceptions.PreventUpdate
+#
+#     # достаём данные юзеров из БД
+#     user_work_data = db.get_user_work_data(project_id, year, month)
+#     num_days, weekends = get_month_info(month, year)
+#     title = [html.Span('КАЛЕНДАРЬ ', style={"font-family": '"Futura PT Medium", monospace'}),
+#              db.get_project_name(project_id).upper()]
+#
+#     # собираем стили в словарь { (stage, day, hour): style }
+#     style_map = {}
+#     for stage_name, deadline in zip(all_stages, ['1','2','3','4','5','6']):
+#         stage_styles = collect_stage_styles(stage_name, deadline, year, month, user_work_data, num_days)
+#
+#         style_map.update(stage_styles)
+#
+#     # возвращаем список в том же порядке, как пришли id
+#     result_styles = []
+#     for cid in cell_ids:
+#         key = (cid["stage"], cid["day"], cid["hour"])
+#         if key in style_map:
+#             result_styles.append(style_map[key])
+#             print('SCORE')
+#         else:
+#             # дефолтный стиль (белая пустая клетка)
+#             result_styles.append({
+#                 "height": "24px",
+#                 "border": "1px solid #F7F7F7",
+#                 "text-align": "center",
+#                 "font-size": "12px",
+#                 "font-weight": "600",
+#                 "color": "white",
+#                 "position": "relative",
+#                 "background-color": "white"
+#             })
+#
+#     return result_styles,  title, month_name_ru(month).upper()
+
 
 @appDash.callback(
     Output('CalendarBody', 'children'),
@@ -344,14 +480,17 @@ def style_day_cells(year, month, num_days, weekends):
     Input('ProjectFilterCal', 'value'),
     Input('YearFilterCal', 'value'),
     Input('MonthFilterCal', 'value')
-
 )
 def update_calendar_body(project_id, year, month):
     user_work_data = db.get_user_work_data(project_id, year, month)
+
     num_days, weekends = get_month_info(month, year)
     title = [html.Span('КАЛЕНДАРЬ ', style={"font-family": '"Futura PT Medium", monospace'}),
              db.get_project_name(project_id).upper()]
     userlines = db.get_user_legend(project_id,year,month)
+
+    # if len(user_work_data) < 1:
+    #     return dash.no_update,  title, month_name_ru(month).upper(), style_day_cells(year, month, num_days, weekends), []
 
     userlist = [html.Div([html.Span([], style={'background-color':rgba_string_to_hex(line['color']), 'border-radius':'50px','padding':'2px 4px', 'margin-right':'10px'})
                              ,line['name']],style={'margin-bottom':'8px'}) for line in userlines] if len(userlines)>0 else [html.Div([html.Span([], style={'background-color':'lightgray', 'border-radius':'50px','padding':'2px 4px', 'margin-right':'10px'}),'Нет данных'],style={'margin-bottom':'8px'})]
@@ -1260,6 +1399,7 @@ def UpdateDict(n_clicks1, n_clicks2, old, head, tab):
 
 @appDash.callback(
     Output('GraphGantt', 'figure'),
+    Output('BigTitleGantt', 'children'),
     Input('YearFilterGantt', 'value'),
     Input('RelevantFilterGantt', 'value'),
     Input('PaletteFilterGantt', 'value'),
@@ -1314,7 +1454,8 @@ def update_gantt_chart(year, relevance, palette_name):
             title=None,
             showgrid=False,
             automargin=True,
-            tickfont=dict(size=12 if num_projects > 10 else 14)
+            tickfont=dict(size=12 if num_projects > 10 else 14),
+            color='#636363',
         ),
         font=dict(
             family="Rubik, sans-serif",
@@ -1328,7 +1469,7 @@ def update_gantt_chart(year, relevance, palette_name):
         showlegend=False
     )
 
-    return Figure(data=bars, layout=layout)
+    return Figure(data=bars, layout=layout), ['ДИАГРАММА ГАНТА ', html.Span(str(year), style={'font-family':'font-family: "Futura PT Medium", monospace;'})]
 
 
 @appDash.callback(

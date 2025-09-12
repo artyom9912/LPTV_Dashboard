@@ -167,7 +167,7 @@ def GANTT():
 
 
     content = html.Div([
-        html.Div('ДИАГРАММА ГАНТА', className='name', id='BigTitle'),
+        html.Div('ДИАГРАММА ГАНТА', className='name', id='BigTitleGantt'),
         html.Div([
             dcc.Loading([
                 html.Div([

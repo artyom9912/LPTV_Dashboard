@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  web:
+    build: .
+    container_name: lptv_app
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=lptv
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    container_name: dash_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: lptv
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql:ro
+
+volumes:
+  mysql_data:

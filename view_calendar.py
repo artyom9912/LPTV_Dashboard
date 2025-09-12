@@ -3,7 +3,8 @@ from dash import dcc
 import dash_bootstrap_components as dbc
 from dash import html
 from datetime import datetime
-from utils import rgba_string_to_hex
+from flask_login import current_user
+from utils import rgba_string_to_hex, get_month_info
 from dash_extensions import EventListener
 import db
 
@@ -18,6 +19,7 @@ all_stages = [
         'КОМПЛЕКТАЦИЯ',
         'РЕАЛИЗАЦИЯ'
     ]
+
 
 
 def render_stage_block(stage_name,deadline, year, month, user_work_data, num_days):
@@ -197,6 +199,11 @@ def render_header(num_days, weekends):
 
 
 def render_table_div(project_id=None, stages=None, year=None, month=None):
+    deadlines = db.get_project_stages(project_id)
+    user_work_data = db.get_user_work_data(project_id, year, month)
+    num_days, weekends = get_month_info(month, year)
+    print(user_work_data)
+
     return html.Div([
 
             render_header(31, []),
@@ -206,9 +213,8 @@ def render_table_div(project_id=None, stages=None, year=None, month=None):
             html.Div(
                 children=sum([
                     [
-                        render_stage_block(project_id, name, 12, year, month, 31)
-
-                    ] for name in stages
+                        render_stage_block(name, deadline, year, month, user_work_data, num_days),
+                    ] for name, deadline in dict(zip(all_stages, deadlines)).items()
                 ], []) if project_id else '',
                 id='CalendarBody'
             ),
@@ -223,6 +229,7 @@ def render_table_div(project_id=None, stages=None, year=None, month=None):
 def CALENDAR(id):
     today = datetime.today()
     options = db.get_graph_filters()
+    prj_id = db.get_user_last_project(current_user.id)
     content = html.Div([
         html.Div('КАЛЕНДАРНЫЙ ОТЧЁТ', className='name', id='CalendarTitle'),
         EventListener(
@@ -238,7 +245,7 @@ def CALENDAR(id):
 
         html.Div([
 
-            html.Div([render_table_div(stages=all_stages)], id='Calendar', className='')
+            html.Div([render_table_div(None, all_stages, today.year, today.month )], id='Calendar', className='')
 
         ], className='line calendar'),
         html.Div([

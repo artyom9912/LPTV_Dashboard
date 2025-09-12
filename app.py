@@ -2,6 +2,7 @@ from dash import Dash, html
 from flask import Flask
 import flask_login
 import dash_bootstrap_components as dbc
+from dash_extensions.enrich import DashProxy, MultiplexerTransform
 import json
 from flask_caching import Cache
 from sqlalchemy import create_engine
@@ -13,11 +14,14 @@ engine = create_engine(f'mysql+pymysql://{config["username"]}:{config["psswd"]}@
 app = Flask(__name__)
 app.secret_key = b'_5f#cky2L"F4Q8z]/'
 
-appDash = Dash(__name__,
-                     server=app,
-                     url_base_pathname='/dash/',
-                    external_stylesheets=[dbc.themes.BOOTSTRAP],
-                    suppress_callback_exceptions=True,)
+appDash = DashProxy(
+    __name__,
+    server=app,  # если у тебя общий Flask-сервер
+    url_base_pathname="/dash/",
+    external_stylesheets=[dbc.themes.BOOTSTRAP],
+    suppress_callback_exceptions=True,
+    transforms=[MultiplexerTransform()],
+)
 
 cache = Cache(appDash.server, config={
     'CACHE_TYPE': 'FileSystemCache',
