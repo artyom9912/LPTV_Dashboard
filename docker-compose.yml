@@ -16,6 +16,7 @@ services:
       - DB_NAME=lptv
     depends_on:
       - db
+    restart: always
 
   db:
     image: mysql:8.0
