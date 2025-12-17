@@ -1,1 +1,12 @@
 config.json
+
+# Python
+__pycache__/
+*.pyc
+
+# Runtime
+cache/
+*.log
+
+# Env
+.env
