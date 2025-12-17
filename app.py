@@ -16,7 +16,7 @@ app.secret_key = b'_5f#cky2L"F4Q8z]/'
 
 appDash = DashProxy(
     __name__,
-    server=app,  # если у тебя общий Flask-сервер
+    server=app,
     url_base_pathname="/dash/",
     external_stylesheets=[dbc.themes.BOOTSTRAP],
     suppress_callback_exceptions=True,

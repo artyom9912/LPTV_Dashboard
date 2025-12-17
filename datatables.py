@@ -39,6 +39,14 @@ def get_style_data_conditional():
         {
             'if': {
                 'filter_query': '{СТАТУС} eq "Не актуальный"',
+                'column_id': 'id'
+            },
+            # 'color': '#25c193'
+            'backgroundColor': '#f7f7f7'
+        },
+        {
+            'if': {
+                'filter_query': '{СТАТУС} eq "Не актуальный"',
                 'column_id': 'СТАТУС'
             },
             'color': 'silver'
@@ -123,7 +131,7 @@ def style_selected_rows(sel_rows, tab, data):
             df = pd.DataFrame.from_records(data)
             for i, rgba in enumerate(df["ЦВЕТ"]):
                 rgba_str = to_css_rgba(rgba)
-                style.append({
+                style.insert(0,{
                     'if': dict(row_index=i, column_id='id'),
                     'backgroundColor': rgba_str,
                     'color': 'black'

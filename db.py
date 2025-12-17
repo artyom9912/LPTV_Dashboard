@@ -1,3 +1,5 @@
+import sqlalchemy
+
 from app import engine
 from sqlalchemy import text
 from utils import month_name_ru, rgba_string_to_hex
@@ -121,7 +123,7 @@ def get_years():
 
 def get_users():
     with engine.connect() as con:
-        df = pd.read_sql("SELECT id, name, username, color, admin, relevant  FROM lptv.user", con)
+        df = pd.read_sql("SELECT id, name, username, color, admin, relevant  FROM lptv.user ORDER BY relevant DESC, id", con)
         return df
 
 
@@ -294,6 +296,10 @@ def execute_project_queries(cache, project_id, mode):
                 if key in cache:
                     sql = f"""INSERT INTO lptv.projectstage (projectId, stageId, finishdate)
                                           VALUES ({last_id}, {stage}, {fmt(cache[key])})"""
+                    execute_query(con, sql)
+                else:
+                    sql = f"""INSERT INTO lptv.projectstage (projectId, stageId, finishdate)
+                                                              VALUES ({last_id}, {stage}, {sqlalchemy.null()})"""
                     execute_query(con, sql)
 
         elif mode == 'delete':

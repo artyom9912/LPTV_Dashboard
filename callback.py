@@ -1233,6 +1233,7 @@ def ProjectChanges(PrjName, PrjStart, PrjSqr, PrjLvl, PrjDone,
                 CACHE[stage_key] = f"'{date_value}'"
                 CACHE['stages'] = True
                 break
+
         return dash.no_update
 
     except Exception as e:
@@ -1314,7 +1315,7 @@ def UserChanges(UserName, UserLogin, UserPass, UserRole, UserActual, UserColor):
         elif 'UserPass' in changed_id:
             CACHE['UserPass'] = f"{UserPass}"
         elif 'UserRole' in changed_id:
-            CACHE['UserRole'] = UserRole
+            CACHE['UserRole'] = 1 if 'tab-admin' in UserRole else 0
         elif 'UserColor' in changed_id:
             CACHE['UserColor'] = hex_to_rgba01(UserColor)
         elif 'UserActual' in changed_id:
@@ -1367,7 +1368,8 @@ def UpdateDict(n_clicks1, n_clicks2, old, head, tab):
                 )]
         elif tab == 'tab-p':
             # для проекта
-            required_fields = ['PrjName', 'PrjSqr'] + [f'StageDate{str(i)}'for i in range(1,7)]
+            required_fields = (['PrjName', 'PrjSqr'])
+                               # + [f'StageDate{str(i)}'for i in range(1,7)])
             missing = [f for f in required_fields if not CACHE.get(f)]
             if missing:
                 return old + [html.Div(
