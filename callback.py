@@ -1076,6 +1076,7 @@ def RenderModal(tab, row, clickE, clickA, clickS, clickD):
             return modal, Open
 
         elif tab == 'tab-p':
+            print("PROJECT!")
             today = date.today().strftime('%Y-%m-%d')
             if UPDATE_DICT:
                 p = db.get_project_full(id)
@@ -1125,7 +1126,7 @@ def RenderModal(tab, row, clickE, clickA, clickS, clickD):
                                 display_format='YYYY-MM-DD',
                                 placeholder='Дата дедлайна',
                                 style={'text-align': 'left'},
-                                date=stage_data[i][2] if stage_data[i][2] not in 'None' else None,
+                                date=None if str(stage_data[i][2]).lower() == 'none' else stage_data[i][2]
 
                             )
                         ], width=6),
@@ -1138,7 +1139,7 @@ def RenderModal(tab, row, clickE, clickA, clickS, clickD):
                                 display_format='YYYY-MM-DD',
                                 placeholder='Дата дедлайна',
                                 style={'text-align': 'left'},
-                                date=stage_data[i + 1][2]  if stage_data[i+1][2] not in 'None' else None
+                                date=None if str(stage_data[i+1][2]).lower() == 'none' else stage_data[i+1][2]
                             )
                         ], width=6)
                     ], className="gx-3", style={'margin-bottom': '8px' if i < 4 else '24px'})
