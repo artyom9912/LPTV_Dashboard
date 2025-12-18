@@ -11,4 +11,6 @@ cache/
 # Env
 .env
 /__pycache__
-config.json
+
+asstes/img/
+*png
