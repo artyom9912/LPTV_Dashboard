@@ -10,3 +10,5 @@ cache/
 
 # Env
 .env
+/__pycache__
+config.json

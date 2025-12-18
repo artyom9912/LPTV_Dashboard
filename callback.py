@@ -1103,6 +1103,7 @@ def RenderModal(tab, row, clickE, clickA, clickS, clickD):
                 )
 
             def generate_stage_rows(stages, today):
+
                 stage_data = [
                     ("1. Подготовка", 'StageDate1', stages[0]),
                     ("2. 3D Графика", 'StageDate2', stages[1]),
@@ -1124,7 +1125,7 @@ def RenderModal(tab, row, clickE, clickA, clickS, clickD):
                                 display_format='YYYY-MM-DD',
                                 placeholder='Дата дедлайна',
                                 style={'text-align': 'left'},
-                                date=stage_data[i][2],
+                                date=stage_data[i][2] if stage_data[i][2] not in 'None' else None,
 
                             )
                         ], width=6),
@@ -1137,7 +1138,7 @@ def RenderModal(tab, row, clickE, clickA, clickS, clickD):
                                 display_format='YYYY-MM-DD',
                                 placeholder='Дата дедлайна',
                                 style={'text-align': 'left'},
-                                date=stage_data[i + 1][2]
+                                date=stage_data[i + 1][2]  if stage_data[i+1][2] not in 'None' else None
                             )
                         ], width=6)
                     ], className="gx-3", style={'margin-bottom': '8px' if i < 4 else '24px'})
