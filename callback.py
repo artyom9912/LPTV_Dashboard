@@ -349,12 +349,22 @@ def style_day_cells(year, month, num_days, weekends):
         "border": "1px solid #EDEDED", "border-bottom": "1px solid #ccc",
         "text-align": "center", "padding": "4px", "height": "30px"
     }
+    today = date.today()
 
     styles = []
     for day in range(1,32):
         day_style = base_style.copy()
         day_style["background-color"] = "#EEEEEE" if day in weekends else "white"
-        day_style["border-right"] = "1px #E4E4E4 solid" if day in weekends else "1px #EDEDED solid"
+
+        if (
+                year == today.year
+                and month == today.month
+                and day == today.day
+        ):
+            day_style["border"] = "2px solid darkgray"
+        else:
+            day_style["border-right"] = "1px #E4E4E4 solid" if day in weekends else "1px #EDEDED solid"
+
         day_style["display"] = "none" if day > num_days else "block"
         styles.append(day_style)
 
