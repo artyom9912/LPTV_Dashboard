@@ -4,7 +4,7 @@ from app import engine
 from sqlalchemy import text
 from utils import month_name_ru, rgba_string_to_hex
 import pandas as pd
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 import os
 
 
@@ -416,8 +416,9 @@ def get_graph_filters():
     options = {}
     with engine.connect() as con:
         # Годы
-        res = con.execute(text("SELECT DISTINCT YEAR(dateStamp) AS year FROM main ORDER BY year DESC"))
-        options['year'] = [{'label': str(row[0]), 'value': row[0]} for row in res.fetchall()]
+        res = con.execute(text("SELECT MIN(YEAR(dateStamp)) FROM main"))
+        min_year = res.scalar()
+        options['year'] = [ {'label': str(x), 'value': x} for x in range(datetime.today().year, min_year - 1, -1)]
 
         # Месяцы
         res = con.execute(text("SELECT DISTINCT MONTH(dateStamp) AS month FROM main ORDER BY month"))
